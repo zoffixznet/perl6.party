@@ -1,4 +1,4 @@
-use lib <lib>;
+use lib </home/zoffix/CPANPRC/Mojo-Extended/lib  lib>;
 
 use Text::MultiMarkdown:from<Perl5> <markdown>;
 
