@@ -1,0 +1,4 @@
+.sass-cache
+lib/.precomp/
+*.map
+assets/sass/main.css

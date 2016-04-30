@@ -1,0 +1,17 @@
+{
+    "perl"         : "6.c",
+    "name"         : "perl6.party",
+    "version"      : "1.001001",
+    "description"  : "Code for website perl6.party",
+    "depends"      : [
+        "Inline::Perl5",
+        "Bailador",
+        "Bailador::Plugin::Static",
+        "Bailador::Dev::AutoRestarter"
+    ],
+    "test-depends" : [ "Test" ],
+    "provides"     : {
+    },
+    "authors"      : [ "Zoffix Znet" ],
+    "source-url"   : "git://github.com/zoffixznet/perl6.party.git"
+}
