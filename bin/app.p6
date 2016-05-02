@@ -13,7 +13,7 @@ app.location = '.';
 renderer Bailador::Template::Mojo::Extended.new;
 
 my Perl6::Party::Posts $posts .= new;
-
+get '/' => sub { template 'index.tt', 'Zoffix', :name<Znet> }
 get '/' => sub {
     template 'index.tt', :posts($posts.all)
 }
