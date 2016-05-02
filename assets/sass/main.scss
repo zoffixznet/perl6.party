@@ -1,7 +1,3 @@
+@import 'bootstrap.min';
+@import 'ie10-viewport-bug-workaround';
 @import 'blog';
-
-$color: #fff;
-
-html {
-    color: $color;
-}

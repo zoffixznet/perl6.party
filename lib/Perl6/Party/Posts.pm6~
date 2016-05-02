@@ -6,16 +6,23 @@ use File::Find;
 method all {
     my @posts = find :dir<post>, :name(/ '.md' $/);
     s/'.md' $// for @posts;
-    return @posts.map: {%(
-            name => $_,
-            title => meta-for($_)<title>,
-            link => "/$_",
-            content => markdown( abridge-content(content($_)) ),
-        )};
+    my @return;
+    for @posts {
+        my $post = "$_.md".IO.slurp;
+        my ($meta, $content) = process $post;
+        @return.push: %(
+            name    => $_,
+            date    => $meta<date>,
+            title   => $meta<title>,
+            link    => "/$_",
+            content => markdown( abridge-content $content ),
+        );
+    }
+    return @return;
 }
 
-method serve ($post) {
-    return markdown content "post/$post";
+sub serve ($post) {
+    return process $post.IO.slurp;
 }
 
 sub abridge-content ($text) {
@@ -27,17 +34,8 @@ sub abridge-content ($text) {
     return $out;
 }
 
-sub meta-for ($post) {
-    my $post-content = "$post.md".IO.slurp;
+sub process ($post is copy) {
     my %meta;
-    %meta{ $0 } = ~$1 while $post-content ~~ s/^ '%%' \s* (\w+)\s* ':' \s* (\N+) \n//;
-    return %meta;
+    %meta{ $0 } = ~$1 while $post ~~ s/^ '%%' \s* (\w+)\s* ':' \s* (\N+) \n//;
+    return (%meta, $post);
 }
-
-sub content ($post) {
-    my $post-content = "$post.md".IO.slurp;
-    my %meta;
-    %meta{ $0 } = ~$1 while $post-content ~~ s/^ '%%' \s* (\w+)\s* ':' \s* (\N+) \n//;
-    return $post-content;
-}
-

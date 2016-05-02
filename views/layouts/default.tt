@@ -1,29 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title><%= $title %>—Perl 6 Party</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/assets/sass/main.css" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-  <h1>Perl 6 Party</h1>
+    <title><%= $title %></title>
 
-  <nav>
-    <a href="/">Home</a>
-  </nav>
+    <link href="/assets/sass/main.css" rel="stylesheet">
+  </head>
 
-  <%= $_content %>
-</div>
+  <body>
 
-<script src="https://code.jquery.com/jquery-2.2.3.min.js"
+    <div class="blog-masthead">
+      <div class="container">
+        <nav class="blog-nav">
+          <a class="blog-nav-item <%= $active-page eq 'home' ?? 'active' !! '' %>" href="/">Home</a>
+          <a class="blog-nav-item <%= $active-page eq 'about' ?? 'active' !! '' %>" href="/about">About</a>
+        </nav>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="blog-header">
+        <h1 class="blog-title"><%= try { EVAL '$post-title' } // 'Perl 6 Party' %></h1>
+        <p class="lead blog-description">Programming Should Be Fun</p>
+      </div>
+
+      <div class="row">
+
+        <div class="col-sm-8 blog-main">
+          <%= $_content %>
+        </div><!-- /.blog-main -->
+
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+          <div class="sidebar-module">
+            <h4>Posts</h4>
+            <ol class="list-unstyled">
+              % for |$posts -> $p {
+                <li><a href="<%= $p<link> %>"><%= $p<title> %></a></li>
+              % }
+            </ol>
+          </div>
+          <div class="sidebar-module">
+            <h4>Resources</h4>
+            <ol class="list-unstyled">
+                <li><a href="http://docs.perl6.org">docs.perl6.org</a></li>
+                <li><a href="http://modules.perl6.org">modules.perl6.org</a></li>
+                <li><a href="http://perl6.org">perl6.org</a></li>
+            </ol>
+          </div>
+        </div><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </div><!-- /.container -->
+
+    <footer class="blog-footer">
+      <p>Follow <a href="https://twitter.com/zoffix">@zoffix</a> on Twitter.</p>
+    </footer>
+
+
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"
     integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="
     crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script src="/assets/js/js.js"></script>
-</body>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/assets/js/main.js"></script>
+  </body>
 </html>
