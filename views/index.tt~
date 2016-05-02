@@ -1,7 +1,7 @@
 %% title: Welcome!
 
 <ul>
-% for |$s<posts> -> $p {
+% for |$posts -> $p {
     <li>
         <a href="<%= $p<link> %>"><%= $p<title> %></a>
         <%= $p<content> %>

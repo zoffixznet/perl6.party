@@ -1,4 +1,4 @@
-use lib </home/zoffix/CPAN/Mojo-Extended/lib  /home/zoffix/CPANPRC/Mojo-Extended/lib  lib>;
+use lib <lib>;
 
 use Bailador;
 use Bailador::Template::Mojo::Extended;
@@ -13,7 +13,7 @@ app.location = '.';
 renderer Bailador::Template::Mojo::Extended.new;
 
 my Perl6::Party::Posts $posts .= new;
-
+get '/' => sub { template 'index.tt', 'Zoffix', :name<Znet> }
 get '/' => sub {
     template 'index.tt', :posts($posts.all)
 }

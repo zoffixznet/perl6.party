@@ -5,20 +5,19 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title><%= $s<title> %>—Perl 6 Party</title>
+  <title><%= $title %>—Perl 6 Party</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
   <link href="/assets/css/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
   <h1>Perl 6 Party</h1>
-  <h2><%= $s<title> %></h2>
 
   <nav>
     <a href="/">Home</a>
   </nav>
 
-  <%= $s<content> %>
+  <%= $_content %>
 </div>
 
 <script src="https://code.jquery.com/jquery-2.2.3.min.js"

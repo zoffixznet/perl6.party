@@ -1,3 +1,12 @@
-%% title: Hello, World!
-%% adjective: Awesome
-<p><%= @pos[0] ~ ' ' ~ $name %> is <%= $adjective %>
+%% title: Welcome!
+
+<ul>
+% for |$posts -> $p {
+    <li>
+        <a href="<%= $p<link> %>"><%= $p<title> %></a>
+        <%= $p<content> %>
+
+        <small><a href="<%= $p<link> %>">Read more</a></small>
+    </li>
+% }
+</ul>
