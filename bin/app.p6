@@ -14,7 +14,6 @@ renderer Bailador::Template::Mojo::Extended.new;
 
 my Perl6::Party::Posts $posts .= new;
 get '/' => sub {
-    start { sleep 10; exit };
     template 'index.tt', :posts($posts.all), :active-page<home>;
 }
 
