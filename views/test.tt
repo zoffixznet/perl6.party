@@ -1,0 +1,7 @@
+% my $posts = [{link => "mepw", title => "foo", date => "today"}];
+% for |$posts -> $p {
+    <div class="blog-post">
+        <h2 class="blog-post-title"><a href="<%= $p<link> %>"><%= $p<title> %></a></h2>
+        <p class="blog-post-meta"><%= $p<date> %> by <a href="http://twitter.com/zoffix">Zoffix Znet</a></p>
+    </div>
+% }
