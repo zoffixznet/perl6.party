@@ -6,6 +6,8 @@
     "depends"      : [
         "Inline::Perl5",
         "Bailador",
+        "Bailador::Template::Mojo::Extended",
+        "Bailador::Plugin::AssetPack::SASS",
         "Bailador::Plugin::Static",
         "Bailador::Dev::AutoRestarter"
     ],

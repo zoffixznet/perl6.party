@@ -2,11 +2,11 @@ use lib <lib>;
 
 use Bailador;
 use Bailador::Template::Mojo::Extended;
-use Bailador::Plugin::AssetPack::SASS;
+#use Bailador::Plugin::AssetPack::SASS;
 use Bailador::Plugin::Static;
 use Perl6::Party::Posts;
 
-Bailador::Plugin::AssetPack::SASS.install;
+#Bailador::Plugin::AssetPack::SASS.install;
 Bailador::Plugin::Static.install;
 
 app.location = '.';
@@ -14,6 +14,7 @@ renderer Bailador::Template::Mojo::Extended.new;
 
 my Perl6::Party::Posts $posts .= new;
 get '/' => sub {
+    start { sleep 10; exit };
     template 'index.tt', :posts($posts.all), :active-page<home>;
 }
 
