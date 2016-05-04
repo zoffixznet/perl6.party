@@ -1,14 +1,13 @@
-%% title: Perl 6: There Are Traitors In Our Midst!
+%% title: There Are Traitors In Our Midst!
 %% date: May 2, 2016
-# Perl 6: There Are Traitors In Our Midst!
 
 *Ahoy, matey! I heard thar be traitors in our ranks! We need t' search t' ship 'n find every last one o' them, put them through exquisite torture, 'n then make them swim t' plank. Now t' ye, I gift a task! Learn everythin' ye can 'bout these traitors 'n all o' t' "traits" they use. Ye succeed, a full barrel o' spiced rum gunna be me generous gift t' ye!*
 
-# PART I: Built-In Traits
+## PART I: Built-In Traits
 
 Traits! In Perl 6, they're subs executed at compile time that make your code tight and sexy. Let's look at some of the traits you get from the bare Perl 6 and then learn how to create your very own!
 
-# `is ...`
+### `is ...`
 
     sub foo ($bar is copy) is export { ... }
     has $.foo is rw is required;
@@ -17,7 +16,7 @@ Traits! In Perl 6, they're subs executed at compile time that make your code tig
 There are several built-in traits that you apply with the `is` keyword. Let's
 take a look some of the oft-used:
 
-## `is export`
+#### `is export`
 
     # In Foo.pm6
     unit module Foo;
@@ -45,7 +44,7 @@ Of course, you can export constants, variables, and classes too:
 The trait is really just sugar for [UNIT::EXPORT::* magic](http://docs.perl6.org/language/modules#Exporting_and_Selective_Importing), which you can use
 directly if you need more control.
 
-## `is copy`
+#### `is copy`
 
 When your subroutine or method recieves parameters, they are read-only. Any
 attempt to modify them will result in a fatal error. At times when you do
@@ -62,12 +61,12 @@ signature:
 And don't worry, that won't affect the caller's data. To do that,
 you'll need the `is rw` trait...
 
-## `is rw`
+#### `is rw`
 
 The `rw` in `is rw` trait is short for "read-write" and this concise trait
 packs a ton of value. Let's break it up:
 
-#### modifying caller's values
+###### modifying caller's values
 
     sub foo ($x is rw) { $x = 42 };
 
@@ -80,7 +79,7 @@ to caller's variable. Modifying this parameter will affect the caller, as can
 be seen above, where we change the value of `$original` by assigning to the
 parameter inside the sub.
 
-#### writable attributes
+###### writable attributes
 
     class Foo {
         has $.foo is rw;
@@ -97,7 +96,7 @@ relevant to the public interface; inside the class, you can still modify
 the values of even read-only attributes using the `$!` twigil
 (i.e. `$!bar = 42`).
 
-#### LHS subroutines/methods
+###### LHS subroutines/methods
 
 The `is rw` trait applied to attibutes, as you've seen in previous section,
 is just syntax sugar for automatically creating a private attribute and
@@ -130,7 +129,7 @@ What you're supposed to be using is for this is `return-rw` keyword instead,
 and if you do use it, `is rw` trait is not needed.
 [I don't think that is the ideal behaviour](https://rt.perl.org/Ticket/Display.html?id=127924), but I've been wrong before.
 
-## `is required`
+#### `is required`
 
 As the name suggests, `is required` trait marks class attributes and
 named parameters as mandatory. If those are not provided at object
@@ -144,7 +143,7 @@ instantiation or method/sub call, a fatal error will be thrown:
     sub foo ( :$bar is required ) { }
     foo; # fatal error, asks for $bar named arg
 
-## `is Type/Class/Role`
+#### `is Type/Class/Role`
 
     role  Foo { method zop { 'Foo' } }
     role  Bar { method zop { 'Bar' } }
@@ -164,7 +163,7 @@ class constructed above is itself empty, but due to inherting from `Int` type
 takes an integer and provides [all of `Int` methods](http://docs.perl6.org/type/Int). We also get method `zop`, which is provided by the punned role `Foo`. And despite both roles providing it too, we don't get any errors,
 because those roles got punned.
 
-## `does`
+#### `does`
 
 Let's try out our previous example, but this type compose the roles correctly,
 using the `does` trait:
@@ -182,7 +181,7 @@ using the `does` trait:
 This time the composition correctly fails. The `does` trait is what you use
 to compose roles.
 
-## `of`
+#### `of`
 
     subset Primes of Int where *.is-prime;
     my Array of Primes $foo;
@@ -193,7 +192,7 @@ The `of` trait gets an honourable mention. It's used in
 [creation of subsets](http://blogs.perl.org/users/zoffix_znet/2016/04/perl-6-types-made-for-humans.html)
 or, for example, restricting elements of an array to a particular type.
 
-## Conclusion
+#### Conclusion
 
 This isn't an exhaustive list of
 [traits in Rakudo Perl 6 compiler](https://github.com/rakudo/rakudo/blob/nom/src/core/traits.pm), but these are the traits you'll likely use most often in your programs. Unmentioned are

@@ -1,3 +1,82 @@
 @import 'bootstrap.min';
 @import 'ie10-viewport-bug-workaround';
+@import 'codemirror';
 @import 'blog';
+
+$color-body: #f6f6f6;
+
+.CodeMirror {
+    border: 1px solid darken($color-body, 20%);
+    height: auto;
+    background: lighten($color-body, 2.5%);
+
+    pre { background: none; }
+}
+
+body {
+    background: $color-body;
+}
+
+pre {
+    border-radius: 0;
+    border: darken($color-body, 20%);
+    padding: 0;
+}
+
+code {
+    background: darken($color-body, 2%);
+}
+
+h2:not(.blog-post-title), h3, h4, h5, h6 {
+    border-left: 10px solid darken($color-body, 20%);
+    padding-left: 10px;
+    margin-top: 40px;
+
+    .title-anchor {
+        visibility: hidden;
+        color: darken($color-body, 60%);
+        font-size: 60%;
+        margin-left: 10px;
+        display: inline-block;
+        text-decoration: none;
+        vertical-align: 0.5ex;
+        outline: none;
+    }
+}
+
+h2:not(.blog-post-title):hover, h3:hover, h4:hover, h5:hover, h6:hover {
+    .title-anchor {
+        visibility: visible;
+    }
+}
+
+h2:not(.blog-post-title) { font-size: 200%; }
+h3 { font-size: 180%; }
+h4 { font-size: 160%; margin-top: 40px; }
+h5 { font-size: 140%; margin-top: 30px; }
+h6 { font-size: 120%; margin-top: 20px; }
+
+hr {
+    border-color: darken($color-body, 20%);
+}
+
+footer {
+    padding-top: 20px;
+
+    .fork-it,
+    .powered-by {
+        background: url(/assets/pics/powered-by.png);
+        width: 54px;
+        height: 51px;
+        overflow: hidden;
+        text-indent: -9999px;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    .fork-it {
+        background: url(/assets/pics/github.png) center no-repeat;
+        width: 31px;
+        margin-left: 20px;
+    }
+}

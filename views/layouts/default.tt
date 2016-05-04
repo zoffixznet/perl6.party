@@ -25,40 +25,23 @@
 
       <div class="blog-header">
         <h1 class="blog-title"><%= try { EVAL '$post-title' } // 'Perl 6 Party' %></h1>
-        <p class="lead blog-description">Programming Should Be Fun</p>
       </div>
 
       <div class="row">
-
-        <div class="col-sm-8 blog-main">
+        <div class="col-sm-12 blog-main">
           <%= $_content %>
-        </div><!-- /.blog-main -->
-
-        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-          <div class="sidebar-module">
-            <h4>Posts</h4>
-            <ol class="list-unstyled">
-              % for |$posts -> $p {
-                <li><a href="<%= $p<link> %>"><%= $p<title> %></a></li>
-              % }
-            </ol>
-          </div>
-          <div class="sidebar-module">
-            <h4>Resources</h4>
-            <ol class="list-unstyled">
-                <li><a href="http://docs.perl6.org">docs.perl6.org</a></li>
-                <li><a href="http://modules.perl6.org">modules.perl6.org</a></li>
-                <li><a href="http://perl6.org">perl6.org</a></li>
-            </ol>
-          </div>
-        </div><!-- /.blog-sidebar -->
-
-      </div><!-- /.row -->
-
-    </div><!-- /.container -->
+        </div>
+      </div>
+    </div>
 
     <footer class="blog-footer">
-      <p>Follow <a href="https://twitter.com/zoffix">@zoffix</a> on Twitter.</p>
+      Follow <a href="https://twitter.com/zoffix">@zoffix</a> on Twitter.
+      <p class="icons">
+        <a href="https://perl6.org" class="powered-by"
+          title="Powered by Perl 6">Powered by Perl 6.</a>
+        <a href="https://github.com/zoffixznet/perl6.party" class="fork-it"
+          title="Fork this blog">Fork this blog.</a>
+      </p>
     </footer>
 
 
@@ -67,6 +50,8 @@
     crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="/assets/js/codemirror/codemirror.min.js"></script>
+    <script src="/assets/js/codemirror/perl6-mode.js"></script>
     <script src="/assets/js/main.js"></script>
   </body>
 </html>
