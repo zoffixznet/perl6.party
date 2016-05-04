@@ -14,7 +14,7 @@ function setup_title_anchors() {
 function setup_glot_io() {
     $('pre').each(function(i, el){
         var $el = $(el);
-        CodeMirror(el, {
+        var mirror = CodeMirror(el, {
             lineNumbers:    true,
             lineWrapping:   true,
             mode:           'perl6',
@@ -24,10 +24,29 @@ function setup_glot_io() {
         });
 
         $el.find('code').text('')
-        $el.append('<div class="code-runner"><a>Run code</a><p></p></div>');
+        $el.append(
+            '<div class="code-runner"><a class="btn btn-sm btn-primary">'
+            + 'Run this code</a></div>'
+        );
+
+        mirror.on('focus',
+            function (runner) {
+                return function (mirror){
+                    runner.find('a').slideDown();
+                }
+            }( $el.find('.code-runner') )
+        );
+
+        mirror.on('blur',
+            function (runner) {
+                return function (mirror){
+                    runner.find('a').slideUp();
+                }
+            }( $el.find('.code-runner') )
+        );
     });
 
-    $('.code-runner').each(function(i, el){
+    $('.code-runner').find('a').hide().end().each(function(i, el){
         $(el).click(function(){
             var code = '';
             $(this).prev().find('.CodeMirror-code .CodeMirror-line').each(
@@ -35,7 +54,21 @@ function setup_glot_io() {
                     code += $(el).text() + "\n";
                 }
             );
-            alert(code);
-        })
+
+            jQuery.ajax('/run', {
+                method: 'POST',
+                success: function(data) {
+                    $(el).find('p').remove();
+                    $(el).append('<p>' + data + '</p>');
+                },
+                data: { code: code },
+                error: function(req, error) {
+                    $(el).find('p').remove();
+                    $(el).append('<p> Error occured:' + error + '</p>');
+                }
+            });
+        });
     });
+
+
 }

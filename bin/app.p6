@@ -1,5 +1,6 @@
 use lib <lib>;
 
+use experimental :cached;
 use Bailador;
 use Bailador::Template::Mojo::Extended;
 use Bailador::Plugin::AssetPack::SASS;
@@ -13,10 +14,9 @@ Bailador::Plugin::Static.install;
 app.location = '.';
 renderer Bailador::Template::Mojo::Extended.new;
 
-use experimental :cached;
-sub _ctemplate (|c) is cached { template |c }
-
+my GlotIO $glot .= new: :key<02fb41ba-78cd-44d8-9f30-2a28350000a8>;
 my Perl6::Party::Posts $posts .= new;
+
 get '/' => sub {
     _ctemplate 'index.tt', :posts($posts.all), :active-page<home>;
 }
@@ -39,6 +39,11 @@ get rx{ ^ '/post/' (<[a..zA..Z0..9_-]>+) $ } => sub (Str(Match:D) $name) {
 
 post '/run' => sub {
     my $code = request.params<code> or return status 404;
+    my $ret = $glot.run: 'perl6', $code;
+    return trim join "\n", $ret<stdout> // Empty, $ret<stderr> // Empty;
 }
 
 baile;
+
+
+sub _ctemplate (|c) is cached { template |c }

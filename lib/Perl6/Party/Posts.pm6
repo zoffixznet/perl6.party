@@ -10,6 +10,7 @@ method all {
     for @posts {
         my $post = "$_.md".IO.slurp;
         my ($meta, $content) = process $post;
+        next if $meta<draft>;
         @return.push: %(
             name    => $_,
             date    => $meta<date>,
@@ -18,7 +19,7 @@ method all {
             content => markdown( abridge-content $content ),
        );
     }
-    return @return;
+    return @return.sort: *<date>;
 }
 
 method serve ($post) {
