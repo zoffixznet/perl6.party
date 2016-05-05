@@ -55,6 +55,8 @@ function setup_glot_io() {
                 }
             );
 
+            console.log(code);
+
             jQuery.ajax('/run', {
                 method: 'POST',
                 success: function(data) {

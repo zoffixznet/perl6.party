@@ -39,8 +39,15 @@ get rx{ ^ '/post/' (<[a..zA..Z0..9_-]>+) $ } => sub (Str(Match:D) $name) {
 
 post '/run' => sub {
     my $code = request.params<code> or return status 404;
-    my $ret = $glot.run: 'perl6', $code;
-    return trim join "\n", $ret<stdout> // Empty, $ret<stderr> // Empty;
+    $code ~~ s:g/\c[ZERO WIDTH SPACE]//;
+    say '----';
+    say $code;
+    my $ret = $glot.run: 'perl6', $code ~ "\n";
+    say '----';
+    my $out = trim join "\n", $ret<stdout> // Empty, $ret<stderr> // Empty;
+    say $out;
+    say '----';
+    return $out;
 }
 
 baile;
