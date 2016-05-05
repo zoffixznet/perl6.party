@@ -19,7 +19,7 @@ method all {
             content => markdown( abridge-content $content ),
        );
     }
-    return @return.sort: *<date>;
+    return @return.sort: { $^b<date> cmp $^a<date> };
 }
 
 method serve ($post) {

@@ -1,5 +1,5 @@
 %% title: There Are Traitors In Our Midst!
-%% date: May 2, 2016
+%% date: 2016-05-02
 
 *Ahoy, matey! I heard thar be traitors in our ranks! We need t' search t' ship 'n find every last one o' them, put them through exquisite torture, 'n then make them swim t' plank. Now t' ye, I gift a task! Learn everythin' ye can 'bout these traitors 'n all o' t' "traits" they use. Ye succeed, a full barrel o' spiced rum gunna be me generous gift t' ye!*
 
@@ -66,7 +66,7 @@ you'll need the `is rw` trait...
 The `rw` in `is rw` trait is short for "read-write" and this concise trait
 packs a ton of value. Let's break it up:
 
-###### modifying caller's values
+##### modifying caller's values
 
     sub foo ($x is rw) { $x = 42 };
 
@@ -79,7 +79,7 @@ to caller's variable. Modifying this parameter will affect the caller, as can
 be seen above, where we change the value of `$original` by assigning to the
 parameter inside the sub.
 
-###### writable attributes
+##### writable attributes
 
     class Foo {
         has $.foo is rw;
@@ -96,7 +96,7 @@ relevant to the public interface; inside the class, you can still modify
 the values of even read-only attributes using the `$!` twigil
 (i.e. `$!bar = 42`).
 
-###### LHS subroutines/methods
+##### LHS subroutines/methods
 
 The `is rw` trait applied to attibutes, as you've seen in previous section,
 is just syntax sugar for automatically creating a private attribute and
@@ -192,7 +192,7 @@ The `of` trait gets an honourable mention. It's used in
 [creation of subsets](http://blogs.perl.org/users/zoffix_znet/2016/04/perl-6-types-made-for-humans.html)
 or, for example, restricting elements of an array to a particular type.
 
-#### Conclusion
+## Conclusion
 
 This isn't an exhaustive list of
 [traits in Rakudo Perl 6 compiler](https://github.com/rakudo/rakudo/blob/nom/src/core/traits.pm), but these are the traits you'll likely use most often in your programs. Unmentioned are
