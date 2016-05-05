@@ -5,7 +5,7 @@ Coming from a Perl 5 background, my first experience with Perl 6's non-destructi
 
 <p style="text-align: center">
     <small><i>(artist's impression)</i></small><br>
-    <img src="stock/20160428-Substitutions.gif" style="display: block; margin: 20px auto;">
+    <img src="/assets/stock/20160428-Substitutions.gif" style="display: block; margin: 20px auto;">
 </p>
 
 You'll fare better, I'm sure. Not only have the error messages improved, but I'll also explain everything right here and now.

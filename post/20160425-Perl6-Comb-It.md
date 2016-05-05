@@ -17,7 +17,7 @@ you don't get strings, you get [`Match` objects](http://docs.perl6.org/type/Matc
 While Matches are fine, let's look at a tool more suited for the job:
 [The `comb`](http://docs.perl6.org/routine/comb)
 
-<img src="stock/20160425-Perl6-Comb-It.jpg" height=400>
+<img src="/assets/stock/20160425-Perl6-Comb-It.jpg" height=400>
 
 ## Plain 'Ol Characters
 
