@@ -25,7 +25,7 @@ get '/about' => sub {
     _ctemplate 'about.tt', :posts($posts.all), :active-page<about>;
 }
 
-get rx{ ^ '/post/' (<[a..zA..Z0..9_-]>+) $ } => sub (Str(Match:D) $name) {
+get rx{ ^ '/post/' (<[a..zA..Z0..9_.-]>+) $ } => sub (Str(Match:D) $name) {
     return status 404 unless .f and .r given "post/$name.md".IO;
     my ($meta, $post) = $posts.serve: "post/$name.md";
     _ctemplate 'post.tt',
