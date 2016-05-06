@@ -13,7 +13,11 @@ $color-body: #f6f6f6;
     pre { background: none; }
 }
 
-body {
+body, .blog-footer {
+    background: lighten($color-body, 50%);
+}
+
+.bg {
     background: $color-body;
 }
 
@@ -66,6 +70,7 @@ hr {
 }
 
 footer {
+    background: lighten($color-body, 50%);
     padding-top: 20px;
 
     .fork-it,

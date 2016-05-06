@@ -21,17 +21,19 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="bg">
+        <div class="container">
 
-      <div class="blog-header">
-        <h1 class="blog-title"><%= try { EVAL '$post-title' } // 'Perl 6 Party' %></h1>
-      </div>
+          <div class="blog-header">
+            <h1 class="blog-title"><%= try { EVAL '$post-title' } // 'Perl 6 Party' %></h1>
+          </div>
 
-      <div class="row">
-        <div class="col-sm-12 blog-main">
-          <%= $_content %>
+          <div class="row">
+            <div class="col-sm-12 blog-main">
+              <%= $_content %>
+            </div>
+          </div>
         </div>
-      </div>
     </div>
 
     <footer class="blog-footer">
