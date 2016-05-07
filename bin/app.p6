@@ -1,4 +1,7 @@
-use lib <lib>;
+use lib
+    # '/home/zoffix/CPANPRC/Bailador-Plugin-Static/lib',
+    # '/home/zoffix/CPANPRC/AssetPack',
+    'lib';
 
 use experimental :cached;
 use Bailador::App;
@@ -28,7 +31,7 @@ class Party is Bailador::App {
             _ctemplate self, 'about.tt', :posts($posts.all), :active-page<about>;
         }
 
-        self.get: rx{ ^ '/post/' (<[a..zA..Z0..9_-]>+) $ } => sub (Str(Match:D) $name) {
+        self.get: rx{ ^ '/post/' (<[a..zA..Z0..9_.-]>+) $ } => sub (Str(Match:D) $name) {
             return self.response.code: 404 unless .f and .r given "post/$name.md".IO;
             my ($meta, $post) = $posts.serve: "post/$name.md";
             _ctemplate self, 'post.tt',

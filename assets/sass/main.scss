@@ -19,6 +19,7 @@ body, .blog-footer {
 
 .bg {
     background: $color-body;
+    padding-bottom: 30px;
 }
 
 pre {
@@ -59,7 +60,7 @@ h2:not(.blog-post-title):hover, h3:hover, h4:hover, h5:hover, h6:hover {
     }
 }
 
-h2:not(.blog-post-title) { font-size: 200%; }
+h2:not(.blog-post-title) { font-size: 230%; }
 h3 { font-size: 180%; }
 h4 { font-size: 160%; margin-top: 40px; }
 h5 { font-size: 140%; margin-top: 30px; }
