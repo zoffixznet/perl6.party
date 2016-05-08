@@ -57,7 +57,7 @@ class Party is Bailador::App {
         }
     }
 
-    sub _ctemplate ($self, |c) is cached { $self.template: |c }
+    sub _ctemplate ($self, |c) { $self.template: |c }
 }
 
 given HTTP::Easy::PSGI.new(:host<0.0.0.0>, :3000port) {
