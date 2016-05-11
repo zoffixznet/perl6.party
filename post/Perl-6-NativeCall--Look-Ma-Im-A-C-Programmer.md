@@ -28,7 +28,7 @@ already!
 ## The Standard C Library
 
 If no argument is given to `is native` trait, it will look in the Standard
-C Library. Those coming from Perl 5 often notice there's no `fork()` in Perl 6. The
+C Library. Programmers coming from Perl 5 often notice there's no `fork()` in Perl 6. The
 reason for that is that, unlike in Perl 5, it's almost never needed, but
 thanks to NativeCall, it *is* actually "there":
 
