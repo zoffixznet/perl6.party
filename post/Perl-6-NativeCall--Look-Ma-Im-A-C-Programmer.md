@@ -45,9 +45,15 @@ thanks to NativeCall, it *is* actually "there":
     sleep .5;
     say 'Hello, World!';
 
+    # OUTPUT:
+    # I'm a parent. The kid is at 13099
+    # I'm a kid!
+    # Hello, World!
+    # Hello, World!
+
 On the first line, we `use` the NativeCall module to bring in its
 functionality. The second line is where all the magic happens. We declare
-a sub with empty body. The sub is sporting `is native` trait which tells the
+a sub with an empty body. The sub is sporting `is native` trait which tells the
 compiler we want a C library function, and since the name of the library
 isn't there, we want the Standard Library.
 
@@ -58,7 +64,7 @@ find `pid_t` can be represented as a C `int` and if we look up an `int`
 in the [handy table mapping C and Perl 6 types](http://docs.perl6.org/language/nativecall#Passing_and_Returning_Values), you'll notice we can use
 `int32` Perl 6 native type, which is what we specified in the `returns` trait.
 
-And that is it! All the rest of our code uses `fork()` as if it were a Perl 6
+And that is it! The rest of our code uses `fork()` as if it were a Perl 6
 sub. It will be looked up in the library on the first call and cached for any subsequent look ups.
 
 ## Basic Use of Libraries
