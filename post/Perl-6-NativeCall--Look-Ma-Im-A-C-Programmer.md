@@ -97,7 +97,7 @@ give the trait two arguments: the library name and its version.
 Notice how
 the name lacks any `lib` prefixes or `.so` suffixes. Those are not needed, as
 NativeCall figures out what those should be automatically, based on the
-Operating System the code is running on.
+operating system the code is running on.
 
 The version is optional, but it's not recommended that you omit it, since
 then you never know whether the version that's loaded is compatible with your
@@ -110,7 +110,7 @@ The one thing to look at are the C function prototypes for these two subs:
     driver_return_code_t    cdio_close_tray (const char *psz_drive, driver_id_t *p_driver_id)
 
 That look mighty fancy and doesn't seem like we reproduced them exactly in our
-Perl 6 code. I'm cheetsy-doodling here a bit: I pass Str typeobject instead
+Perl 6 code. I'm cheetsy-doodling here a bit: I pass Str type object instead
 of an actual string to pass `NULL`, and I looked up what `int` value will
 work for `p_driver_id` so I don't have to mess with structs or enums, for now.
 
