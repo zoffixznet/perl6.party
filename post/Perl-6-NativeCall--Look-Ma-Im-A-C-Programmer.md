@@ -65,7 +65,11 @@ sub. It will be looked up in the library on the first call and cached for any su
 
 For our learning pleasure, I'll be using
 [libcdio](http://www.gnu.org/software/libcdio/) library that lets you
-mess around with CDs and CD-ROMs (anybody still got those?). I'm going to
+mess around with CDs and CD-ROMs (anybody still got those?). On Debian,
+I'll just need `libcdio13` package. Notice is it *not* the `-dev` version and
+on my box it was actually already installed.
+
+I'm going to
 create a Perl 6 program called `troll.p6` that opens and closes the CD tray:
 
     use NativeCall;
@@ -131,3 +135,8 @@ The usage is simple: name your sub whatever you want its name to be, then
 use `is symbol` trait and use the C function name as its argument. And that's
 it! With just a couple of lines of code, we're making a call into a C library
 and we're using purty sub names to do it!
+
+## Conclusion
+
+Today we've seen a glimpse of the power Perl 6 provides when it comes to
+C libraries.
