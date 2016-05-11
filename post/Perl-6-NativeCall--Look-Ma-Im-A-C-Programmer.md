@@ -109,7 +109,7 @@ The one thing to look at are the C function prototypes for these two subs:
     driver_return_code_t    cdio_eject_media_drive (const char *psz_drive)
     driver_return_code_t    cdio_close_tray (const char *psz_drive, driver_id_t *p_driver_id)
 
-That look mighty fancy and it doesn't seem like we reproduced them exactly in our
+That looks mighty fancy and it seems like we haven't reproduced them exactly in our
 Perl 6 code. I'm cheetsy-doodling here a bit: while Str is correct for `const char *`, I looked up what `int` value will work for `p_driver_id` so I don't
 have to mess with structs or enums, for now. I'm also ignoring return types
 which may be a bad idea and makes my code less predictable and perhaps less
