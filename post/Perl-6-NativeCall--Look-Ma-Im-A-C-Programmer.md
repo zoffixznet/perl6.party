@@ -110,7 +110,7 @@ The one thing to look at are the C function prototypes for these two subs:
     driver_return_code_t    cdio_close_tray (const char *psz_drive, driver_id_t *p_driver_id)
 
 That looks mighty fancy and it seems like we haven't reproduced them exactly in our
-Perl 6 code. I'm cheetsy-doodling here a bit: while Str is correct for `const char *`, I looked up what `int` value will work for `p_driver_id` so I don't
+Perl 6 code. I'm cheetsy-doodling here a bit: while `Str` is correct for `const char *`, I looked up what `int` value will work for `p_driver_id` so I don't
 have to mess with structs or enums, for now. I'm also ignoring return types
 which may be a bad idea and makes my code less predictable and perhaps less
 portable as well. When making calls to subs, I used the type object
@@ -121,7 +121,7 @@ I'll leave more detailed coverage of passing arguments around for future article
 ## Renaming Functions
 
 One thing that sucks about C functions is they're often named with
-snake_case, which is an eyesore in Perl 6 and it's shiny kebob-case.
+snake_case, which is an eyesore in Perl 6 with it's shiny kebob-case.
 Luckily, the fix is just a trait away:
 
     use NativeCall;
@@ -139,8 +139,8 @@ Luckily, the fix is just a trait away:
     say "Ha! Too slow!";
     close-tray Str, 0;
 
-The usage is simple: name your sub whatever you want its name to be, then
-use `is symbol` trait and use the C function name as its argument. And that's
+The usage is simple: name your sub with whatever you want its name to be, then
+use `is symbol` trait and use the C function's name as its argument. And that's
 it! With just a couple of lines of code, we're making a call into a C library
 and we're using purty sub names to do it!
 
