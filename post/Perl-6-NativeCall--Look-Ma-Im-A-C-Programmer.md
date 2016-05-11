@@ -110,9 +110,11 @@ The one thing to look at are the C function prototypes for these two subs:
     driver_return_code_t    cdio_close_tray (const char *psz_drive, driver_id_t *p_driver_id)
 
 That look mighty fancy and doesn't seem like we reproduced them exactly in our
-Perl 6 code. I'm cheetsy-doodling here a bit: I pass Str type object instead
-of an actual string to pass `NULL`, and I looked up what `int` value will
-work for `p_driver_id` so I don't have to mess with structs or enums, for now.
+Perl 6 code. I'm cheetsy-doodling here a bit: while Str is correct for `const char *`, I looked up what `int` value will work for `p_driver_id` so I don't
+have to mess with structs or enums, for now. I'm also ignoring return types
+which may be a bad idea and makes my code less predictable and perhaps less
+portable as well. When making calls to subs, I used the type object
+`Str` for the strings. That translates to a `NULL` in C.
 
 I'll leave more detailed coverage of passing arguments around for future articles. Right now, there's a more serious issue that needs fixing. The names!
 
