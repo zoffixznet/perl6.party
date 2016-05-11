@@ -139,4 +139,10 @@ and we're using purty sub names to do it!
 ## Conclusion
 
 Today we've seen a glimpse of the power Perl 6 provides when it comes to
-C libraries.
+C libraries. It lets you get pretty far without needing a C compiler.
+
+In future posts in the series, we'll learn more about passing data around
+as well as various helpers that do the heavy lifting.
+
+See you next time!
+
