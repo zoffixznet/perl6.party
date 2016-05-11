@@ -7,7 +7,7 @@ C libraries without writing any C code. It was cool and clickbaity, but I quickl
 
 And so has [started](http://learnxinyminutes.com/docs/c/) my
 path to [re-learn C](http://www.amazon.com/Programming-Language-Brian-W-Kernighan/dp/0131103628)
-(I barely ever used it and it was over a decade ago) and to learn Perl 6's NativeCal in great detail. Oh, and I'll blog about my journey in a series of bite-sized posts. Let's begin!
+(I barely ever used it and it was over a decade ago) and to learn Perl 6's NativeCall in great detail. Oh, and I'll blog about my journey in a series of bite-sized posts. Let's begin!
 
 ## Use C Libraries Without Writing Any C Code!
 
@@ -28,7 +28,7 @@ already!
 ## The Standard C Library
 
 If no argument is given to `is native` trait, it will look in the Standard
-C Library. Perl 5 converts often notice there's no `fork()` in Perl 6. The
+C Library. Those coming from Perl 5 often notice there's no `fork()` in Perl 6. The
 reason for that is that, unlike in Perl 5, it's almost never needed, but
 thanks to NativeCall, it *is* actually "there":
 
