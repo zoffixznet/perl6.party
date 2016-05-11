@@ -53,7 +53,7 @@ thanks to NativeCall, it *is* actually "there":
 
 On the first line, we `use` the NativeCall module to bring in its
 functionality. The second line is where all the magic happens. We declare
-a sub with an empty body. The sub is sporting `is native` trait which tells the
+a sub with an empty body and name it the same as its named in the C library. The sub is sporting `is native` trait which tells the
 compiler we want a C library function, and since the name of the library
 isn't there, we want the Standard Library.
 
