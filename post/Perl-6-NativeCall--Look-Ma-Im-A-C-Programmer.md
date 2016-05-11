@@ -38,7 +38,7 @@ thanks to NativeCall, it *is* actually "there":
 
     given fork() {
         when 0     { say "I'm a kid!";                       };
-        when * > 0 { say "I'm a parent. The kid is at $_"; };
+        when * > 0 { say "I'm a parent. The kid is at $_";   };
         default    { die "Failed :(";                        };
     }
 
