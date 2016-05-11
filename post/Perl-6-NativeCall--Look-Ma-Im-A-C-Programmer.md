@@ -127,7 +127,7 @@ Luckily, the fix is just a trait away:
     use NativeCall;
 
     sub open-tray(Str) is native('cdio', v13)
-        is symbol('cdio_eject_media_drive'){};
+        is symbol('cdio_eject_media_drive') {};
 
     sub close-tray(Str, int32) is native('cdio', v13)
         is symbol('cdio_close_tray') {};
