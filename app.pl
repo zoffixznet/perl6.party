@@ -9,6 +9,7 @@ use Perl5::Party::Posts;
 
 use constant GLOT_KEY => '02fb41ba-78cd-44d8-9f30-2a28350000a8';
 my $posts = Perl5::Party::Posts->new;
+my $ua = Mojo::UserAgent->new;
 
 get '/about';
 
@@ -30,7 +31,7 @@ post '/run' => sub {
         or return $c->reply->not_found;
     $code =~ s/\N{ZERO WIDTH SPACE}//g;
 
-    Mojo::UserAgent->new->post(
+    $ua->post(
         'https://run.glot.io/languages/perl6/latest' => {
             'Content-type'  => 'application/json',
             'Authorization' => 'Token ' . GLOT_KEY,
