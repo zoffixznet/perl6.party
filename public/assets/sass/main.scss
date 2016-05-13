@@ -104,3 +104,15 @@ footer {
         background: darken($color-body, 10%);
     }
 }
+
+.blog-nav {
+    font-size: 130%;
+
+    a {
+        color: #eDeDEB;
+    }
+}
+
+.blog-post-meta {
+    color: #888;
+}
