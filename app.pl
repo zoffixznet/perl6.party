@@ -38,10 +38,9 @@ post '/run' => sub {
         } => json => { files => [{ name => 'main.p6', content => $code }] }
         => sub {
             my ($ua, $tx) = @_;
-            my $out = $tx->res;
-            # $out = trim join "\n", $out->{stdout} // (), $out->{stderr} // ();
-            use Data::Dumper;
-            say Dumper $out;
+            my $out = $tx->res->json;
+            $out = trim join "\n", $out->{stdout} // (),
+                $out->{stderr} ? "STDERR:\n$out->{stderr}" : ();
             $c->render( text => $out );
         },
     );
