@@ -3,6 +3,7 @@
 use lib qw<lib>;
 use Mojolicious::Lite;
 use Mojo::UserAgent;
+use Mojo::Config;
 use Mojo::Util qw/trim/;
 use Text::Markdown;
 use Perl5::Party::Posts;
@@ -10,6 +11,8 @@ use Perl5::Party::Posts;
 use constant GLOT_KEY => '02fb41ba-78cd-44d8-9f30-2a28350000a8';
 my $posts = Perl5::Party::Posts->new;
 my $ua = Mojo::UserAgent->new;
+
+config { hypnotoad => { listen => 'http://*:3000' }};
 
 get '/about';
 
