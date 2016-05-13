@@ -1,0 +1,9 @@
+% layout 'default';
+% title 'Welcome';
+
+% for my $p ( @$posts ) {
+    <div class="blog-post">
+        <h2 class="blog-post-title"><a href="<%= $p->{link} %>"><%= $p->{title} %></a></h2>
+        <p class="blog-post-meta"><%= $p->{date} %> by <a href="http://twitter.com/zoffix">Zoffix Znet</a></p>
+    </div>
+% }
