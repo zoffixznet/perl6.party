@@ -12,6 +12,7 @@ use constant GLOT_KEY => '02fb41ba-78cd-44d8-9f30-2a28350000a8';
 my $posts = Perl5::Party::Posts->new;
 my $ua = Mojo::UserAgent->new;
 
+app->plugin('Config');
 config { hypnotoad => { listen => 'http://*:3000' }};
 
 get '/about';
