@@ -4,3 +4,4 @@ lib/.precomp/
 *.map
 assets/sass/main.css
 test.p6
+hypnotoad.pid
