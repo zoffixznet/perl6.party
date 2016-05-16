@@ -5,7 +5,7 @@
 
 ## PART I: *Anguish*: The Invisible Programming Language
 
-You may be familiar with funky isoteric languages like [Ook](http://esolangs.org/wiki/Ook!) or even [Whitespace](https://en.wikipedia.org/wiki/Whitespace_%28programming_language%29). Those are fun and neat, but I've decided to dial up the crazy a notch and make a completely invisible programming language!
+You may be familiar with funky esoteric languages like [Ook](http://esolangs.org/wiki/Ook!) or even [Whitespace](https://en.wikipedia.org/wiki/Whitespace_%28programming_language%29). Those are fun and neat, but I've decided to dial up the crazy a notch and make a completely invisible programming language!
 
 I named it *Anguish* and, based on my quick googling, I may be a lone wolf at this depth of insanity. In this article, I'll describe the language, go over my implementation of its interpreter, and then talk about some security implications that come with invisible code.
 
@@ -43,7 +43,7 @@ and Anguish versions of them on the right:
     [   [‌] U+200C ZERO WIDTH NON-JOINER [Cf]
     ]   [‍] U+200D ZERO WIDTH JOINER [Cf]
 
-These are—by far—not the only insible Unicode characters and my choice was
+These are—by far—not the only invisible Unicode characters and my choice was
 more or less arbitrary. However, most of the ones I chose can actually be
 abused into Perl 6 terms and operators, which I'll show in Part II.
 
@@ -185,7 +185,7 @@ Let's get evil!
 
 ### Exporting Malicious Operators
 
-Now, if we just plop down our data theiving code in the middle of an
+Now, if we just plop down our data thieving code in the middle of an
 important piece of software, someone will likely notice it. Instead, we'll
 insert it into and export from some auxiliary module no one's likely to
 start poking in. We'll also disguise our code with a clever comment to make
