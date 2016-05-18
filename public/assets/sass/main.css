@@ -6214,6 +6214,8 @@ h2:not(.blog-post-title), h3, h4, h5, h6 {
 article p {
   margin-bottom: 30px;
   line-height: 1.7em; }
+article > pre {
+  margin-top: -30px; }
 
 h2:not(.blog-post-title):hover .title-anchor, h3:hover .title-anchor, h4:hover .title-anchor, h5:hover .title-anchor, h6:hover .title-anchor {
   visibility: visible; }

@@ -49,9 +49,15 @@ h2:not(.blog-post-title), h3, h4, h5, h6 {
     }
 }
 
-article p {
-    margin-bottom: 30px;
-    line-height: 1.7em;
+article {
+    p {
+        margin-bottom: 30px;
+        line-height: 1.7em;
+    }
+
+    > pre {
+        margin-top: -30px;
+    }
 }
 
 h2:not(.blog-post-title):hover, h3:hover, h4:hover, h5:hover, h6:hover {
