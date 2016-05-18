@@ -79,7 +79,7 @@ not through the whole list:
 
     say 120.polymod:      10¹, 10², 10³, 10⁴, 10⁵;
     say 120.polymod: lazy 10¹, 10², 10³, 10⁴, 10⁵;
-    say 120.polymod:      10¹, 10² … ∞;
+    say 120.polymod:      10¹, 10², 10³ … ∞;
 
     # OUTPUT:
     # (0 12 0 0 0 0)
