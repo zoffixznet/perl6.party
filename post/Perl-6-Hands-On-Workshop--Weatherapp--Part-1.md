@@ -1,6 +1,5 @@
 %% title: Perl 6 Hands-On Workshop: Weatherapp (Part 1)
 %% date: 2016-05-20
-%% draft: True
 
 *Welcome to the Perl 6 Hands-On Workshop, or Perl 6 HOW, where instead of
 learning about a specific feature or technique of Perl 6, we'll be learning
@@ -117,7 +116,7 @@ have to make yourself, as a programmer.
 Even if you choose not to include other languages (and we won't, for the
 purposes of this tutorial), it's always a good idea to take a look at prior art.
 Not only can we see how other people solved similar problems and use their
-ideas, and for our program we can also see which weather Web service people
+ideas, but for our program we can also see which weather Web service people
 tend to use.
 
 The two pieces we'll examine are Perl 5's
@@ -127,11 +126,11 @@ They use different services, return their results in different formats
 (Perl 5's native data structures vs. objects), and the data contains
 varying amounts of detail.
 
-I like ::OpenWeatherMap's approach with returning results as objects, since the
+I like ::OpenWeatherMap's approach of returning results as objects, since the
 data can be abstracted and we can add useful methods if we ever need to,
 however, traversing its documentation is more difficult than that of
 ::Underground—even more so for someone not overly familiar with Object
-Orientation. So in our program, I think we can return objects, but have
+Orientation. So in our program, I think we can return objects, but we'll have
 fewer of them. We'll think more about that during design stage.
 
 Also, the implementations suggest none of the two Web services offer humidex or
@@ -148,7 +147,7 @@ future. The [website](https://www.wunderground.com/) is pretty slow,
 has two giant ads, has poor usability,
 and the availability of the API isn't apparent right away
 (the link to it is in the footer). While those aren't direct indicators of
-what the service is like, there's some correlation.
+the quality of the service, there tends to be at least some correlation.
 
 When we get to the [API service level options](https://www.wunderground.com/weather/api/d/pricing.html), we see
 the free version has rather low limits: 10 requests per minute up to a maximum
@@ -165,9 +164,10 @@ I'd try to avoid this service if I have a choice.
 Up next, Weather::OpenWeatherMap's
 service—[www.openweathermap.org](http://www.openweathermap.org/). Nicer
 and faster website, unintrusive ads, the API link is right in the navigation
-and leads to clear summary of the APIs offered. The
+and leads to a clear summary of the APIs offered. The
 [free version](http://www.openweathermap.org/price) limits are much better too:
-60 requests per minute. Signing up for the API key is simpler—no annoying
+60 requests per minute, without a daily limit.
+Signing up for the API key is simpler as well—no annoying
 email confirmations. And [docs](http://www.openweathermap.org/current)
 are excellent. Even though humidex and wind chill aren't available,
 the docs explicitly state how many worldwide weather stations the site offers,
@@ -191,14 +191,14 @@ need to update our docs to reflect that.
 
 You can also update it to reflect some other service you found. Perhaps,
 don't mention the specific data types, but rather the purpose of the
-returned weather update. Is it for a city dweller to know what to wear in the
+weather information. Is it for a city dweller to know what to wear in the
 morning? Is it for a farmer to know when to sow the crops? Or is the data to
 be used in a research project?
 
 ### Conclusion
 
 Today, we started our design docs by defining the scope of our application.
-We then looked at prior art written in Perl 6 (found none) and other languages.
+We then looked at prior art written in Perl&nbsp;6 (found none) and other languages.
 We evaluated to services that provide weather data on their potential quality,
 reliability, query limits, and feature sets.
 
