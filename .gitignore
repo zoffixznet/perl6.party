@@ -5,3 +5,6 @@ lib/.precomp/
 assets/sass/main.css
 test.p6
 hypnotoad.pid
+assets/assetpack.db
+assets/cache/
+

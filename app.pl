@@ -12,8 +12,15 @@ my $ua = Mojo::UserAgent->new;
 
 app->config( { hypnotoad => { listen => ['http://*:3000'], proxy => 1 }} );
 
-plugin 'AssetPack' => { pipes => [qw/Less Sass Css JavaScript/] };
-app->asset->process( 'app.css' => 'assets/sass/main.scss' );
+plugin 'AssetPack' => { pipes => [qw/Less Sass Css JavaScript Combine/] };
+app->asset->process( 'app.css' => 'sass/main.scss' );
+app->asset->process( 'app.js' => qw{
+        js/ie10-viewport-bug-workaround.js
+        js/codemirror/codemirror.min.js
+        js/codemirror/perl6-mode.js
+        js/main.js
+    }
+);
 
 ### Routes
 
