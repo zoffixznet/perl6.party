@@ -1,5 +1,5 @@
 %% title: Perl 6 Hands-On Workshop: Weatherapp [Part 1]
-%% date: 2016-05-18
+%% date: 2016-05-20
 %% draft: True
 
 *Welcome to the Perl 6 Hands-On Workshop, or Perl 6 HOW, where instead of
@@ -85,42 +85,125 @@ Anyway, time to go shopping!
 ## Research and Prior Art
 
 Before we write anything, let's see if someone already wrote it for us.
-Searching [the ecosystem](http://modules.perl6.org/) for `weather` gives
+Searching [the ecosystem](https://modules.perl6.org/) for `weather` gives
 zero results, at the time of this writing, so it looks like if we want
 this in pure Perl 6, we have to write it from scratch. Lack of Perl 6
 implementation doesn't *always* mean you have to write anything, however.
 
+### Use multiple languages
+
 What zealots who endlessly diss everything that isn't their favourite language
 don't tell you is their closet is full of reinvented wheels, created for
-no good reason. You can use C libraries with [NativeCall](http://docs.perl6.org/language/nativecall),
+no good reason. You can use C libraries with [NativeCall](https://docs.perl6.org/language/nativecall),
 most of Perl 5 modules with
-[Inline::Perl5](http://modules.perl6.org/repo/Inline::Perl5), and there's
-[a handful of other Inlines](http://modules.perl6.org/#q=Inline) in the
+[Inline::Perl5](https://modules.perl6.org/repo/Inline::Perl5), and there's
+[a handful of other Inlines](https://modules.perl6.org/#q=Inline) in the
 ecosystem, including Python and Ruby. When instead of spending several weeks
 designing, writing, and testing code you can just use someone's library that
-did all that already, you are a winner!
+did all that already, you are the winner!
 
 That's not to say such an approach is always the best one. First, you're
 adding extra dependencies that can't be automatically installed by
-[`panda`](http://modules.perl6.org/dist/panda) or
+[`panda`](https://modules.perl6.org/dist/panda) or
 [`zef`](https://modules.perl6.org/dist/zef). The C library you used might
 not be available at all for the system you're deploying your code on.
 `Inline::Perl5` requires perl compiled with `-fPIC`, which may not be the
 case on user's box. And your client may refuse to involve Python without
-ever giving you a reason why. This is a decision you'll have to make yourself.
+ever giving you a reason why. How to approach this issue is a decision you'll
+have to make yourself, as a programmer.
 
+### ~~Steal~~ Borrow Ideas
 
+Even if you choose not to include other languages (and we won't, for the
+purposes of this tutorial), it's always a good idea to take a look at prior art.
+Not only can we see how other people solved similar problems and use their
+ideas, and for our program we can also see which weather Web service people
+tend to use.
 
----
+The two pieces we'll examine are Perl 5's
+[Weather::Underground](https://metacpan.org/pod/Weather::Underground) and
+[Weather::OpenWeatherMap](https://metacpan.org/pod/Weather::OpenWeatherMap).
+They use different services, return their results in different formats
+(Perl 5's native data structures vs. objects), and the data contains
+varying amounts of detail.
 
+I like ::OpenWeatherMap's approach with returning results as objects, since the
+data can be abstracted and we can add useful methods if we ever need to,
+however, traversing its documentation is more difficult than that of
+::Underground—even more so for someone not overly familiar with Object
+Orientation. So in our program, I think we can return objects, but have
+fewer of them. We'll think more about that during design stage.
 
+Also, the implementations suggest none of the two Web services offer humidex or
+windchill values. We'll ask our client how badly they need those values and
+try to find another service,
+if they are absolutely required. A more common case will be where the more
+expensive plan of the service offers a feature while the free or less expensive
+doesn't. The client will have to decide how much they wish to splurge in that
+case.
 
-Imagine writing 10,000 lines of code and then throwing it all away.
-Turns out when the client said "easy to use,"
-they meant being able to access the app without a password, but you took it
-to mean a "smart" UI that figures out user's setup and stores it together
-with their account information. Ouch.
+Weather::Underground's service seems to offer more types of data, so let's
+look at it first. Even if we don't need those right now, we might in the
+future. The [website](https://www.wunderground.com/) is pretty slow,
+has two giant ads, has poor usability,
+and the availability of the API isn't apparent right away
+(the link to it is in the footer). While those aren't direct indicators of
+what the service is like, there's some correlation.
 
-Our weather reporting app as
-a script run by one user from command line will be vastly different than
-the same app but run by millions of users per day from a Web application.
+When we get to the [API service level options](https://www.wunderground.com/weather/api/d/pricing.html), we see
+the free version has rather low limits: 10 requests per minute up to a maximum
+of 500 per day. If you actually try to sign up to the site, you'll encounter a bug where you have to fill out your app's details twice. And the docs?
+[They](https://www.wunderground.com/weather/api/d/docs?d=data/conditions) aren't
+terrible, but it took me a bit to find the description of
+[request parameters](https://www.wunderground.com/weather/api/d/docs?d=data/index). Also,
+none of the response parameters are explained and we're left to wonder
+what `estimated` is and what its properties are when it's not empty, for
+example. The API actually *does* offer windchill and "heat index," but in
+a sample response their values are "N/A". Are they ever available? Overall,
+I'd try to avoid this service if I have a choice.
+
+Up next, Weather::OpenWeatherMap's
+service—[www.openweathermap.org](http://www.openweathermap.org/). Nicer
+and faster website, unintrusive ads, the API link is right in the navigation
+and leads to clear summary of the APIs offered. The
+[free version](http://www.openweathermap.org/price) limits are much better too:
+60 requests per minute. Signing up for the API key is simpler—no annoying
+email confirmations. And [docs](http://www.openweathermap.org/current)
+are excellent. Even though humidex and wind chill aren't available,
+the docs explicitly state how many worldwide weather stations the site offers,
+while Wunderground's site mentions worldwidedness as an afterthought inside
+a broken `<dfn>` hovering over which pops up `Definition not found` message.
+
+The winner is clear: OpenWeatherMap. [Sign up](https://home.openweathermap.org/users/sign_up) for an account and
+generate an [API key](https://home.openweathermap.org/api_keys) for us to use.
+You can use [a throwaway email address](http://www.throwawaymail.com/) for
+registration, if you prefer.
+
+Alternatively, try finding yet another web service that's better suited
+for our weather application!
+
+### Homework
+
+By choosing OpeanWeathMap service we had to abandon providing humidex
+and wind chill in our data that we originally wrote in our design doc.
+We pretended our client OKed changing the requirements of the app, so we
+need to update our docs to reflect that.
+
+You can also update it to reflect some other service you found. Perhaps,
+don't mention the specific data types, but rather the purpose of the
+returned weather update. Is it for a city dweller to know what to wear in the
+morning? Is it for a farmer to know when to sow the crops? Or is the data to
+be used in a research project?
+
+### Conclusion
+
+Today, we started our design docs by defining the scope of our application.
+We then looked at prior art written in Perl 6 (found none) and other languages.
+We evaluated to services that provide weather data on their potential quality,
+reliability, query limits, and feature sets.
+
+At this point we have: start of the design doc, chosen service provider, and
+API key for it. In the next post, we'll write detailed design and tests for our
+app.
+
+See you then!
