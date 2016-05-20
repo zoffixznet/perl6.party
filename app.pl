@@ -10,7 +10,7 @@ use constant GLOT_KEY => '02fb41ba-78cd-44d8-9f30-2a28350000a8';
 my $posts = Perl5::Party::Posts->new;
 my $ua = Mojo::UserAgent->new;
 
-app->config( { hypnotoad => { listen => ['http://*:3000'], proxy => 1 }} );
+app->config({ hypnotoad => { listen => ['http://*:3000'], proxy => 1 } });
 
 plugin 'AssetPack' => { pipes => [qw/Sass JavaScript Combine/] };
 app->asset->process( 'app.css' => 'sass/main.scss' );
