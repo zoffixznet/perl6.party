@@ -122,3 +122,12 @@ footer {
 .blog-post-meta {
     color: #888;
 }
+
+a {
+    code {
+        text-decoration: underline;
+    }
+    code:hover, code:focus, code:active {
+        text-decoration: none;
+    }
+}

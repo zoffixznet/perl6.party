@@ -1,6 +1,5 @@
-%% title: Perl 6 Hands-On Workshop: Weatherapp [Part 1]
+%% title: Perl 6 Hands-On Workshop: Weatherapp (Part 1)
 %% date: 2016-05-20
-%% draft: True
 
 *Welcome to the Perl 6 Hands-On Workshop, or Perl 6 HOW, where instead of
 learning about a specific feature or technique of Perl 6, we'll be learning
@@ -24,7 +23,7 @@ Sounds simple enough! Let's jump in!
 
 ## Preparation
 
-I'm be using Linux with bash shell. If you aren't, you can get a
+I'll be using Linux with bash shell. If you aren't, you can get a
 [good distro](http://www.bodhilinux.com/) and run it in [VirtualBox](https://www.virtualbox.org/wiki/Downloads), or just try to find
 what the equivalent commands are on your OS. It should be fairly easy.
 
@@ -39,16 +38,16 @@ To start, we'll create an empty directory `Weatherapp` and initialize a new
 git repository inside:
 
     mkdir Weatherapp
-    cd !$
+    cd Weatherapp
     git init
 
 ## Design Docs: "Why?"
 
 Before we write down a single line of code we need to know a clear answer
-for what problem you're trying to solve. The "tell weather" is ridiculously
+for what problem we're trying to solve. The statement
+"tell weather" is ridiculously
 vague. Do we need real-time, satellite-tracked wind speeds and pressures
-or is temperature alone for one day for just the locations within United States
-is enough? The answer will drastically change the amount of code written and
+or is it enough to have temperature alone for one day for just the locations within United States? The answer will drastically change the amount of code written and
 the web service we'll choose to use—and some of those are rather expensive.
 
 Let's write the first bits of our design docs: the purpose of the code.
@@ -62,7 +61,7 @@ write out our goal:
     # Purpose
 
     Provide basic information on the current weather for a specified location.
-    The information must be provided for as many countries as possible and
+    The information must be available for as many countries as possible and
     needs to include temperature, possibility of precipitation, wind
     speed, humidex, and windchill. The information is to be provided
     for the current day only (no hourly or multi-day forecasts).
@@ -94,7 +93,7 @@ implementation doesn't *always* mean you have to write anything, however.
 
 What zealots who endlessly diss everything that isn't their favourite language
 don't tell you is their closet is full of reinvented wheels, created for
-no good reason. You can use C libraries with [NativeCall](https://docs.perl6.org/language/nativecall),
+no good reason. In Perl 6, you can use C libraries with [NativeCall](https://docs.perl6.org/language/nativecall),
 most of Perl 5 modules with
 [Inline::Perl5](https://modules.perl6.org/repo/Inline::Perl5), and there's
 [a handful of other Inlines](https://modules.perl6.org/#q=Inline) in the
@@ -112,7 +111,7 @@ case on user's box. And your client may refuse to involve Python without
 ever giving you a reason why. How to approach this issue is a decision you'll
 have to make yourself, as a programmer.
 
-### ~~Steal~~ Borrow Ideas
+### <s>Steal</s> Borrow Ideas
 
 Even if you choose not to include other languages (and we won't, for the
 purposes of this tutorial), it's always a good idea to take a look at prior art.

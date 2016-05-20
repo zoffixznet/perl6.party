@@ -12,6 +12,11 @@ my $ua = Mojo::UserAgent->new;
 
 app->config( { hypnotoad => { listen => ['http://*:3000'], proxy => 1 }} );
 
+plugin 'AssetPack' => { pipes => [qw/Less Sass Css JavaScript/] };
+app->asset->process( 'app.css' => 'assets/sass/main.scss' );
+
+### Routes
+
 get '/about';
 
 get '/' => sub {
