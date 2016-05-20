@@ -214,7 +214,7 @@ As with the earlier example, I've inserted `U+2063` character right before
 `my` in this code. It's our malicious operator that gets automatically
 imported from `SomethingInnocent`. When the code is run, our operator
 gets called with the value of `$credit_card` and we dump it to our secret
-file `DUBUG.txt`. Data theft completed.
+file `DEBUG.txt`. Data theft completed.
 
 ### Wait a minute! What about git commits?
 
