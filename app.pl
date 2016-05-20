@@ -12,7 +12,7 @@ my $ua = Mojo::UserAgent->new;
 
 app->config( { hypnotoad => { listen => ['http://*:3000'], proxy => 1 }} );
 
-plugin 'AssetPack' => { pipes => [qw/Less Sass Css JavaScript Combine/] };
+plugin 'AssetPack' => { pipes => [qw/Sass JavaScript Combine/] };
 app->asset->process( 'app.css' => 'sass/main.scss' );
 app->asset->process( 'app.js' => qw{
         js/ie10-viewport-bug-workaround.js
