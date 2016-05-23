@@ -91,7 +91,7 @@ any $_ => sub {
         link        => "http://perl6.party$_->{link}",
         permaLink   => "http://perl6.party$_->{link}",
         description => $_->{desc},
-    ) for $posts->all->@*;
+    ) for @{ $posts->all };
 
     $c->render(text => $rss->as_string, format => 'xml');
 } for '/feed', '/feed/', '/feed/index';
