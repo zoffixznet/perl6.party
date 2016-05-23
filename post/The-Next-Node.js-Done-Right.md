@@ -1,5 +1,6 @@
 %% title: Perl 6: The Next Node.js, Done Right
 %% date: 2016-03-23
+%% desc: Discussion on Perl 6's JavaScript backend work in progress.
 
 If you've been a programmer for more than a couple of years, then you remember when Node.js first appeared. Some folks were raging about how insanely fast their ecosystem was growing, while others confusedly shrugged, wondering why anyone would want to use a language made for scripting browsers for server side work.
 

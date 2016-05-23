@@ -1,5 +1,6 @@
 %% title: "Anguish": Invisible Programming Language and Invisible Data Theft
 %% date: 2016-05-16
+%% desc: Description of a variant of Brainfuck that uses invisible Unicode characters for its operators and examination of the implication of invisible code on security.
 
 *DISCLAIMER: data theft is a serious crime in many jurisdictions. The author does not condone or encourage anyone to break laws. The information provided here is for educational purposes only.*
 

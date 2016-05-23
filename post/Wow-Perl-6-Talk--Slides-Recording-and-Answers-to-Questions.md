@@ -1,5 +1,6 @@
 %% title: "Wow, Perl 6!" Talk: Slides, Recording, and Answers to Questions
 %% date: 2016-03-31
+%% desc: The overview of cool bits of Perl 6.
 
 Last night I gave a "Wow, Perl 6!" talk at the Toronto Perl Mongers, whom I thank for letting me speak, even after I got lost for 15 minutes in the building the event was hosted at and was subsequently late.
 

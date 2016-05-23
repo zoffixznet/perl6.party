@@ -1,5 +1,6 @@
 %% title: Perl 6 .polymod: Break Up a Number Into Denominations
 %% date: 2016-05-18
+%% desc: Everything about .polymod method.
 
 Back in the day, I wrote Perl 5 module
 [Number::Denominal](https://metacpan.org/pod/Number::Denominal) that breaks up a number into "units," say, 3661 becomes '1 hour, 1 minute, and 1 second'. I felt it was the pinnacle of achievement and awesome to boot.

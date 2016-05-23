@@ -1,5 +1,6 @@
 %% title: There Are Traitors In Our Midst!
 %% date: 2016-05-02
+%% desc: Examination of Perl 6's built-in traits.
 
 *Ahoy, matey! I heard thar be traitors in our ranks! We need t' search t' ship 'n find every last one o' them, put them through exquisite torture, 'n then make them swim t' plank. Now t' ye, I gift a task! Learn everythin' ye can 'bout these traitors 'n all o' t' "traits" they use. Ye succeed, a full barrel o' spiced rum gunna be me generous gift t' ye!*
 

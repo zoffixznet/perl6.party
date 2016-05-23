@@ -1,5 +1,6 @@
 %% title: Extra-Typical Perl 6
 %% date: 2016-04-27
+%% desc: Extending Perl 6's existing types.
 
 Have you ever grabbed an [`Int`](http://docs.perl6.org/type/Int) and thought, *"Boy! I sure would enjoy having an .even method on it!"* Before you beg the core developers [on IRC](irc://irc.freenode.net/#perl6) to add it to Perl 6, let's review some user-space recourse available to you.
 

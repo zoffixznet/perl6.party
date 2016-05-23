@@ -1,5 +1,6 @@
 %% title: How to Make a Perl 6 Module (Bit Rot Thursday)
 %% date: 2016-02-04
+%% desc: Discussion of steps involved in publishing a Perl 6 modules into the Perl 6 ecosystem.
 
 Happy [Bit Rot Thursday](http://blogs.perl.org/users/zoffix_znet/2016/01/bit-rot-thursday.html)! This week I'm taking care of fixing minor issues with packaging of my Perl 6 modules, and so, I'll talk about the general process of
 releasing a Perl 6 module. Let's dive in!

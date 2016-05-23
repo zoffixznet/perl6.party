@@ -18,6 +18,7 @@ sub all {
             name    => $_,
             date    => $meta->{date},
             title   => $meta->{title},
+            desc    => $meta->{desc},
             link    => "/$_",
        };
     }

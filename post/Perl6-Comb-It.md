@@ -1,5 +1,6 @@
 %% title: Comb It!
 %% date: 2016-04-25
+%% desc: Everything about .comb method.
 
 In Perl 5, I always appreciated the convenience of constructs like these two:
 

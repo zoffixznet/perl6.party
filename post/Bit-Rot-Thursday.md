@@ -1,5 +1,6 @@
 %% title: Bit Rot Thursday
 %% date: 2016-01-27
+%% desc: A plan to combat Bit Rot in software. Cause and solutions.
 
 ## Part 1: There is a Problem
 

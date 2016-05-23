@@ -1,5 +1,6 @@
 %% title: Why in The World Would Anyone Use Perl 6?
 %% date: 2016-01-12
+%% desc: Musings on why Perl 6 is awesome.
 
 I mean, can you get it any more WRONG?! The juvenile logo and awful color scheme of the website.
 The Christmas release that isn't all release-like. Version 6.c? Why not 6.0?

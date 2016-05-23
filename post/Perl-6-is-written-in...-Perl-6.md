@@ -1,5 +1,6 @@
 %% title: Perl 6 is written in... Perl 6
 %% date: 2016-01-22
+%% desc: Discussion of Rakudo Perl 6 compiler's implementation.
 
 Today, I've done something strange.
 

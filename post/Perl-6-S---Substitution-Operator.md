@@ -1,5 +1,6 @@
 %% title: The S/// Operator
 %% date: 2016-04-28
+%% desc: Everything about how to use the S/// non-destructive substitution operator.
 
 Coming from a Perl 5 background, my first experience with Perl 6's non-destructive substitution operator `S///` looked something like this:
 

@@ -1,5 +1,6 @@
 %% title: The Perl 6 User Experience
 %% date: 2016-01-14
+%% desc: Announcement of Perl 6's User Experience repository.
 
 A person's experience with a programming language involves many aspects: how
 a user first learns that a language exists, their first steps in that language,

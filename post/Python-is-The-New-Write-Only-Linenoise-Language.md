@@ -1,5 +1,6 @@
 %% title: Python is The New "Write-Only, Linenoise" Language
 %% date: 2016-01-20
+%% desc: Attempting to answer most commonly asked Python StackOverflow questions in Perl 6.
 
 As a Perl 5 programmer of about a decade, I'm well aware of how it was referred to at some point or another as the "write-only" and "linenoise" language. With the newest addition of the baby Perl 6 language to the Perl family, I fear that I must <s>declare</s> (wildly speculate) based on my <s>extensive research</s> (a boring ride on a bus, while staring at my phone) that Python steals that title now!!
 

@@ -1,5 +1,6 @@
 %% title: Perl 6: Shortcuts (Part 1)
 %% date: 2016-02-01
+%% desc: Examination of available ways to write more concise code.
 
 Programming is a task where laziness is a virtue. We write modules to avoid repeatedly writing subroutines. We write subroutines to avoid repeatedly writing loops. We write loops to avoid repeatedly writing code... And there's another level of laziness: we use language shortcuts to avoid writing too much code.
 

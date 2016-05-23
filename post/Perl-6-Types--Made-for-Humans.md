@@ -1,5 +1,6 @@
 %% title: Types: Made for Humans
 %% date: 2016-04-04
+%% desc: Description of Perl 6's type system and how to define your own subsets.
 
 In my first college programming course, I was taught that Pascal language
 has `Integer`, `Boolean`, and `String` types among others. I learned the types

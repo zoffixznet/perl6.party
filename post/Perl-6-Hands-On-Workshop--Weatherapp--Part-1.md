@@ -1,5 +1,6 @@
 %% title: Perl 6 Hands-On Workshop: Weatherapp (Part 1)
 %% date: 2016-05-20
+%% desc: Developing a weather reporting application. Part 1: narrowing scope and doing research.
 
 *Welcome to the Perl 6 Hands-On Workshop, or Perl 6 HOW, where instead of
 learning about a specific feature or technique of Perl 6, we'll be learning

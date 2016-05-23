@@ -1,5 +1,6 @@
 %% title: .rotor: The King of List Manipulation
 %% date: 2016-01-29
+%% desc: All about .rotor method for making sublists out of lists.
 
 Rotor. The word makes a mechanic think about brakes, an electrical engineer about motors, and a fan of [Red Letter Media YouTube channel](https://www.youtube.com/watch?v=s76vZATqLrE) about poorly executed films. But to a Perl 6 programmer, [`.rotor`](http://docs.perl6.org/routine/rotor) is a powerful tool for list operations.
 

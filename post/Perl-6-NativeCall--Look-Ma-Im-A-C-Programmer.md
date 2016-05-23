@@ -1,5 +1,6 @@
 %% title: Perl 6 NativeCall: Look, Ma! I'm a C Programmer!
 %% date: 2016-05-12
+%% desc: Using shared C libraries from Perl 6—no C compiler needed.
 
 A while back, I wanted to write a post talking about how Perl 6 lets you use
 C libraries without writing any C code. It was cool and clickbaity, but I quickly realized two things: (a) the statement isn't always true; and (b) I'm too ignorant to talk about it without sounding like a moron.

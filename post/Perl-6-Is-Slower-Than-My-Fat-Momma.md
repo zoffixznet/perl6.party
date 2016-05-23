@@ -1,5 +1,6 @@
 %% title: Perl 6 Is Slower Than My Fat Momma!
 %% date: 2016-04-07
+%% desc: A response to those who question Perl 6's performance and answers to those who are genuinely curious. 
 
 I notice several groups of people:
 folks who wish Perl 6's performance weren't mentioned;

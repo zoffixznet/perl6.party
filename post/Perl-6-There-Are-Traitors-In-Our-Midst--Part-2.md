@@ -1,5 +1,6 @@
 %% title: There Are Traitors In Our Midst! [Part 2]
 %% date: 2016-05-03
+%% desc: How to build custom traits in Perl 6.
 %% draft: True
 
 # PART II: Custom Traits
