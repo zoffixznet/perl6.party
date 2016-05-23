@@ -1,4 +1,4 @@
-%% title: Perl 6 Hands-On Workshop: Weatherapp [Part 2]
+%% title: Perl 6 Hands-On Workshop: Weatherapp (Part 2)
 %% date: 2016-05-22
 %% draft: True
 
@@ -167,14 +167,12 @@ an OpenWeatherMap-specific class.
 
 Let's write the general outline into our `DESIGN.md`:
 
-```
     # GENERAL OUTLINE
 
     The implementation is a module that provides a function to retrieve
     weather information. Currently supported service
     is [OpenWeatherMap](www.openweathermap.org), but the implementation
     must allow for easy replacement of services.
-```
 
 ### Details
 
@@ -187,3 +185,35 @@ city name, and if we want to include a country, just plop its code in after
 the city, separated with a comma. So, how about this:
 
     my $result = weather-for 'Brampton,ca';
+
+While this will let us write the simplest
+implementation—we simply hand over the argument to the API—I am not a fan
+of it. It merges two distinct units of information into one, so any
+calls where the arguments are stored in variables would have to use a
+`join` or string interpolation. Should we choose to make a specific country
+the default one, we'd have to mess around inspecting the given argument
+to see whether it already includes a country. Lastly, city names can
+get [rather weird](https://simple.wikipedia.org/wiki/Llanfairpwllgwyngyllgogerychwyrndrobwllllantysiliogogogoch)... what happens if a user supplies a city name
+with a comma in it? The API doesn't address that possibility, so my choice
+would be to strip commas from city names, which is easiest to do when it's
+a separate variable. Thus, I'll alter what the call looks like to this:
+
+    my $result = weather-for 'Brampton', 'ca';
+
+As for the return value, we'll return a `Weather::Result` object. I'll go over
+what objects are when we write the code. For now, you can think of them as
+things you can send a message to (by calling a method on it) and sometimes get
+a useful message back in return. So, if I want to know the temperature in
+Celsius, I can call `my $t = $weather-object.temp-C` and
+get a number in `$t`; and I don't care at all how that value is obtained.
+
+Our generic `Weather::Result` object will have a method for each
+piece of information we're interested in: temperature, information on
+precipitation, and wind speed. Looking at the
+[available information given by the API](http://www.openweathermap.org/current#current_JSON), we can merge
+amount of rain and amount of snow into a single method, and for wind I'll
+only use the speed value itself and not the direction, thus a potential use
+for our function could look like this:
+
+    printf "Current weather is: %d℃, %dmm precip/3hr, wind %dm/s\n",
+        .temp, .precip, .wind given weather-for <Brampton ca>;
