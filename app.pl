@@ -4,6 +4,7 @@ use lib qw<lib>;
 use Mojolicious::Lite;
 use Mojo::UserAgent;
 use Mojo::Util qw/trim/;
+use XML::RSS;
 use Perl5::Party::Posts;
 
 use constant GLOT_KEY => '02fb41ba-78cd-44d8-9f30-2a28350000a8';
@@ -60,5 +61,38 @@ post '/run' => sub {
 
     $c->render_later;
 };
+
+any $_ => sub {
+    my $c = shift;
+    my $rss = XML::RSS->new(version => '2.0');
+    $rss->channel(
+        title          => 'Perl 6 Party',
+        link           => 'http://perl6.party',
+        language       => 'en',
+        description    => 'Programing Perl 6 is like a party!',
+        rating         => '(PICS-1.1 "http://www.classify.org/safesurf/" '
+            . '1 r (SS~~000 2 SS~~001 4))',
+        copyright      => 'Copyright 2016, Zoffix Znet',
+        managingEditor => 'broto3@zoffix.com',
+        webMaster      => 'broto3@zoffix.com'
+    );
+
+    $rss->image(
+        title       => 'Perl 6 Party',
+        url         => 'http://perl6.party/assets/pics/perl6.party.gif',
+        link        => 'http://perl6.party',
+        width       => 400,
+        height      => 229,
+        description => '',
+    );
+
+    $rss->add_item(
+        title       => $_->{title},
+        link        => "http://perl6.party$_->{link}",
+        permaLink   => "http://perl6.party$_->{link}",
+    ) for $posts->all->@*;
+
+    $c->render(text => $rss->as_string, format => 'xml');
+} for '/feed', '/feed/', '/feed/index';
 
 app->start;
