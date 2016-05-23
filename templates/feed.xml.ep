@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+    	<title>Perl 6 Party</title>
+    	<atom:link href="http://perl6.party/feed/" rel="self" type="application/rss+xml" />
+    	<link>http://perl6.party/</link>
+    	<description>Programming Perl 6 is Like a Fun Party!</description>
+    	<lastBuildDate><%= $last_update %>T00:00:00Z</lastBuildDate>
+    	<language>en</language>
+        <image>
+    		<url>http://perl6.party/assets/pics/perl6.party.gif</url>
+    		<title>Perl 6 Party</title>
+    		<link>http://perl6.party/</link>
+    	</image>
+
+        % for my $post ( @$posts ) {
+        	<item>
+        		<title><%= $post->{title} %></title>
+        		<link>http://perl6.party<%= $post->{link} %></link>
+        		<pubDate><%= $post->{date} %>T00:00:00Z</pubDate>
+        		<guid
+                isPermaLink="true">http://perl6.party<%= $post->{link} %></guid>
+        		<description><![CDATA[<%= $post->{desc} %>]]></description>
+        	</item>
+        % }
+    </channel>
+</rss>
