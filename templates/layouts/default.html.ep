@@ -18,6 +18,7 @@
         <nav class="blog-nav">
           <a class="blog-nav-item <%= stash('active-page')//'' eq 'home' ? 'active' : '' %>" href="/">Home</a>
           <a class="blog-nav-item <%= stash('active-page')//'' eq 'about' ? 'active' : '' %>" href="/about">About</a>
+          <a class="blog-nav-item feed-nav" href="/feed/">Feed</a>
         </nav>
       </div>
     </div>
