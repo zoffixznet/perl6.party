@@ -83,7 +83,7 @@ get '/pull/*password' => sub {
         unless $c->param('password') eq trim slurp 'pull-password';
 
     $c->render(
-        text   => "Pulled!\n" . `git pull`,
+        text   => "Pulled!\n" . `git pull; hypnotoad app.pl`,
         format => 'txt',
     );
 };
