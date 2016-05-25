@@ -4,7 +4,7 @@ use lib qw<lib>;
 use Mojolicious::Lite;
 use Mojo::UserAgent;
 use Mojo::Util qw/trim/;
-use HTML::Entities;
+use Time::Moment;
 use Perl5::Party::Posts;
 
 use constant GLOT_KEY => '02fb41ba-78cd-44d8-9f30-2a28350000a8';
@@ -64,8 +64,10 @@ post '/run' => sub {
 
 any $_ => sub {
     my $c = shift;
-    my $posts = $posts->all;
-    my $blog_last_updated_date = encode_entities $posts->[0]{date};
+    my $posts = [ map +{ %$_ }, @{ $posts->all } ];
+    $_->{date} = blog_date_to_feed_date($_->{date}) for @$posts;
+
+    my $blog_last_updated_date = $posts->[0]{date};
     $c->stash(
         posts       => $posts,
         last_update => $blog_last_updated_date,
@@ -75,3 +77,9 @@ any $_ => sub {
 } for '/feed', '/feed/', '/feed/index', '/atom', '/atom/', '/atom/index';
 
 app->start;
+
+sub blog_date_to_feed_date {
+    my $date = shift;
+    return Time::Moment->from_string("${date}T00:00:00Z")
+        ->strftime("%a, %d %b %Y %H:%M:%S %z");
+}
