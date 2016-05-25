@@ -3,7 +3,7 @@
 use lib qw<lib>;
 use Mojolicious::Lite;
 use Mojo::UserAgent;
-use Mojo::Util qw/trim/;
+use Mojo::Util qw/slurp  trim/;
 use Time::Moment;
 use Perl5::Party::Posts;
 
@@ -75,6 +75,18 @@ any $_ => sub {
         format      => 'xml',
     );
 } for '/feed', '/feed/', '/feed/index', '/atom', '/atom/', '/atom/index';
+
+get '/pull/*password' => sub {
+    my $c = shift;
+
+    return $c->reply->not_found
+        unless $c->param('password') eq trim slurp 'pull-password';
+
+    $c->render(
+        text   => "Pulled!\n" . `git pull`,
+        format => 'txt',
+    );
+};
 
 app->start;
 
