@@ -208,3 +208,5 @@ API key for it. In the next post, we'll write detailed design and tests for our
 app.
 
 See you then!
+
+UPDATE: [Part 2](http://perl6.party/post/Perl-6-Hands-On-Workshop--Weatherapp--Part-2) is now available!
