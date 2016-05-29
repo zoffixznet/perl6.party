@@ -1,5 +1,5 @@
 %% title: Perl 6 Hands-On Workshop: Weatherapp (Part 3)
-%% date: 2016-05-25
+%% date: 2016-05-29
 %% desc: Developing a weather reporting application. Part 3: writing tests
 %% draft: True
 
@@ -15,7 +15,8 @@ type of tests these are. Let's dive in!
 
 ## TDD
 
-TDD (Test-Driven Development) is where you write a bunch of tests, ensure they
+TDD (Test-Driven Development) is where you write a bunch of tests
+before you write the actual code, ensure they
 fail—because code to satisfy them isn't there yet—and then you write code
 until the tests succeed. Now you can safely refactor your code or add new
 features without worrying you'll break something. Rinse and repeat.
@@ -27,15 +28,15 @@ is to use before you even create it.
 ## Testing Modules
 
 Perl 6 comes with a number of standard modules included, one of which is
-a module called [`Test`](http://docs.perl6.org/language/testing)
+a module called [`Test`](https://docs.perl6.org/language/testing)
 that we'll use. The Ecosystem also has dozens of
 [other test related modules](https://modules.perl6.org/#q=Test) and we'll use
 two called [`Test::When`](https://modules.perl6.org/dist/Test::When) and
 [`Test::META`](https://modules.perl6.org/dist/Test::META)
 
-`Test` provides all the testing routines we'll use, `Test::When` will let
-us watch for when the user actually agreed to run network tests, and
-`Test::META` will keep an eye on the sanity of our distribution's META file
+`Test` provides all the generic testing routines we'll use, `Test::When` will
+let us watch for when the user actually agreed to run specific types of tests,
+and `Test::META` will keep an eye on the sanity of our distribution's META file
 (more on that later).
 
 To install `Test::When` and `Test::META`, run
@@ -120,13 +121,13 @@ installer requests online tests. The names of these subdirectories are arbitrary
 and their existence is purely for organizational purposes. Whether the tests are
 actually run is controlled by `Test::When` module.
 
-Last but not least, we have the `key` file that will contain our API key. This
+Last but not least, we have the `key` file containing our API key. This
 way, we don't hardcode it into any one test, it's more obvious that this
-sort of data is present in our codebase, and if we know where to go if
+sort of data is present in our codebase, and we know where to go if
 we have to replace it (even if we add multiple files that need the key).
 Depending on the service you are using, you may choose to make the key
 entirely private and ask the installer to enter their own key. Some services
-offer tester keys or sandboxed services precisely for the purposes of users
+offer tester keys or sandboxed endpoints precisely for the purposes of users
 running tests.
 
 The `01-use.t` and `author/01-meta.t` tests are rather unspectacular.
@@ -138,12 +139,13 @@ The `01-use.t` and `author/01-meta.t` tests are rather unspectacular.
 
     done-testing;
 
-We call [`use-ok`](http://docs.perl6.org/language/testing#Testing_modules)
+We call [`use-ok`](https://docs.perl6.org/language/testing#Testing_modules)
 that tests whether the module can be loaded and we give it the name of
 our future module as the argument. Generally, this test isn't needed,
 since you're going to `use` your module to bring in the functionality for
 testing anyway. In this particular case, however, all of our other tests
-may get skipped, resulting in `Result: NOTESTS` output,
+may get skipped (installer doesn't ask for author/online tests),
+resulting in `Result: NOTESTS` output,
 which I don't entirely trust for all module installers to know to interpret as
 success.
 
@@ -171,11 +173,11 @@ later.
 
 To write the main test, we'll peak into what sort of values
 [the API returns](http://api.openweathermap.org/data/2.5/weather?q=London&appid=4f5572bc11dda69c43a0114ce5ce4116) and try to model them. We need to strike a balance
-between knowing we received a legit value from our subroutine or method while
+between knowing we received a legit value from our subroutine or method, while
 not making the test so precise that it fails the minute the valid value we
 receive decided to wear a hat and put on makeup.
 
-Here's the first attempt at writing the test:
+Here's the code for the test:
 
     # t/online/01-weather-for.t
     use Test::When <online>;
@@ -208,7 +210,8 @@ Here's the first attempt at writing the test:
 
 We use `Test::When` to mark this test as requiring an active Internet
 connection, so the test will only run when the installer explicitly
-requests to do so. We also `use` the module we'll make.
+requests to do so via an environmental variable. We also `use` the module we'll
+make.
 
 In the first `for` loop, we're iterating over two sets of arguments:
 city only and city + country. The loop executes a `subtest` on each
@@ -217,7 +220,7 @@ iteration, delineating our results in the output nicely. When we call
 arguments in and save the return value into our `$result`.
 
 We follow the interface described in [our DESIGN doc](https://github.com/zoffixznet/perl6-Workshop-1-Weatherapp/blob/master/DESIGN.md#interface-details) to write the tests for the result. It needs
-to be an object, it has `.temp`, `.wind`, and `.precip` methods and
+to be an object and it has `.temp`, `.wind`, and `.precip` methods and
 their values are [`Numeric`](https://docs.perl6.org/type/Numeric).
 
 The [`isa-ok` sub](https://docs.perl6.org/language/testing#By_object_type) tests
@@ -228,7 +231,7 @@ all of the return values do the [`Numeric` role](https://docs.perl6.org/type/Num
 
 The last segment of the test uses a bunch of [`cmp-ok`](https://docs.perl6.org/language/testing#By_arbitrary_comparison)
 tests to check the sanity of the range of the returned values. Since we
-don't know what the weather is like on the day we're running a test, we
+don't know what the weather is like on the day we're running the test, we
 can't check for the exact values. I've consulted with the
 [list of weather records](https://en.wikipedia.org/wiki/List_of_weather_records)
 to get an idea for the range of the values we're expecting.
@@ -237,21 +240,29 @@ Lastly, outside our main `for` loop, we have one more test that gives
 `weather-for` a garbage city name and tests that it returns a
 [`Failure` object](http://docs.perl6.org/type/Failure).
 
+We're done with our tests, so let's commit them:
+
+    git add t
+    git commit -m 'Write tests'
+    git push
+
+Your distribution structure should look [something like this](https://github.com/zoffixznet/perl6-Workshop-1-Weatherapp/tree/bfdd41d052e5f909125d65a01ddf63be8d0145a7) now.
+
 ## Extra Testing
 
 Our tests did not test absolutely everything that can be tested. What
 happens when a city is an empty string? What happens when it's not
-a string? What happens when we give a garbage value for a country? What
+a string? What happens when we give a garbage value for the country? What
 happens when network connection fails?
 
-We could add that, but keep one thing in mind: test are code and code needs
+We could add that, but keep one thing in mind: tests are code and code needs
 maintenance. If adding a couple lines of code to your program requires you
 to also dig through thousands of lines of tests, you're going to have a
 bad day.
 
 So how much testing is enough? It depends on the type of the software
 you're writing. If your software failing will result in the loss of human
-life (e.g. medical software) or loss of large investment (e.g. software
+life (e.g. medical software) or loss of a large investment (e.g. software
 for space probes) you better make sure you test every possible case. On the
 other end, if you're writing a [cowsay](https://en.wikipedia.org/wiki/Cowsay)
 clone, you may scrimp on tests for the sake of easier maintenance.
@@ -259,10 +270,10 @@ clone, you may scrimp on tests for the sake of easier maintenance.
 ## Running The Tests
 
 To run the tests, we use the `prove` command and pass `perl6` as executable
-to use. Since our module is in `lib/` directory, we should also pass the
-`-I` command line switch to include that directory in the module search path.
-We'll also tell it to find test files recursively and be verbose with
-its output. Thus, the full command is:
+to use. Since the modules we're writing tend to live in `lib/` directory, we
+should also pass the `-I` command line switch to include that directory in the
+module search path. We'll also tell it to find test files recursively and be
+verbose with its output. Thus, the full command is:
 
     prove -e 'perl6 -Ilib' -vr t/
 
@@ -292,24 +303,32 @@ that type of code is much cheaper to change than one we've written and shipped.
 Does anything feel off or awkward to use? Are we missing anything? Does
 anything seem redundant? If yes, we probably should alter our design.
 
-Two things jump out with our weather module:
+Three things jump out with our weather module:
 
 * We don't know why we failed. Was the city name wrong? Did the service change and now we're not giving it the correct arguments? Was it a network error?
-Perhaps, we should add some exception classes a throw one of them, depending
+Perhaps, we should add some exception classes and throw one of them, depending
 on the error.
 * We don't know whether we got the weather for the correct city. Calling with
 `('London')` gives weather for London in Britain, but calling with
 `('London', 'ca')` gives weather for London in Ontario, Canada. Perhaps,
 we could add a `.location` method to our result object that would return
 City + Country of the actual location we received the weather for.
+* An astute reader will notice we never specced how `weather-for` obtains
+**the API key!** There are several approaches. We can specify it on the
+`use` line or call a `key` subroutine and store it in a class variable—both of
+which will restrict your program to use just one API key. Another way may be
+to pass a `:key` named argument to `weather-for` or even redesign the interface
+to be Object Oriented, with key specified as an attribute to the
+`WebService::Weather` object.
 
 ## Homework
 
-Several problems with our code/design were brought up in this articles:
-tests don't test for everything and we could use some extra features, such
+Several problems with our code/design were brought up in this articles: we
+don't know how to specify the API key to use,
+tests don't test for everything, and we could use some extra features, such
 as precise failure mode indicators and providing the location of in the result.
 
-Try to alter the design and add extra tests for that stuff.
+Try to alter the design and modify the tests to accommodate that stuff.
 
 ## Conclusion
 
@@ -318,7 +337,7 @@ tests the functionality of the actual app code we're yet to write.
 
 Ensuring your code works is important and having automated tests do that
 for you lets you modify your code without fear that you'll break something.
-The amount of tests you write depends on the type of your application, as
+The amount of tests you write depends on the type of your application. As
 tests require maintenance and you need to strike a balance between
 having your application work "correctly enough" and adding extra maintenance
 work for you.
