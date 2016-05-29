@@ -330,3 +330,5 @@ create it. It's useful to have the design written down in human language,
 as that's easier to understand and cheaper to change than code. We wrote
 the design for our weather applications and are now ready to get down and dirty
 and start writing some code. Coming up next: Tests!
+
+UPDATE: [Part 3](http://perl6.party/post/Perl-6-Hands-On-Workshop--Weatherapp--Part-3) is now available!
