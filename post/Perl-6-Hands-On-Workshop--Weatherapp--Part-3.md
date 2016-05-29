@@ -1,7 +1,6 @@
 %% title: Perl 6 Hands-On Workshop: Weatherapp (Part 3)
 %% date: 2016-05-29
 %% desc: Developing a weather reporting application. Part 3: writing tests
-%% draft: True
 
 *Be sure to read [Part 1](/post/Perl-6-Hands-On-Workshop--Weatherapp--Part-1) and [Part 2](/post/Perl-6-Hands-On-Workshop--Weatherapp--Part-2)
 of this workshop first.*
