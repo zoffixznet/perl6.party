@@ -32,6 +32,6 @@ your code is WORKING CORRECTLY!
 
 No one should care what's underneath the hood of your subroutine. All we want
 to know is were the pedals are! You don't need to write a novel. It doesn't
-even need to spelled right! Just write SOMETHING!
+even need to be spelled right! Just write SOMETHING!
 
 Seriously. Stop being a giant dick and write your damned docs, buddy!
