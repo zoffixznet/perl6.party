@@ -36,7 +36,8 @@ These fields must be present in the article you contribute:
     %% author: Zoffix Znet
 ```
 
-The `title` is the title of your article, `date` is the published date,
+The `title` is the title of your article, `date` is the published date
+in `YYYY-MM-DD` format,
 `desc` is a short description, and `author` is your name.
 This is all just text, not markup, so you don't
 have to escape any special HTML characters.
