@@ -5,7 +5,7 @@ a similar code style. **Please note:** your PR might get rejected for any
 reason. If you're making substantial changes, please first consult with the
 author on whether the change is desirable, by opening an Issue.
 
-To contribute an article, follow these instructions:
+To contribute an **article**, follow these instructions:
 
 ### Content Format
 
