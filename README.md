@@ -25,5 +25,5 @@ Zoffix Znet.
 
 # AUTHOR
 
-Zoffix Znet [(cpan at zoffix.com>)](mailto:cpan@zoffix.com) /
+Zoffix Znet [(cpan at zoffix.com)](mailto:cpan@zoffix.com) /
 [Twitter: @zoffix](https://twitter.com/zoffix)
