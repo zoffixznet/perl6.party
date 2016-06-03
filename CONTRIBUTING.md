@@ -7,6 +7,12 @@ whether the change is desirable, by opening an Issue.
 
 To contribute an article, follow these instructions:
 
+### Content Format
+
+The post files use MultiMarkdown with a few meta data lines at the top of the
+file. MultiMarkdown is a superset of Markdown, so if all you know is regular
+Markdown, you should be OK if you use just that.
+
 ### Create Post File
 
 Create a file in [`/post`
