@@ -6,7 +6,7 @@ This repository contains redistributable files created by third parties and
 those files may be licensed under a different license.
 
 The blog posts (files in [`/post`
-directory](https://github.com/zoffixznet/perl6.party/tree/master/post) are
+directory](https://github.com/zoffixznet/perl6.party/tree/master/post)) are
 copyright of their respective authors as specified by the `%% author` field at
 the top of the file and express permission is required in
 order to reproduce them in any format, unless the post in question contains
