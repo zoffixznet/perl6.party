@@ -232,7 +232,7 @@ Everyone and their brother knows about `and` and what it's for, but did you
 know about `andthen`? I get
 [flashbacks](https://www.youtube.com/watch?v=GKNX6dieVcc) whenever I see it,
 but it's a [useful chaining operator](https://docs.perl6.org/routine/andthen)
-in Perl 6! And I learned about it from a bug report on it.
+in Perl 6! And I learned about it from a bug report.
 
 You can get very far with language primitives, but knowing more powerful
 and more appropriate contructs and features will let you write more concise
