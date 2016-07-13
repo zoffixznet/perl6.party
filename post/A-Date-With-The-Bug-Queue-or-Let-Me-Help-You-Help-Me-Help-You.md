@@ -1,7 +1,6 @@
 %% title: A Date With The Bug Queue or Let Me Help You Help Me Help You
 %% date: 2016-07-10
 %% desc: Lessons learned from going through 1,300+ bug reports
-%% draft: True
 
 Recently, I decided to undertake a quick little journey down to the
 [Perl 6's Bug Queue](https://rt.perl.org/). A quest for fame and profit—some
