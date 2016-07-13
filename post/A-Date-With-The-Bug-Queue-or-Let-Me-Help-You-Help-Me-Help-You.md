@@ -72,7 +72,7 @@ missing information
 * **Bug reports for an unrelated project:** move them (or, for the lazy, just close with explanation)
 * **Feature proposals:** ping core members and users for discussion
 * **A feature confused for a bug:** explain the confusion; *add to the documentation if this confusion happens often*
-* **Incorrectly used code that was never meant to work:** offer a correct example; improve documentation, if needed
+* **Incorrectly used code that was never meant to work:** offer a correct example; improve the documentation, if needed
 * **People asking for help with their code:** redirect to appropriate help channels; improve documentation, if this happens often
 * **Patches for other bugs:** apply the patches, move them to the appropriate
 ticket, or make them easier to merge (e.g. make a Pull Request)
