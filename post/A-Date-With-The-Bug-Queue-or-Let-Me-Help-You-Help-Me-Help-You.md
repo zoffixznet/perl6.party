@@ -183,7 +183,9 @@ After the bug is fixed, the project's test suite should contain a test checking
 regression of that bug. Perl's <abbr title='Test Anything Protocol'>TAP</abbr>
 supports TODO and SKIP features. TODO expects the test to fail and will
 alert you when it starts to pass. SKIP marks the needed number of tests as
-skipped and your test logic can avoid running them.
+skipped and your test logic can avoid running them. So even if the bug is not
+yet fixed, we can still add tests for it—we'll just TODO or SKIP them,
+depending on how severe the bug is.
 
 [Perl 6's test suite](https://github.com/perl6/roast/)
 has a fudging mechanism that lets you mark tests as skip
