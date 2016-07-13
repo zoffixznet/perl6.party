@@ -5,7 +5,7 @@
 Recently, I decided to undertake a quick little journey down to the
 [Perl 6's Bug Queue](https://rt.perl.org/). A quest for fame and profit—some
 easy game to hunt for sport. There's plenty of tickets, so how hard can
-it be? The quick little journey turned out to be long and big, but I've
+it be? The quick little journey turned out to be long and large, but I've
 learned a lot of good lessons in the process.
 
 ![](/assets/pics/date-with-bug-queue/found-tickets.png)
