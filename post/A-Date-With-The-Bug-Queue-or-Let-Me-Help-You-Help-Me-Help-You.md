@@ -137,7 +137,7 @@ That code is a bitch to read, let's pop open an editor and format it properly:
     # Outputs nothing when run
 
 That's *much* better! So the report claims we can't catch things and we've
-got *five* `try` blocks and not outpuit. Hmmm... Let's get rid of all the
+got *five* `try` blocks and no output. Hmmm... Let's get rid of all the
 tries and catching and see what error the write throws:
 
     given Proc::Async.new: :w, "asdfcat" {
