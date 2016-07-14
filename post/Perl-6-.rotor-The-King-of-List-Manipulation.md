@@ -145,7 +145,7 @@ Keep in mind, the pattern you supply to `.rotor` can be dynamically generated! H
 
     say ^92 .rotor(
         (0.2, 0.4 ... 3).map: (10 * *.sin).Int # pattern we supply to .rotor
-    ).join: "\n"'
+    ).join: "\n"
 
     # OUTPUT:
     #    0
