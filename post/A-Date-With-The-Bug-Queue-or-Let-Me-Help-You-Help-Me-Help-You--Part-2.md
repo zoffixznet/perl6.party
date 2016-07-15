@@ -197,5 +197,5 @@ your time at.
 New contributors help core developers by filtering out the queue,
 doing preliminary debugging, and writing tests. Core developers help new
 contribitors by tagging tickets, giving direction for how tickets should be
-resolved, and providing training. This in turn, lets new contributors to help
+resolved, and providing training. This in turn, lets new contributors help
 back by fixing bugs and... eventually to become core contributors themselves.
