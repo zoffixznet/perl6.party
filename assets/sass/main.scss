@@ -133,3 +133,24 @@ a code {
     margin-left: 10px;
     background: url(/assets/pics/rss.png) no-repeat left;
 }
+
+blockquote {
+    background: #fcfcfc;
+    border: 1px solid #EEE;
+    border-left-width: 10px;
+    position: relative;
+    font-family: 'Courier New';
+}
+
+blockquote p:before{
+    content: '\201C';
+    font-family: serif;
+    font-style: normal;
+    font-weight: 700;
+    position: absolute;
+    font-size: 175px;
+    top: 40px;
+    left: -105px;
+    color: rgba(200, 200, 200, .5);
+    text-shadow: 7px 14px 10px rgba(0, 0, 0, 0.1);
+}
