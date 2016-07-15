@@ -86,7 +86,7 @@ doesn't want to spend their entire afternoon learning how to search for
 tickets. They probably wouldn't be too sure about what to search for anyway.
 
 So what's the solution? Tags! Categorize your tickets with tags and then you
-can have a Wiki or page on your project's website linking to search queues
+can have a Wiki or page on your project's website linking to search queries
 for specific tags. Here are some ideas to consider when deciding on ticket
 tags:
 
