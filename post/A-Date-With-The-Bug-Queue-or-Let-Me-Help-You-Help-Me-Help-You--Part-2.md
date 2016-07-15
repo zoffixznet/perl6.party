@@ -164,7 +164,9 @@ light of day and rarely appear on chat channels or comment on mailing lists,
 bug tickets, and other commentables. That's what busy people do.
 
 However, what would happen if you also spend a bit of time writing
-tutorials, blogs, or training specific people?
+tutorials and [project internals
+courses](https://github.com/edumentab/rakudo-and-nqp-internals-course), or
+training specific people?
 
 > **&lt;psch&gt;** i can also guide you how i figured out what to change where to throw a typed Exception there, because as i said, i think it's a great ticket for getting used to the Grammar and Actions
 > <br>**&lt;BrokenRobot&gt;** psch: sure, I'd love to learn that
