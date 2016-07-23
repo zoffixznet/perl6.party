@@ -29,7 +29,7 @@ sub load {
     my ($self, $post) = @_;
     return unless -e "post/$post.md";
     my ($meta, $content) = process( decode 'UTF-8', slurp "post/$post.md" );
-    return $meta, markdown $content;
+    return $meta, markdown $content =~ s/^```$//gmr;
 }
 
 sub process {
