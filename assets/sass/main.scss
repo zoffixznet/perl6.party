@@ -4,6 +4,7 @@
 @import 'blog';
 
 $color-body: #f6f6f6;
+$irc-alt: darken(#428BCA, 20%);
 
 .CodeMirror {
     border: 1px solid darken($color-body, 20%);
@@ -153,4 +154,8 @@ blockquote p:before{
     left: -105px;
     color: rgba(200, 200, 200, .5);
     text-shadow: 7px 14px 10px rgba(0, 0, 0, 0.1);
+}
+
+.irc-alt {
+    color: $irc-alt;
 }
