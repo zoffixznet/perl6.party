@@ -57,7 +57,7 @@ article {
     }
 
     > p + pre {
-        margin-top: -30px;
+        margin-top: -20px;
     }
 }
 
@@ -158,4 +158,8 @@ blockquote p:before{
 
 .irc-alt {
     color: $irc-alt;
+}
+
+.irc-timestamp {
+    color: darken($color-body, 50%);
 }
