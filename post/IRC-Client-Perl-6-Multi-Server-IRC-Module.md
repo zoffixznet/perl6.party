@@ -18,7 +18,8 @@ procrastenator.
 
 To create an IRC bot, instantiate an `IRC::Client` object, giving it some basic
 info, and call the `.run` method. Implement all of the functionality you need as
-classes and hand those in via the `.plugins` attribute. When an IRC event
+classes with method names matching the events you want to listen to
+and hand those in via the `.plugins` attribute. When an IRC event
 occurs, it's passed to all of the plugins, in the order you specify them,
 stopping if a plugin claims it handled the event.
 
@@ -271,7 +272,7 @@ All of `IRC::Client`'s events—including custom plugin-emitted events—have
 without worrying about conflicting with event handlers. Speaking of emitting
 things...
 
-## Don't Wait For Me!
+## Keep 'Em Commin'
 
 Responding to commands is sweet and all, but many bots will likely want
 to generate some output out of their own volition. As an example, let's write
@@ -350,6 +351,82 @@ have unread messages, we simply call `IRC::Client`'s `.send` method, asking
 it to send us an IRC notice with the total number of unread messages. Pure
 awesomeness!
 
+## Don't Wait Up
+
+We've covered the cases where we either have an asynchronous supply of values
+we sent to IRC or where we reply to a command right away. It's not uncommon
+for a bot command to take some time to execute. In those cases, we don't want
+the bot to lock up while the command is doing its thing.
+
+Thanks to Perl 6's excellent concurrency primitives, it doesn't have to! If
+an event handler returns a [`Promise`](https://docs.perl6.org/type/Promise),
+the Client Object will use its `.result` as the reply when it is kept. This
+means that in order to make our blocking event handler non-blocking, all we have
+to do is wrap its body in a `start { ... }` block. What could be simpler?
+
+As an example, let's write a bot that will respond to `bash` command. The bot
+will fetch [bash.org/?random1](http://bash.org/?random1), parse out the
+quotes from the HTML, and keep them in the cache. When the command is triggered,
+the bot will hand out one of the quotes, repeating the fetching when the cache
+runs out. In particular, we don't want the bot to block while retrieving
+and parsing the web page. Here's the full code:
+
+```
+    use IRC::Client;
+    use Mojo::UserAgent:from<Perl5>;
+
+    class Bash {
+        constant $BASH_URL = 'http://bash.org/?random1';
+        constant $cache    = Channel.new;
+        has        $!ua    = Mojo::UserAgent.new;
+
+        multi method irc-to-me ($ where /bash/) {
+            start $cache.poll or do { self!fetch-quotes; $cache.poll };
+        }
+
+        method !fetch-quotes {
+            $cache.send: $_ for $!ua.get($BASH_URL).res.dom.find('.qt').each».all_text;
+        }
+    }
+
+    .run with IRC::Client.new:
+        :nick<MahBot>
+        :host<irc.freenode.net>
+        :channels<#perl6>
+        :debug
+        :plugins(Bash.new)
+```
+
+> <b>&lt;Zoffix&gt;</b> MahBot, bash<br>
+> <span class="irc-alt"><b>&lt;MahBot&gt;</b> Zoffix, &lt;Time&gt; that reminds
+me of when Manning and I installed OS/2 Warp4 on a box and during the install
+routine it said something to the likes of 'join the hundreds of people on the
+internet'<br></span>
+
+For page fetching needs, I chose Perl 5's
+[Mojo::UserAgent](https://metacpan.org/pod/Mojo::UserAgent), since it has
+an HTML parser built-in. The `:from<Perl5>` adverb indicates to the compiler
+that we want to load a Perl 5, not Perl 6, module.
+
+Since we're multi-threading, we'll use a
+[Channel](https://docs.perl6.org/type/Channel) as a thread-safe queue
+for our caching purposes. We
+subscribe to the `irc-to-me` event where text contains word `bash`. When the
+event handler is triggered, we pop out to a new thread using the `start`
+keyword. Then we `.poll` our cache and use the cached value if we have one,
+otherwise, the logic will move onto the `do` block that
+that calls the `fetch-quotes` private method and when that completes,
+polls the cache once more, getting a fresh quote. All said and done, a quote
+will be the result of the `Promise` we return from the event handler.
+
+The `fetch-quotes` method fires up our `Mojo::UserAgent` object that fetches
+the random quotes page from the website, finds all
+HTML elements that have `class="qt"` on them—those are paragraphs with
+quotes. Then, we use a hyper method call to convert those paragraphs to just
+text and that final list is fed to our `$cache` `Channel` via a `for` loop.
+And there you go, we non-blockingly connected our bot to the cesspit of the IRC
+world. And speaking of things you may want to filter...
+
 ## Watch Your Mouth!
 
 Our bot would get banned rather quickly if it spewed enormous amounts of
@@ -392,13 +469,13 @@ code!
         :debug
         :plugins(Bash.new)
         :filters(
-            -> $text where .lines > 3 or .chars > 300 {
+            -> $text where .lines > 5 or .chars > 300 {
                 Pastebin::Shadowcat.new.paste: $text
             }
         )
 ```
 
-The code that does all the work is small enough that it's easy to
+The code that does all the filtering work is small enough that it's easy to
 miss—it's the last 5 lines in the program above. The `:filters` attribute
 takes a list of [Callables](https://docs.perl6.org/type/Callable), and here
 we're passing a pointy block. In its signature we constraint the text
