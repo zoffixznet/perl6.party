@@ -1,4 +1,4 @@
-%% title: IRC::Client: Perl 6 Multi-Server IRC
+%% title: IRC::Client: Perl 6 Multi-Server IRC (or Awesome Async Interfaces with Perl 6)
 %% date: 2016-07-23
 %% desc: A tutorial for writing IRC bots with Perl 6
 
@@ -269,10 +269,9 @@ we defined:
 
 ![](/assets/pics/irc-bot/debug-output2.png)
 
-All of `IRC::Client`'s events—including custom plugin-emitted events—have
-`irc-` prefix, so you can freely define auxiliary methods in your plugin,
-without worrying about conflicting with event handlers. Speaking of emitting
-things...
+All of `IRC::Client`'s events have `irc-` prefix, so you can freely define
+auxiliary methods in your plugin, without worrying about conflicting with event
+handlers. Speaking of emitting things...
 
 ## Keep 'Em Commin'
 
@@ -291,7 +290,7 @@ a bot that will annoy us whenever we have unread GitHub notifications!
         constant $API_URL = 'https://api.github.com/notifications';
 
         method irc-connected ($) {
-            react {
+            start react {
                 whenever self!notification.grep(* > 0) -> $num {
                     $.irc.send: :where<Zoffix>
                                 :text("You have $num unread notifications!")
@@ -343,7 +342,7 @@ returned by successful requests, and `grep`s the message list for any items with
 to an `Int` that is total items found, which is what we `emit` from our supply.
 
 The `irc-connected` event handler gets triggered when we successfully connect
-to an IRC server. In it, we start an event loop that `react`s `whenever`
+to an IRC server. In it, we `start` an event loop that `react`s `whenever`
 we receive the current unread messages count from our `supply` given by
 `notifications` method. Since we're only interested in cases where we *do*
 have unread messages, we also pop a `grep` on the supply to filter out the
@@ -387,7 +386,8 @@ and parsing the web page. Here's the full code:
         }
 
         method !fetch-quotes {
-            $cache.send: $_ for $!ua.get($BASH_URL).res.dom.find('.qt').each».all_text;
+            $cache.send: $_
+                for $!ua.get($BASH_URL).res.dom.find('.qt').each».all_text.lines.join: '  ';
         }
     }
 
@@ -467,21 +467,28 @@ code!
     .run with IRC::Client.new:
         :nick<MahBot>
         :host<irc.freenode.net>
-        :channels<#perl6>
+        :channels<#zofbot>
         :debug
         :plugins(Bash.new)
         :filters(
-            -> $text where .lines > 5 or .chars > 300 {
-                Pastebin::Shadowcat.new.paste: $text
+            -> $text where .lines > 1 || .chars > 300 {
+                Pastebin::Shadowcat.new.paste: $text.lines.join: "\n";
             }
         )
 ```
+
+> <b>&lt;Zoffix&gt;</b> MahBot, bash<br>
+> <span class="irc-alt"><b>&lt;MahBot&gt;</b> Zoffix, &lt;intuit&gt; hmm maybe
+sumtime next week i will go outside'<br></span>
+> <b>&lt;Zoffix&gt;</b> MahBot, bash<br>
+> <span class="irc-alt"><b>&lt;MahBot&gt;</b> Zoffix, &lt;intuit&gt;
+<a href="http://fpaste.scsys.co.uk/528741"><http://fpaste.scsys.co.uk/528741></a><br></span>
 
 The code that does all the filtering work is small enough that it's easy to
 miss—it's the last 5 lines in the program above. The `:filters` attribute
 takes a list of [Callables](https://docs.perl6.org/type/Callable), and here
 we're passing a pointy block. In its signature we constraint the text
-to be over three lines or more than 300 characters long, so our filter will
+to be more than 1 line or more than 300 characters long, so our filter will
 be run only when those criteria are met. Inside the block, we simply use the
 [Pastebin::Shadowcat](https://modules.perl6.org/repo/Pastebin::Shadowcat) module
 to throw the output onto the pastebin. Its `.paste` method returns the
@@ -496,13 +503,14 @@ to another directory, change config, and you're done. It almost made sense
 that a new server would mean a "new" bot: different channels, different
 nicknames, and so on.
 
-In Perl 6's `IRC::Client`, I tried to think of a server as merely another
+In Perl 6's `IRC::Client`, I tried to re-imagine things a bit:
+a server is merely another
 identifier for a message, along with a channel or nickname. This means
 connecting your bot to multiple servers is as simple as adding new server
 configuration via `:servers` attribute:
 
 
-```perl6
+```
     use IRC::Client;
 
     class BFF {
@@ -511,19 +519,19 @@ configuration via `:servers` attribute:
 
     .run with IRC::Client.new:
         :debug
-        :plugins[BFF]
+        :plugins(BFF)
         :nick<MahBot>
         :channels<#zofbot>
-        :servers{
+        :servers(
             freenode => %(
-                :host<irc.freenode.net>
+                :host<irc.freenode.net>,
             ),
             local => %(
-                :nick<P6Bot>
+                :nick<P6Bot>,
                 :channels<#zofbot #perl6>,
-                :host<localhost>
+                :host<localhost>,
             )
-        }
+        )
 ```
 
 > <span class="irc-timestamp">\[on Freenode server]</span><br>
@@ -558,14 +566,15 @@ when we *do* want to talk to a specific server?
 
 When the bot is `.run`, the Client Object changes the values of `:servers`
 attribute to be `IRC::Client::Server` objects. Those stringify to the label
-for the server they represent and are passed in the `.server` attribute of the
-Message Object too. Client Object methods such as `.send` or `.join` take
+for the server they represent and we can get them either from the `.server`
+attribute of the Message Object or `.servers` hash attribute of the
+Client Object. Client Object methods such as `.send` or `.join` take
 an optional `server` attribute that controls which server the message will
 be sent to and defaults to value `*`, which means *send to every server.*
 
 Here's a bot that connects to two servers and joins several channels. Whenever
 it sees a channel message, it forwards it to all other channels and sends a
-private message to user `ZoffixW` on server designated by label `local`.
+private message to user `Zoffix` on server designated by label `local`.
 
 ```
     use IRC::Client;
@@ -582,7 +591,7 @@ private message to user `ZoffixW` on server designated by label `local`.
                 }
             }
 
-            $.irc.send: :where<ZoffixW>
+            $.irc.send: :where<Zoffix>
                         :text('I spread the messages!')
                         :server<local>;
         }
@@ -600,7 +609,7 @@ private message to user `ZoffixW` on server designated by label `local`.
             local => %(
                 :nick<P6Bot>,
                 :channels<#zofbot #perl6>,
-                :host(%*ENV<IRC_HOST> // 'localhost'),
+                :host<localhost>,
             )
         }
 ```
