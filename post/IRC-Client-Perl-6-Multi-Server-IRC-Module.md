@@ -12,7 +12,9 @@ Recently, I needed a tool for some Perl 6 bug queue work, so I decided to lock
 myself up for a weekend and re-design and re-write the module from scratch.
 Multiple people bugged me to do so over the past months, so I figured I'd also
 write a tutorial for how to use the module—as an apology for being a master
-procrastenator.
+procrastenator. And should IRC be of no interest to you, I hope the tutorial
+will prove useful as a general example of async, non-blocking interfaces
+in Perl 6.
 
 ## The Basics
 
@@ -485,3 +487,145 @@ be run only when those criteria are met. Inside the block, we simply use the
 to throw the output onto the pastebin. Its `.paste` method returns the
 URL of the newly-created paste, which is what our filter will replace the
 original content with. Pretty awesome!
+
+## It Spreads Like Butter
+
+In the past, when I used other IRC client tools, whenever someone asked me to
+place my bots on other servers, the procedure was simple: copy over the code
+to another directory, change config, and you're done. It almost made sense
+that a new server would mean a "new" bot: different channels, different
+nicknames, and so on.
+
+In Perl 6's `IRC::Client`, I tried to think of a server as merely another
+identifier for a message, along with a channel or nickname. This means
+connecting your bot to multiple servers is as simple as adding new server
+configuration via `:servers` attribute:
+
+
+```perl6
+    use IRC::Client;
+
+    class BFF {
+        method irc-to-me ($ where /'♥'/) { 'I ♥ YOU!' }
+    }
+
+    .run with IRC::Client.new:
+        :debug
+        :plugins[BFF]
+        :nick<MahBot>
+        :channels<#zofbot>
+        :servers{
+            freenode => %(
+                :host<irc.freenode.net>
+            ),
+            local => %(
+                :nick<P6Bot>
+                :channels<#zofbot #perl6>,
+                :host<localhost>
+            )
+        }
+```
+
+> <span class="irc-timestamp">\[on Freenode server]</span><br>
+> <b>&lt;ZoffixW&gt;</b> MahBot, I ♥ you<br>
+> <span class="irc-alt"><b>&lt;MahBot&gt;</b> ZoffixW, I ♥ YOU!<br></span>
+> <br>
+> <span class="irc-timestamp">\[on local server]</span><br>
+> <b>&lt;ZoffixW&gt;</b> P6Bot, I ♥ you<br>
+> <span class="irc-alt"><b>&lt;P6Bot&gt;</b> ZoffixW, I ♥ YOU!<br></span>
+
+First, our plugin remains oblivious that it's being run on multiple servers.
+Its replies get redirected to the correct server and `IRC::Client` still
+executes its method handler in a thread-safe way.
+
+In the `IRC::Client`'s constructor we added `:servers` attribute that takes
+a `Hash`. The keys of this `Hash` are servers' labels and values are
+server-specific configurations that override global settings. So `freenode`
+server gets its `:nick` and `:channels` from the `:nick` and `:channels`
+attributes we give to `IRC::Client`, while the `local` server overrides those
+with its own values.
+
+The debug output now has server lables printed, to indicate to which server
+the event applies:
+
+![](/assets/pics/irc-bot/debug-output3.png)
+
+And so, but simply telling the bot to connect to another server, we made it
+multi-server, without making any changes to our plugins. But what do we do
+when we *do* want to talk to a specific server?
+
+## Send It That Way
+
+When the bot is `.run`, the Client Object changes the values of `:servers`
+attribute to be `IRC::Client::Server` objects. Those stringify to the label
+for the server they represent and are passed in the `.server` attribute of the
+Message Object too. Client Object methods such as `.send` or `.join` take
+an optional `server` attribute that controls which server the message will
+be sent to and defaults to value `*`, which means *send to every server.*
+
+Here's a bot that connects to two servers and joins several channels. Whenever
+it sees a channel message, it forwards it to all other channels and sends a
+private message to user `ZoffixW` on server designated by label `local`.
+
+```
+    use IRC::Client;
+
+    class Messenger does IRC::Client::Plugin {
+        method irc-privmsg-channel ($e) {
+            for $.irc.servers.values -> $server {
+                for $server.channels -> $channel {
+                    next if $server eq $e.server and $channel eq $e.channel;
+
+                    $.irc.send: :$server, :where($channel), :text(
+                        "$e.nick() over at $e.server.host()/$e.channel() says $e.text()"
+                    );
+                }
+            }
+
+            $.irc.send: :where<ZoffixW>
+                        :text('I spread the messages!')
+                        :server<local>;
+        }
+    }
+
+    .run with IRC::Client.new:
+        :debug
+        :plugins[Messenger.new]
+        :nick<MahBot>
+        :channels<#zofbot>
+        :servers{
+            freenode => %(
+                :host<irc.freenode.net>,
+            ),
+            local => %(
+                :nick<P6Bot>,
+                :channels<#zofbot #perl6>,
+                :host(%*ENV<IRC_HOST> // 'localhost'),
+            )
+        }
+```
+
+> <span class="irc-timestamp">\[on Freenode server/#zofbot]</span><br>
+> <b>&lt;ZoffixW&gt;</b> Yey!<br>
+> <span class="irc-timestamp">\[on local server/#zofbot]</span><br>
+> <span class="irc-alt"><b>&lt;P6Bot&gt;</b> ZoffixW over at irc.freenode.net/#zofbot says Yey!<br></span>
+> <span class="irc-timestamp">\[on local server/#perl6]</span><br>
+> <span class="irc-alt"><b>&lt;P6Bot&gt;</b> ZoffixW over at irc.freenode.net/#zofbot says Yey!<br></span>
+> <span class="irc-timestamp">\[on local server/ZoffixW private message queue]</span><br>
+> <span class="irc-alt"><b>&lt;P6Bot&gt;</b> I spread the messages!<br></span>
+
+We subscribe to the `irc-privmsg-channel` event and when it's triggered,
+we loop over all the servers. For each server, we loop over all of the
+connected channels and use `$.irc.send` method to send a message to that
+particular channel and server, unless the server and channel are the same
+as where the message originated.
+
+The message itself calls `.nick`, `.channel`, and `.server.host` methods
+on the Message Object to identify the sender and origin of the message.
+
+## Conclusion
+
+Perl 6 offers powerful concurrency primitives, dispatch methods, and
+introspection that lets you build awesome non-blocking, event-based interfaces.
+One of them is `IRC::Client` that lets you use IRC networks. It's here.
+It's ready. Use it!
