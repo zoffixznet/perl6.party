@@ -12,7 +12,7 @@ Recently, I needed a tool for some Perl 6 bug queue work, so I decided to lock
 myself up for a weekend and re-design and re-write the module from scratch.
 Multiple people bugged me to do so over the past months, so I figured I'd also
 write a tutorial for how to use the module—as an apology for being a master
-procrastenator. And should IRC be of no interest to you, I hope the tutorial
+procrastinator. And should IRC be of no interest to you, I hope the tutorial
 will prove useful as a general example of async, non-blocking interfaces
 in Perl 6.
 
