@@ -1,5 +1,5 @@
 %% title: IRC::Client: Perl 6 Multi-Server IRC (or Awesome Async Interfaces with Perl 6)
-%% date: 2016-07-23
+%% date: 2016-07-29
 %% desc: A tutorial for writing IRC bots with Perl 6
 
 I wrote my first Perl 6 program—a New Years IRC Party bot—around Christmas,
