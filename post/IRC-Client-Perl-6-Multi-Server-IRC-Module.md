@@ -481,8 +481,7 @@ code!
 > <span class="irc-alt"><b>&lt;MahBot&gt;</b> Zoffix, &lt;intuit&gt; hmm maybe
 sumtime next week i will go outside'<br></span>
 > <b>&lt;Zoffix&gt;</b> MahBot, bash<br>
-> <span class="irc-alt"><b>&lt;MahBot&gt;</b> Zoffix, &lt;intuit&gt;
-<a href="http://fpaste.scsys.co.uk/528741"><http://fpaste.scsys.co.uk/528741></a><br></span>
+> <span class="irc-alt"><b>&lt;MahBot&gt;</b> Zoffix, <a href="http://fpaste.scsys.co.uk/528741"><http://fpaste.scsys.co.uk/528741></a><br></span>
 
 The code that does all the filtering work is small enough that it's easy to
 miss—it's the last 5 lines in the program above. The `:filters` attribute
