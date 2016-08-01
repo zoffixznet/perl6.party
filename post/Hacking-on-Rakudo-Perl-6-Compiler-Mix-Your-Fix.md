@@ -298,7 +298,7 @@ Here's our offending `Any`, let's go up a bit and dump the `$here` right where
 it's defined:
 
     ...
-    my $here=($sclass{True}:v).SetHash;
+    my $here=$sclass{True}.SetHash;
     dd $here;
     ...
     # OUTPUT:
