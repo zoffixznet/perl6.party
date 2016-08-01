@@ -99,7 +99,7 @@ Run the file now to ensure the test fails. Hint: some files have fudging;
 explaining it is out of the scope of this article, but if you notice failures
 you're not expecting, look it up.
 
-    $ prove -e './perl6' -vlr t/spec/S06-signature/outside-subroutine.t
+    $ make t/spec/S06-signature/outside-subroutine.t
     ...
     Test Summary Report
     -------------------
@@ -112,7 +112,7 @@ hunt begin!
 
 ## Make it Saucy
 
-Our bug involves a Smartmach operator, which aliases the left side to the topic
+Our bug involves a Smartmatch operator, which aliases the left side to the topic
 variable `$_` and calls `.ACCEPTS` method on the right side with it. Both
 of our sides are `Signature` objects, so let's pop open Rakudo's sauce code
 for that class.
@@ -309,7 +309,7 @@ It's still there, and for a good reason. If we trace the creation of
 
     my $sclass = self.params.classify({.named});
 
-The params of the Signature on the right of the smartmach get classified
+The params of the Signature on the right of the smartmatch get classified
 based on whether they are named or not. The named parameters will be inside
 a list under the `True` key of `$sclass`. Since we do *not* have any named
 params, there won't be such a key, and we can verify that with this bit of
@@ -338,7 +338,7 @@ compiler.
 
 Verify our fix worked before we proceed onto the final stages:
 
-    $ prove -e './perl6' -vlr t/spec/S06-signature/outside-subroutine.t
+    $ make t/spec/S06-signature/outside-subroutine.t
     ...
     All tests successful.
     Files=1, Tests=4,  1 wallclock secs ( 0.03 usr  0.00 sys +  0.32 cusr  0.02 csys =  0.37 CPU)
