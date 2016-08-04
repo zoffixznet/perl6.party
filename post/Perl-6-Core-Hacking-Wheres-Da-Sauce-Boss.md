@@ -218,7 +218,7 @@ The location of the setting file may differ, depending on how you installed
 Perl 6, but on my system (I use
 [`rakudobrew`](https://github.com/tadzik/rakudobrew)), it's in
 `$*EXECUTABLE.parent.parent.parent.child('gen/moar/m-CORE.setting')`, so the
-code for finding the actual file is this:
+code for finding the actual file our core sub or method is defined in is this:
 
     sub real-location-for (&code) {
         my $wanted = &code.line;
