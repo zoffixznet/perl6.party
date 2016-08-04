@@ -220,37 +220,35 @@ Perl 6, but on my system (I use
 `$*EXECUTABLE.parent.parent.parent.child('gen/moar/m-CORE.setting')`, so the
 code for finding the actual file our core sub or method is defined in is this:
 
-    sub real-location-for (&code) {
-        my $wanted = &code.line;
-        my $line-num = 0;
+    sub real-location-for ($wanted) {
+        state $setting = $*EXECUTABLE.parent.parent.parent.child: 'gen/moar/m-CORE.setting';
+        my ($cur-line-num, $offset) = 0, 0;
         my $file;
-        my $offset;
-        for $*EXECUTABLE.parent.parent.parent.child(&code.file).IO.lines -> $line {
-            $line-num++;
-
-            return { :$file, :line($line-num - $offset), } if $line-num == $wanted;
+        for $setting.IO.lines -> $line {
+            return %( :$file, :line($cur-line-num - $offset), )
+                if ++$cur-line-num == $wanted;
 
             if $line ~~ /^ '#line 1 ' $<file>=\S+/ {
-                $file = $<file>;
-                $offset = $line-num+1;
+                $file   = $<file>;
+                $offset = $cur-line-num + 1;
             }
         };
-
-        fail 'Were not able to find location in setting. Are you sure this is a core Code?';
+        fail 'Were not able to find location in setting.';
     }
 
-    say "{.<file>}:{.<line>}" given real-location-for &say;
+    say "{.<file>}:{.<line>}" given real-location-for &say.line;
+
 
     # OUTPUT:
     # src/core/io_operators.pm:17
 
-The `$wanted` contains the setting line number `$line-num` contains the
-current number we're examining. We loop until the `$line-num` reaches `$wanted`
-and return a `Hash` with the results. For each line that matches our
+The `$wanted` contains the setting line number `$cur-line-num` contains the
+current number we're examining. We loop until the `$cur-line-num` reaches
+`$wanted` and return a `Hash` with the results. For each line that matches our
 special comment, we store the real name of the file the code is from into
 `$file` and store the `$offset` of the first line of code in that file. Once
-done, we simply subtract the `$offset` from the setting `$line-num` and we get
-the line number in the source file.
+done, we simply subtract the `$offset` from the setting
+`$cur-line-num` and we get the line number in the source file.
 
 This is pretty awesome and useful, but it's still not what I had in mind
 when I said we wanted to know *exactly* where da sauce is. I don't want
@@ -258,3 +256,61 @@ to clone the repo and go to the repo and open my editor. I want to just look
 at code.
 
 ## If it's worth doing, it's worth overdoing
+
+There's one place where we can stare at rakudo's source code until it blushes
+and looks away: [GitHub](https://github.com/rakudo/rakudo/). Since our handy
+sub gives us a filename and a line number, we can construct a URL that points
+to a specific file and line in source code, like this one, for example:
+[https://github.com/rakudo/rakudo/blob/nom/src/core/Str.pm#L16](https://github.com/rakudo/rakudo/blob/nom/src/core/Str.pm#L16)
+
+There's an obvious problem with such an approach: the URL points to the master
+branch (called `nom`, for *"New Object Model,"* in Rakudo). Commits go into
+the repo daily, and unless we rebuild our Perl 6 several times a day, there's
+a good chance the location our GitHub URL points to is wrong.
+
+Not only do we have to point to a specific file and line number, we have to
+point to the right commit too. On GitHub's end, it's easy: we just replace
+`nom` in the URL with the appropriate commit number—we just need Rakudo to
+tell us what that number is.
+
+The two dynamic variables `$*VM` and `$*PERL` contain some juicy information.
+By introspecting them, we can see some useful info and what looks like commit
+prefix parts in version numbers:
+
+    say $*VM.^methods
+    # (BUILD platform-library-name Str gist config prefix precomp-ext
+    # precomp-target precomp-dir name auth version signature desc)
+
+    say $*VM.version
+    # v2016.06
+
+    say $*PERL.^methods
+    # (BUILD VMnames DISTROnames KERNELnames Str gist compiler name auth version
+    # signature desc)
+
+    say $*PERL.compiler.^methods
+    # (BUILD build-date Str gist id release codename name auth version
+    # signature desc)
+
+    say $*PERL.compiler.version
+    # v2016.06.10.g.7.cff.429
+
+Rakudo is a compiler and so we're insterested in the value of
+`$*PERL.compiler.version`. It contains the major release version, followed by
+`g`, followed by the commit prefix of this particular build. The prefix is
+split up on number-letter boundaries, so we'll need to join up all the bits and
+split on `g`. But, take a look at `$*VM.version`. There aren't any `g`s and
+commits and for a good reason: it's the tagged major release. The same will
+occur for Rakudo on release builds, like the ones shipped with
+[Rakudo Star](http://rakudo.org/). So we'll need to check for such edge cases
+and this is the code:
+
+    my $where = .Str ~~ /g/
+        ?? .parts.join.split("g")[*-1]
+        !! .Str
+    given $*PERL.compiler.version;
+
+`given` a `$*PERL` `.compiler` `.version`, if it contains letter `g`, join up
+version bits, split on `g`, and the last portion will be our commit prefix; if
+it doesn't contain letter `g`, then we're dealing with a release tag, so we'll
+take it as-is.
