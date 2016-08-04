@@ -227,15 +227,16 @@ code for finding the actual file our core sub or method is defined in is this:
         my $offset;
         for $*EXECUTABLE.parent.parent.parent.child(&code.file).IO.lines -> $line {
             $line-num++;
+
             return { :$file, :line($line-num - $offset), } if $line-num == $wanted;
+
             if $line ~~ /^ '#line 1 ' $<file>=\S+/ {
                 $file = $<file>;
                 $offset = $line-num+1;
             }
         };
 
-        fail 'Were not able to find location in setting. Are you sure this is'
-            ~ ' a core Code?';
+        fail 'Were not able to find location in setting. Are you sure this is a core Code?';
     }
 
     say "{.<file>}:{.<line>}" given real-location-for &say;
