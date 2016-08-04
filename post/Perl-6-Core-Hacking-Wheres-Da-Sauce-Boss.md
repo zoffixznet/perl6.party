@@ -313,4 +313,101 @@ and this is the code:
 `given` a `$*PERL` `.compiler` `.version`, if it contains letter `g`, join up
 version bits, split on `g`, and the last portion will be our commit prefix; if
 it doesn't contain letter `g`, then we're dealing with a release tag, so we'll
-take it as-is.
+take it as-is. All said and done, our code for locating source becomes this:
+
+    my $where = .Str ~~ /g/
+        ?? .parts.join.split("g")[*-1]
+        !! .Str
+    given $*PERL.compiler.version;
+
+    say [~] 'https://github.com/rakudo/rakudo/blob/',
+            $where, '/', .<file>, '#L', .<line>
+    given real-location-for &say.line;
+
+    # OUTPUT:
+    # https://github.com/rakudo/rakudo/blob/c843682/src/core/io_operators.pm#L17
+
+Hey! Awesome! We got a link that points to the correct commit and file! Let
+celebrations begin! Wait. What? You followed the link and noticed the line
+number is not quite right? What gives? Did we mess up our algorithm?
+
+## Crank Up The Insanity
+
+If you take a look again at the [script that generates the setting
+file](https://github.com/rakudo/rakudo/blob/nom/tools/build/gen-cat.nqp),
+you'll notice it strips things: comments and special backend-specific chunks
+of code.
+
+There are two ways to fix this. The sane approach would be to commit a change
+that would make that script insert an empty line for each line it skips and
+then pretend that I didn't do that just to make my personal project work.
+Then, there's the Zoffix Way to fix this: we got the GitHub link, so why
+don't we fetch that code and figure out what the right line number is. Hey!
+That second way sounds much more fun! Let's do just that!
+
+The one link we've seen so far is this:
+[https://github.com/rakudo/rakudo/blob/c843682/src/core/io_operators.pm#L17](https://github.com/rakudo/rakudo/blob/c843682/src/core/io_operators.pm#L17).
+It's not quite what we want, since it's got HTML and bells and whistles in it.
+We want raw code and GitHub does offer that at a slightly different URL:
+[https://raw.githubusercontent.com/rakudo/rakudo/c843682/src/core/io_operators.pm](https://raw.githubusercontent.com/rakudo/rakudo/c843682/src/core/io_operators.pm). The plan of action then
+becomes:
+
+* Get the line number in the setting
+* Use our `real-location-for` sub to get the filename and sorta-right line
+number in a source file
+* Get the commit our compiler was built with
+* Generate a GitHub URL for raw code for that file on that commit
+and fetch that code
+* Use the same algorithm as in the [setting generating
+script](https://github.com/rakudo/rakudo/blob/nom/tools/build/gen-cat.nqp#L28-L45) to convert the code we fetched into the version that lives in our setting,
+while keeping track of the number of lines we strip
+* When we reach the correct line number in the converted file, we adjust
+the original line number we had by the number of lines we stripped
+* Generate a regular GitHub URL to the commit, file, and corrected line number
+* ???
+* Profit!
+
+I could go over the code, but it's just a dumb, unfun algorithm, and most
+importantly, you don't need to know it. Because... there's a module that
+does just that!
+
+## What Sorcery Is This?
+
+The module is called
+[CoreHackers::Sourcery](https://github.com/zoffixznet/perl6-CoreHackers-Sourcery) and when you `use` it, it'll
+[`augment`](https://docs.perl6.org/syntax/augment) the `Code` class and
+all core classes that inherit from it with `.sourcery` method, as well
+as provide a `sourcery` subroutine.
+
+So, to get the location of the code for `say` sub, just run:
+
+    use CoreHackers::Sourcery;
+    &say.sourcery.say;
+
+    # OUTPUT:
+    # src/core/io_operators.pm:20 https://github.com/rakudo/rakudo/blob/c843682/src/core/io_operators.pm#L20
+
+That gives us the correct location of the `proto`. Want to get the location
+of a specific multi? There's no need to mess with `.cando`! The arguments you
+give to the `.sourcery` method will be used to select the best matching multi,
+so to find the location of the `say` multi that will handle `say "foo"` call,
+just run:
+
+    &say.sourcery("foo").say;
+
+    # OUTPUT:
+    # src/core/io_operators.pm:22 https://github.com/rakudo/rakudo/blob/c843682/src/core/io_operators.pm#L22
+
+That covers the subs. For methods, you can go with the whole `.^can` meta
+dance, but we like simple things, and so we'll use the subroutine form
+of `sourcery`:
+
+    say sourcery Int, 'abs';      # method called on a type object
+    say sourcery 42,  'split';    # method called on an Int object
+    say sourcery 42,  'base', 16; # method call with args
+
+This is pretty handy. And the whole hitting the GitHub thing? The module
+will cache the code fetched from GitHub, so things like this won't take
+forever:
+
+    say "Int.{.name} is at {.sourcery}" for Int.^methods;
