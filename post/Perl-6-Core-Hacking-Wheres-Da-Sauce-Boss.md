@@ -181,7 +181,7 @@ rather well. Let's dive into the core, shall we?
 ## Can't see the core files for the setting
 
 If this is the first time you're to see the print out of the `.file`/`.line`
-for some core stuff, your're in for surprise. Actually, we've already seen the
+for some core stuff, you're in for a surprise. Actually, we've already seen the
 surprise, but you may have thought it to be a fluke:
 
     say "{.file}:{.line}" given &say;
