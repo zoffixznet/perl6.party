@@ -488,6 +488,6 @@ Happy hacking!
 
 Inspired by this blog post, lizmat++
 [has changed](https://github.com/rakudo/rakudo/commit/715b822bfd7dc66efbf041e19d11cf4841fbf12f)
-the setting generation script to *not* skip lines, so the whole
-fetching-code-from-GitHub-to-find-the-real-number thing is no longer necessary,
+the setting generation script to *not* skip lines, so making adjustments
+to line numbers by fetching source from GitHub is no longer necessary,
 as the line numbers match up with the original source.
