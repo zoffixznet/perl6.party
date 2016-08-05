@@ -296,7 +296,7 @@ commit prefix parts in version numbers:
     say $*PERL.compiler.version;
     # v2016.06.10.g.7.cff.429
 
-Rakudo is a compiler and so we're insterested in the value of
+Rakudo is a compiler and so we're interested in the value of
 `$*PERL.compiler.version`. It contains the major release version, followed by
 `g`, followed by the commit prefix of this particular build. The prefix is
 split up on number-letter boundaries, so we'll need to join up all the bits and
