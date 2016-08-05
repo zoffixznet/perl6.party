@@ -484,7 +484,7 @@ handy command line aliases.
 
 Happy hacking!
 
-# UPDATE 2016.08.05
+## UPDATE 2016.08.05
 
 Inspired by this blog post, lizmat++
 [has changed](https://github.com/rakudo/rakudo/commit/715b822bfd7dc66efbf041e19d11cf4841fbf12f)
