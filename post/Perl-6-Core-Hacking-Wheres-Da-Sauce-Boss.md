@@ -211,7 +211,7 @@ This means if we're clever enough, we can write a sub that translates
 a line number in the setting to the separate file we can locate in the repo.
 Here's a plan of action: we pop open the setting file and read it line by line.
 When we encounter one of the above comments, we make a note of which file
-we're in as well as how many lines deep we're in that file.
+we're in as well as how many lines deep in the setting we're currently at.
 
 The location of the setting file may differ, depending on how you installed
 Perl 6, but on my system (I use
