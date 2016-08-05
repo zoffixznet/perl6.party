@@ -483,3 +483,11 @@ source code we can edit, culminating with a shiny module and a couple of
 handy command line aliases.
 
 Happy hacking!
+
+# UPDATE 2016.08.05
+
+Inspired by this blog post, lizmat++
+[has changed](https://github.com/rakudo/rakudo/commit/715b822bfd7dc66efbf041e19d11cf4841fbf12f)
+the setting generation script to *not* skip lines, so the whole
+fetching-code-from-GitHub-to-find-the-real-number thing is no longer necessary,
+as the line numbers match up with the original source.
