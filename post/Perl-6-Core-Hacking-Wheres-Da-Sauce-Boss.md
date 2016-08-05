@@ -156,7 +156,7 @@ its specific `.file` and `.line`:
 
     my $code = gather {
         for Kitty.^can('meow') -> $meth {
-            .take for grep *.defined, $meth.cando: \(Kitty, 'meow');
+            .take for $meth.cando: \(Kitty, 'meow');
         }
     }
 
@@ -170,8 +170,8 @@ our two classes with three `meow` methods total. On line 17–21 we loop
 over the two `meow` `Method`s the `.^can` metamodel call gives us. For
 each of them we call the `.cando` method with the `Capture` that matches
 the multi we want (note that we do need to provide the needed object as the
-first argument of the Capture). We `grep` the returned list for all of the
-`.defined` values that we then `.take` to `gather` into the `$code` variable.
+first argument of the Capture). We then `.take` all found candidates to
+`gather` them into the `$code` variable.
 
 The first value we get is the narrowest candidate and is good 'nuf for us,
 so we call the `.file` and `.line` on it, which gives us the location we were
