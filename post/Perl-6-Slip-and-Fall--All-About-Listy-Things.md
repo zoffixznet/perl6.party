@@ -45,14 +45,16 @@ A list in a list is a thing in Perl 6 and you don't need to think about it:
 And so is a list in a list in a list in a list in a list in a list...
 
     dd my @foo = 1, (2, (3, (4, (5, (6,)))));
+    say @foo[1][1][1][1][1].WHAT;
 
     # OUTPUT:
     # Array @foo = [1, (2, (3, (4, (5, (6,)))))]
+    # (List)
 
 I did not typo that comma after the `6`, it's making that last list with
-`6` in it. And so comes the first rule: commas make lists, not parentheses.
-The parentheses are there just for grouping. If you need a list with just
-one item in it, pop a comma after it.
+`6` in it a list. And so comes the first rule: commas make lists, not
+parentheses. The parentheses are there just for grouping. If you need a list
+with just one item in it, pop a comma after it.
 
 It's a bit hard to see the effect with the `@`-sigiled variables, so let's see
 an alternative.
@@ -61,6 +63,7 @@ an alternative.
 
     dd my $foo = (1, 2, ('meow', 'moo'), 3, 4);
 
+    # OUTPUT:
     # List $foo = $(1, 2, ("meow", "moo"), 3, 4)
 
 The `$` sigil doesn't mean you can store just "one" thing in it, as
