@@ -2,7 +2,7 @@
 %% date: 2016-08-04
 %% desc: Locating the source code for specific core methods and subs
 
-Imagine you were playing with Perl 6 and you came across a bugglet
+Imagine you were playing with Perl 6 and you came across a buglet
 or you were having some fun with [the Perl 6 bug
 queue](http://rakudo.org/rt/open-all)—you'd like to debug a particular core
 subroutine or method, so where's the source for it at?
@@ -81,13 +81,13 @@ We got extra cruft of the `.^can` metamodel call, which returns a list of
 `.line` number from, but is it really the method we were looking for?
 Take a look at this example:
 
-    class Cudly {
+    class Cuddly {
         method meow ('meow', 'meow') {
             say 'Meow meow meow!';
         }
     }
 
-    class Kitty is Cudly {
+    class Kitty is Cuddly {
         multi method meow ('world') {
             say 'Meow world!';
         }
@@ -119,7 +119,7 @@ two meows in the output? Let's print the `.file` and `.line` for both meows:
     # The code is in test.p6 on line 2
 
 The second `meow` gives us a sane result; it's our method defined in
-class `Cudly`. The first one, however, gives us some weird file.
+class `Cuddly`. The first one, however, gives us some weird file.
 
 What's happening here is the line is referencing the `proto` for the multies.
 Since in this case instead of providing our own `proto` we use the
@@ -138,13 +138,13 @@ and since the returned object is a `Code`, we can query
 its specific `.file` and `.line`:
 
 
-    class Cudly {
+    class Cuddly {
         method meow ('meow', 'meow') {
             say 'Meow meow meow!';
         }
     }
 
-    class Kitty is Cudly {
+    class Kitty is Cuddly {
         multi method meow ('world') {
             say 'Meow world!';
         }
