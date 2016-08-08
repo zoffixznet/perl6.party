@@ -276,3 +276,7 @@ That's not the only thing the bug queue has on the menu. In the next post,
 we'll examine what it has to teach more experienced regulars and core
 members of the project! How can you get more bugs fixed? Maybe the bug queue
 knows the answer.
+
+## Part 2
+
+[Part 2](http://perl6.party/post/A-Date-With-The-Bug-Queue-or-Let-Me-Help-You-Help-Me-Help-You--Part-2) is now available!
