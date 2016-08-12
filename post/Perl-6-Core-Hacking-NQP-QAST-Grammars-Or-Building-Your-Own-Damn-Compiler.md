@@ -14,7 +14,7 @@ make some of our own, using the same building blocks Rakudo uses. Let's
 build our own compiler for a language we invent! A gooddamm compiler for a
 gooddamm language... literally.
 
-## The Patient
+## The Goal
 
 Here's what our language will have:
 
