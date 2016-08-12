@@ -19,6 +19,8 @@ gooddamm language... literally.
 Here's what our language will have:
 
 * strings and basic numerals
+* basic math and string concatenation
+* variables
 * subroutines
 * classes with methods you can call
 
