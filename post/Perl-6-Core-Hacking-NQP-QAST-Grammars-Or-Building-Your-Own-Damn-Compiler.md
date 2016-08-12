@@ -11,9 +11,8 @@ execution.
 
 Perl 6 is large and scary, so today, instead of looking at its guts, we'll
 make some of our own, using the same building blocks Rakudo uses. Let's
-build our own compiler for a language we invent! I find programming can be
-rather exasperating at times, and taking a break to vent is helpful. So, let's
-build a good damn compiler for a good damn language... literally.
+build our own compiler for a language we invent! A gooddamm compiler for a
+gooddamm language... literally.
 
 ## The Patient
 
