@@ -2,7 +2,7 @@
 %% date: 2016-08-15
 %% desc: The show off and the explanation of Perl 6 errors.
 
-If you're following tech stuff, you probably know by know about the folks
+If you're following tech stuff, you probably know by now about the folks
 at Rust land working on [some totally awesome error reporting
 capabilities](https://internals.rust-lang.org/t/new-error-format/3438). Since
 Perl 6 is also known for it's Awesome Errors,
