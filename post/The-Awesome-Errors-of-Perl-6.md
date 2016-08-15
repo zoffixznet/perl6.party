@@ -70,7 +70,7 @@ it and use a `for` loop to iterate over the values:
 ```
 
 Perl 6 lets you omit parentheses when calling subroutines. The error talks
-about about gobbling blocks. What happens is the block we were hoping to
+about gobbling blocks. What happens is the block we were hoping to
 give to the `for` loop is actually being passed to the subroutine as an
 argument instead. The second error in the output corroborates by saying
 the `for` loop is missing its block (and makes a suggestion it was taken by
