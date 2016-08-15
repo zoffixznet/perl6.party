@@ -177,6 +177,15 @@ go:
     @seq.map({ $_² }).join(', ').say;
 ```
 
+And even though we're storing the Seq in an Array, it won't get reified until
+actually needed:
+
+    my @a = 1 … ∞;
+    say @a[^10];
+
+    # OUTPUT:
+    # (1 2 3 4 5 6 7 8 9 10)
+
 ## These Aren't The Attributes You're Looking For
 
 Imagine you have a class. In it, you have some private attributes and you've
