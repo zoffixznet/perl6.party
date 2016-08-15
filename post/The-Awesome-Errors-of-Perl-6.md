@@ -246,25 +246,7 @@ the value we see in the error message. Since indexes cannot be negative,
 we get the error, which also tells us the index must be 0 to positive infinity
 (with any indexes above what the list contains returning `Any` when looked up).
 
-## S/// Is Not Useful
-
-After coding some of our Perl 5 sister language, doing `$foo ~~ S/foo/bar/;`
-as a non-destructive version of `$foo ~~ s/foo/bar/;` comes naturally.
-
-```
-    say "foo" ~~ S/foo/bar/;
-
-    Potential difficulties:
-        Smartmatch with S/// is not useful. You can use given instead: S/// given $foo
-        at /home/zoffix/test.p6:1
-        ------> say "foo" ~~ ⏏S/foo/bar/;
-    False
-```
-
-This is not actually an error, it's a warning. But since we get wrong results,
-it may as well be one.
-
-## A Rose By Any Other Name, Would Still Use Perl 5
+## A Rose By Any Other Name, Would Code As Sweet
 
 If you're an active user of Perl 6's sister language, the Perl 5, you may
 sometimes write Perl-5-isms in your Perl 6 code:
@@ -280,14 +262,33 @@ Above, we're attempting to use Perl 5's concatenation operator to concatenate
 two strings. The error mechanism is smart enough to detect such usage
 and to recommend the use of the correct `~` operator instead.
 
-## HEREDOC Or What The Hell Does That Error Mean Anyway
+This is not the only case of such detection. There are many. Here's another
+example, detecting accidental use of Perl 5's diamond operator:
 
-Here's an evil error. It's evil enough that it may have been improved if you're
-reading this far enough in the future from when I'm writing this. Try to
-spot what the problem is... read the error first, as if you were the one
+    while <> {}
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Unsupported use of <>; in Perl 6 please use lines() to read input, ('') to
+    # represent a null string or () to represent an empty list
+    # at /home/zoffix/test.p6:1
+    # ------> while <⏏> {}
+
+## Heredoc, Theredoc, Everywheredoc
+
+Here's an evil error and there's nothing awesome about it, but I figured I'd
+mention it, since it's easy to debug if you know about it, and quite annoying
+if you don't. The error is evil enough that it may have been already improved
+if you're reading this far enough in the future from when I'm writing this.
+
+Try to spot what the problem is... read the error first, as if you were the one
 who wrote (and so, are familiar with) the code:
 
 ```
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Variable '$wtf' is not declared
+    # at /home/zoffix/test.p6:13
+    # ------> sub foo (⏏$wtf) {
+
     my $stuff = qq:to/END/;
     Blah blah blah
     END;
@@ -303,16 +304,11 @@ who wrote (and so, are familiar with) the code:
     sub foo ($wtf) {
         say 'oh my!';
     }
-
-    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
-    # Variable '$wtf' is not declared
-    # at /home/zoffix/test.p6:13
-    # ------> sub foo (⏏$wtf) {
 ```
 
 Huh? It's crying about an undeclared variable, but it's pointing to a
 signature of a subroutine. Of course it won't be declared. What sort of
-eCrack is the compiler smoking?
+e-Crack is the compiler smoking?
 
 For those who didn't spot the problem: it's the spurious semicolon after
 the closing `END` of the heredoc. The heredoc ends where the closing delimiter
@@ -322,3 +318,140 @@ A `qq` heredoc lets you interpolate variables, so when the parser gets to the
 `$wtf` variable in the signature, it has no idea it's in a signature of an
 actual code and not just some random text, so it cries about the variable
 being undeclared.
+
+## Won't Someone Think of The Reader?
+
+Here's a great error that prevents you from writing horrid code:
+
+    my $a;
+    sub {
+        $a.say;
+        $^a.say;
+    }
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # $a has already been used as a non-placeholder in the surrounding sub block,
+    #   so you will confuse the reader if you suddenly declare $^a here
+    # at /home/zoffix/test.p6:4
+    # ------>         $^a⏏.say;
+
+Here's a bit of a background: you can use the
+[`$^` twigil](https://docs.perl6.org/language/variables#index-entry-%24^)
+on variables to create an implicit signature, so the above sub has signature
+`($)`. To make it possible to use such variables in nested blocks, this syntax
+actually creates the same variable without the twigil, so `$^a` and `$a` are
+the same thing.
+
+In our code, we also have an `$a` in outer scope and supposedly we print it
+first, before using the `$^` twigil to create another `$a` in the same scope,
+but one that is the argument to the sub... complete brain-screw! To avoid this,
+just rename your variables to something that doesn't clash:
+
+    my $ความสงบ = 'peace';
+    sub {
+        $ความสงบ.say;
+        $^กับตัวแปรของคุณ.say;
+    }('to your variables');
+
+    # OUTPUT:
+    # peace
+    # to your variables
+
+## Well, Colour Me Errored
+
+If your terminal supports it, the compiler will emit ANSI codes to colourize
+the output a bit:
+
+    for ^5 {
+        say meow";
+    }
+
+![](/asssets/pics/awesome-errors.png)
+
+That's all nice and spiffy, but if you're, say, capturing output from the
+compiler to display it elsewhere, you may get the ANSI code as is, like
+`31m===[0mSORRY![31m===[0m`.
+
+That's awful, but luckily, it's easy to disable the colours: just set
+`RAKUDO_ERROR_COLOR` environmental variable to `0`:
+
+![](/asssets/pics/awesome-errors2.png)
+
+You can set it from within the program too. You just have to do it early
+enough, so put it somewhere at the start of the program and use the
+[`BEGIN` Phaser](https://docs.perl6.org/language/phasers#BEGIN) to set it
+as soon as the assignment is compiled:
+
+    BEGIN %*ENV<RAKUDO_ERROR_COLOR> = 0;
+
+    for ^5 {
+        say meow";
+    }
+
+## An Exceptional Failure
+
+Perl 6 has a special exception—[`Failure`](https://docs.perl6.org/type/Failure)—that
+doesn't explode until you try to use it as a value, and you can even defuse it
+entirely by using it in boolean context. You can produce your own Failures
+by calling the [`fail`](https://docs.perl6.org/routine/fail) subroutine and
+Perl 6 uses them in core whenever it can.
+
+Here's a piece of code that has a prefix operator for calculating a
+circumference of an object, given its radius. If the radius is negative,
+it calls `fail`, returning a `Failure` object:
+
+    sub prefix:<⟳> (\𝐫) {
+        𝐫 < 0 and fail 'Your object warps the Universe a new one';
+        τ × 𝐫;
+    }
+
+    say 'Calculating circumference of the mystery object';
+    my $cₘ = ⟳ −𝑒;
+
+    say 'Calculating circumference of Earth';
+    my $cₑ = ⟳ 6.3781 × 10⁶;
+
+    say 'Calculating circumference of the Sun';
+    my $cₛ = ⟳ 6.957 × 10⁸;
+
+    say "The circumference of the largest object is {max $cₘ, $cₑ, $cₛ} metres";
+
+    # OUTPUT:
+    # Calculating circumference of the mystery object
+    # Calculating circumference of Earth
+    # Calculating circumference of the Sun
+    # Your object warps the Universe a new one
+    #   in sub prefix:<⟳> at test.p6 line 2
+    #   in block <unit> at test.p6 line 7
+    #
+    # Actually thrown at:
+    #   in block <unit> at test.p6 line 15
+
+We're calculating the circumference for a negative radius on line 7, so if
+it were just a regular exception, our code would die there and then. Instead,
+by the output we can see that we *continue* to calculate the circumference
+of the Earth and the Sun, until we get to the last line.
+
+There we try to use the `Failure` in `$cₘ` variable as of the arguments to the
+[`max` routine](https://docs.perl6.org/routine/max). Since we're asking for
+the actual value, the Failure explodes and gives us a nice backtrace. The
+error message includes the point where our Failure blew up (line 15), where
+we received it (line 7) as well as where it came from (line 2). Pretty sweet!
+
+## Conclusion
+
+Useful, descriptive errors are becoming the industry standard and
+Perl 6 and [Rust](https://doc.rust-lang.org/book/README.html) languages
+are leading that effort. The errors must go beyond merely telling you the
+line number to look at. They should point to a piece of code you wrote.
+They should make a guess at what you meant. They should point to your code,
+even if they originate in some third party library you're using.
+
+Most of Perl 6 errors display the piece of code containing the error. They
+use algorithms to offer valid suggestions when you mistyped a subroutine name.
+If you're used to other languages, Perl 6 will detect your "accent," and offer
+the correct way to pronounce it in Perl 6. And instead of immediately blowing
+up, Perl 6 offers a mechanism to propagate errors right to the code the
+programmer is writing.
+
+Perl 6 has Awesome Errors.
