@@ -277,7 +277,7 @@ two strings. The error mechanism is smart enough to detect such usage
 and to recommend the use of the correct `~` operator instead.
 
 This is not the only case of such detection. There are many. Here's another
-example, detecting accidental use of Perl 5's diamond operator, as well as
+example, detecting accidental use of Perl 5's diamond operator, with
 several suggestions of what the programmer may have meant:
 
     while <> {}
