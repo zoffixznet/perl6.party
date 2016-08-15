@@ -425,9 +425,9 @@ it calls `fail`, returning a `Failure` object:
     say "The circumference of the largest object is {max $cₘ, $cₑ, $cₛ} metres";
 
     # OUTPUT:
-    # Calculating circumference of the mystery object
-    # Calculating circumference of Earth
-    # Calculating circumference of the Sun
+    # Calculating the circumference of the mystery object
+    # Calculating the circumference of the Earth
+    # Calculating the circumference of the Sun
     # Your object warps the Universe a new one
     #   in sub prefix:<⟳> at test.p6 line 2
     #   in block <unit> at test.p6 line 7
