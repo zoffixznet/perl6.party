@@ -1,18 +1,17 @@
 %% title: The Awesome Errors of Perl 6
 %% date: 2016-08-15
 %% desc: The show off and the explanation of Perl 6 errors.
-%% draft: True
 
 If you're following tech stuff, you probably know by know about the folks
 at Rust land working on [some totally awesome error reporting
 capabilities](https://internals.rust-lang.org/t/new-error-format/3438). Since
-Perl 6 is also know for it's Awesome Errors,
+Perl 6 is also known for it's Awesome Errors,
 [mst](https://twitter.com/shadowcat_mst) inquired for some examples to show
 off to the rustaceans, and unfortunately I drew a blank...
 
-Errors is something I try to avoid and rarely read in full. So I figured I'll
+Errors are something I try to avoid and rarely read in full. So I figured I'll
 hunt down some cool examples of Awesome Errors and write about them. While
-I could bash my head on the keyboard and paste the output, that'd be quite
+I could just bash my head on the keyboard and paste the output, that'd be quite
 boring to read, so I'll talk about some of the tricky errors that might not
 be obvious to beginners, and how to fix them.
 
@@ -22,25 +21,25 @@ Let the head bashing begin!
 
 Here's some code with an error in it;
 
-  say "Hello world!;
-  say "Local time is {DateTime.now}";
+    say "Hello world!;
+    say "Local time is {DateTime.now}";
 
-  # ===SORRY!=== Error while compiling /home/zoffix/test.p6
-  # Two terms in a row (runaway multi-line "" quote starting at line 1 maybe?)
-  # at /home/zoffix/test.p6:2
-  # ------> say "⏏Local time is {DateTime.now}";
-  #     expecting any of:
-  #         infix
-  #         infix stopper
-  #         postfix
-  #         statement end
-  #         statement modifier
-  #         statement modifier loop
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Two terms in a row (runaway multi-line "" quote starting at line 1 maybe?)
+    # at /home/zoffix/test.p6:2
+    # ------> say "⏏Local time is {DateTime.now}";
+    #     expecting any of:
+    #         infix
+    #         infix stopper
+    #         postfix
+    #         statement end
+    #         statement modifier
+    #         statement modifier loop
 
 The first line is missing the closing quote on the string, so everything
 until the opening quote on the second line is still considered part of the
 string. Once the supposedly closing quote is found, Perl 6 sees word "Local,"
-which it identifies as a term. Since two terms in a row are now allowed in
+which it identifies as a term. Since two terms in a row are not allowed in
 Perl 6, the compiler throws an error, offering some suggestions on what it was
 expecting, and it detects we're in a string and suggests we check we didn't
 forget a closing quote on line 1.
@@ -87,12 +86,12 @@ so our loop needs to be:
 ```
 
 However, were our subroutine actually expecting a block to be passed, no
-parentheses would be necessary. Two code blocks side by side is a "two terms
-in a row" error we've seen above, so Perl 6 knows to pass the first block
-to the subroutine and use the second block as the body of the `for` loop:
+parentheses would be necessary. Two code blocks side by side would result in
+"two terms in a row" error we've seen above, so Perl 6 knows to pass the first
+block to the subroutine and use the second block as the body of the `for` loop:
 
 ```
-    sub things (&code) { code() }
+    sub things (&code) { code }
 
     for things { 1 … ∞ } {
         say "Current stuff is $_";
@@ -118,10 +117,11 @@ above it encountered an invocation of a subroutine it didn't know about. It
 noticed we do have a similar subroutine, so it offered it as an alternative.
 No more staring at the screen, trying to figure out where you made the typo!
 
-The feature doesn't consider everything under the moon, however. We we
-to capitalize the sub's name to `Levenshtein`, we would no longer get the
-suggestion, because for things that start with a capital letter, the compiler
-looks figures it's likely a type and not a subroutine name:
+The feature doesn't consider everything under the moon each time it's
+triggered, however. Were we to capitalize the sub's name to `Levenshtein`, we
+would no longer get the suggestion, because for things that start with a
+capital letter, the compiler figures it's likely a type name and not a
+subroutine name, so it checks for those instead:
 
     class Levenshtein {}
     Lvnshtein.new;
@@ -156,8 +156,9 @@ doesn't keep stuff around. When you iterate over it, each time it gives you
 a value, it discards it, so once you've iterated over the entire `Seq`, you're
 done.
 
-Above, we're attempting to iterate over it again, and so it cries and complains,
-because it can't do it. The error message does offer two possible solutions.
+Above, we're attempting to iterate over it again, and so the compiler cries
+and complains, because it can't do it. The error message does offer two
+possible solutions.
 We can either use the [`.cache` method](https://docs.perl6.org/routine/cache)
 to obtain a `List` we'll iterate over:
 
@@ -178,8 +179,9 @@ go:
 
 ## These Aren't The Attributes You're Looking For
 
-Imagine you have a class. In it, you have some private attributes. You got
-a method that does a regex match using the value of that attribute as part of it:
+Imagine you have a class. In it, you have some private attributes and you've
+got a method that does a regex match using the value of that attribute as part
+of it:
 
     class {
         has $!prefix = 'foo';
@@ -200,7 +202,7 @@ Oops! What happened?
 
 It's useful to understand that as far as the parser is concerned, Perl 6 is
 actually braided from several languages: Perl 6, Quote, and Regex languages
-are parts of braiding. This is why stuff like this works:
+are parts of that braiding. This is why stuff like this Just Works™:
 
     say "foo { "bar" ~ "meow" } ber ";
 
@@ -208,12 +210,13 @@ are parts of braiding. This is why stuff like this works:
     # foo barmeow ber
 
 Despite the interpolated code block using the same `"` quotes to delimit the
-strings within it as our original string, there's no conflict. However, the
-same mechanism presents us with a limitation in regexes, because in them, the
-looked up attributes belong to the `Cursor` object responsible for the regex.
+strings within it as the quotes on our original string, there's no conflict.
+However, the same mechanism presents us with a limitation in regexes, because
+in them, the looked up attributes belong to the `Cursor` object responsible
+for the regex.
 
-To avoid the error, simply use a temporary variable to store the `$!prefix` in
-or use the `given` block:
+To avoid the error, simply use a temporary variable to store the `$!prefix`
+in—as suggested by the error message—or use the `given` block:
 
 ```
     class {
@@ -236,15 +239,17 @@ Ever tried to access an element of a list that's out of range?
     #  in block <unit> at test.p6 line 2
 ```
 
-In Perl 6, to index an item from the end of a list, you use funky syntax
-: `[*-42]`. That's actually a closure that takes an argument (which is the
+In Perl 6, to index an item from the end of a list, you use funky syntax:
+`[*-42]`. That's actuall a closure that takes an argument (which is the
 number of elements in the list), subtracts 42 from it, and the return value
-is used as an actual index.
+is used as an actual index. You could use `@a[sub ($total) { $total - 42 }]`
+instead, if you were particularly bored.
 
 In the error above, that index ends up being `3 - 42`, or `-39`, which is
 the value we see in the error message. Since indexes cannot be negative,
-we get the error, which also tells us the index must be 0 to positive infinity
-(with any indexes above what the list contains returning `Any` when looked up).
+we receive the error, which also tells us the index must be 0 to positive
+infinity (with any indexes above what the list contains returning `Any` when
+looked up).
 
 ## A Rose By Any Other Name, Would Code As Sweet
 
@@ -263,7 +268,8 @@ two strings. The error mechanism is smart enough to detect such usage
 and to recommend the use of the correct `~` operator instead.
 
 This is not the only case of such detection. There are many. Here's another
-example, detecting accidental use of Perl 5's diamond operator:
+example, detecting accidental use of Perl 5's diamond operator, as well as
+several suggestions of what the programmer may have meant:
 
     while <> {}
 
@@ -280,15 +286,10 @@ mention it, since it's easy to debug if you know about it, and quite annoying
 if you don't. The error is evil enough that it may have been already improved
 if you're reading this far enough in the future from when I'm writing this.
 
-Try to spot what the problem is... read the error first, as if you were the one
-who wrote (and so, are familiar with) the code:
+Try to spot what the problem is... read the error at the bottom first, as if
+you were the one who wrote (and so, are familiar with) the code:
 
 ```
-    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
-    # Variable '$wtf' is not declared
-    # at /home/zoffix/test.p6:13
-    # ------> sub foo (⏏$wtf) {
-
     my $stuff = qq:to/END/;
     Blah blah blah
     END;
@@ -304,6 +305,11 @@ who wrote (and so, are familiar with) the code:
     sub foo ($wtf) {
         say 'oh my!';
     }
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Variable '$wtf' is not declared
+    # at /home/zoffix/test.p6:13
+    # ------> sub foo (⏏$wtf) {
 ```
 
 Huh? It's crying about an undeclared variable, but it's pointing to a
@@ -312,7 +318,8 @@ e-Crack is the compiler smoking?
 
 For those who didn't spot the problem: it's the spurious semicolon after
 the closing `END` of the heredoc. The heredoc ends where the closing delimiter
-appears; as far as the compiler is concerned, we've not seen the delimiter
+appears on a line all by itself. As far as the compiler is concerned, we've
+not seen the delimiter
 at `END;`, so it *continues* parsing as if it were still parsing the heredoc.
 A `qq` heredoc lets you interpolate variables, so when the parser gets to the
 `$wtf` variable in the signature, it has no idea it's in a signature of an
@@ -337,15 +344,16 @@ Here's a great error that prevents you from writing horrid code:
 
 Here's a bit of a background: you can use the
 [`$^` twigil](https://docs.perl6.org/language/variables#index-entry-%24^)
-on variables to create an implicit signature, so the above sub has signature
-`($)`. To make it possible to use such variables in nested blocks, this syntax
-actually creates the same variable without the twigil, so `$^a` and `$a` are
-the same thing.
+on variables to create an implicit signature. To make it possible to use such
+variables in nested blocks, this syntax actually creates the same variable
+without the twigil, so `$^a` and `$a` are the same thing, and the signature
+of the sub above is `($a)`.
 
 In our code, we also have an `$a` in outer scope and supposedly we print it
 first, before using the `$^` twigil to create another `$a` in the same scope,
-but one that is the argument to the sub... complete brain-screw! To avoid this,
-just rename your variables to something that doesn't clash:
+but one that contains the argument to the sub... complete brain-screw! To
+avoid this, just rename your variables to something that doesn't clash. How
+about some Thai?
 
     my $ความสงบ = 'peace';
     sub {
@@ -357,7 +365,7 @@ just rename your variables to something that doesn't clash:
     # peace
     # to your variables
 
-## Well, Colour Me Errored
+## Well, Colour Me Errpressed!
 
 If your terminal supports it, the compiler will emit ANSI codes to colourize
 the output a bit:
@@ -366,7 +374,7 @@ the output a bit:
         say meow";
     }
 
-![](/asssets/pics/awesome-errors.png)
+![](/assets/pics/awesome-errors.png)
 
 That's all nice and spiffy, but if you're, say, capturing output from the
 compiler to display it elsewhere, you may get the ANSI code as is, like
@@ -375,11 +383,11 @@ compiler to display it elsewhere, you may get the ANSI code as is, like
 That's awful, but luckily, it's easy to disable the colours: just set
 `RAKUDO_ERROR_COLOR` environmental variable to `0`:
 
-![](/asssets/pics/awesome-errors2.png)
+![](/assets/pics/awesome-errors2.png)
 
 You can set it from within the program too. You just have to do it early
 enough, so put it somewhere at the start of the program and use the
-[`BEGIN` Phaser](https://docs.perl6.org/language/phasers#BEGIN) to set it
+[`BEGIN` phaser](https://docs.perl6.org/language/phasers#BEGIN) to set it
 as soon as the assignment is compiled:
 
     BEGIN %*ENV<RAKUDO_ERROR_COLOR> = 0;
@@ -396,7 +404,7 @@ entirely by using it in boolean context. You can produce your own Failures
 by calling the [`fail`](https://docs.perl6.org/routine/fail) subroutine and
 Perl 6 uses them in core whenever it can.
 
-Here's a piece of code that has a prefix operator for calculating a
+Here's a piece of code where we define a prefix operator for calculating the
 circumference of an object, given its radius. If the radius is negative,
 it calls `fail`, returning a `Failure` object:
 
@@ -432,8 +440,8 @@ it were just a regular exception, our code would die there and then. Instead,
 by the output we can see that we *continue* to calculate the circumference
 of the Earth and the Sun, until we get to the last line.
 
-There we try to use the `Failure` in `$cₘ` variable as of the arguments to the
-[`max` routine](https://docs.perl6.org/routine/max). Since we're asking for
+There we try to use the `Failure` in `$cₘ` variable as one of the arguments to
+the [`max` routine](https://docs.perl6.org/routine/max). Since we're asking for
 the actual value, the Failure explodes and gives us a nice backtrace. The
 error message includes the point where our Failure blew up (line 15), where
 we received it (line 7) as well as where it came from (line 2). Pretty sweet!
@@ -444,14 +452,14 @@ Useful, descriptive errors are becoming the industry standard and
 Perl 6 and [Rust](https://doc.rust-lang.org/book/README.html) languages
 are leading that effort. The errors must go beyond merely telling you the
 line number to look at. They should point to a piece of code you wrote.
-They should make a guess at what you meant. They should point to your code,
-even if they originate in some third party library you're using.
+They should make a guess at what you meant. They should be referencing your
+code, even if they originate in some third party library you're using.
 
 Most of Perl 6 errors display the piece of code containing the error. They
 use algorithms to offer valid suggestions when you mistyped a subroutine name.
 If you're used to other languages, Perl 6 will detect your "accent," and offer
-the correct way to pronounce it in Perl 6. And instead of immediately blowing
-up, Perl 6 offers a mechanism to propagate errors right to the code the
+the correct way to pronounce your code in Perl 6. And instead of immediately
+blowing up, Perl 6 offers a mechanism to propagate errors right to the code the
 programmer is writing.
 
 Perl 6 has Awesome Errors.
