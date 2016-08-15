@@ -413,13 +413,13 @@ it calls `fail`, returning a `Failure` object:
         τ × 𝐫;
     }
 
-    say 'Calculating circumference of the mystery object';
+    say 'Calculating the circumference of the mystery object';
     my $cₘ = ⟳ −𝑒;
 
-    say 'Calculating circumference of Earth';
+    say 'Calculating the circumference of the Earth';
     my $cₑ = ⟳ 6.3781 × 10⁶;
 
-    say 'Calculating circumference of the Sun';
+    say 'Calculating the circumference of the Sun';
     my $cₛ = ⟳ 6.957 × 10⁸;
 
     say "The circumference of the largest object is {max $cₘ, $cₑ, $cₛ} metres";
