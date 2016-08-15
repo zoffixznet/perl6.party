@@ -1,0 +1,324 @@
+%% title: The Awesome Errors of Perl 6
+%% date: 2016-08-15
+%% desc: The show off and the explanation of Perl 6 errors.
+%% draft: True
+
+If you're following tech stuff, you probably know by know about the folks
+at Rust land working on [some totally awesome error reporting
+capabilities](https://internals.rust-lang.org/t/new-error-format/3438). Since
+Perl 6 is also know for it's Awesome Errors,
+[mst](https://twitter.com/shadowcat_mst) inquired for some examples to show
+off to the rustaceans, and unfortunately I drew a blank...
+
+Errors is something I try to avoid and rarely read in full. So I figured I'll
+hunt down some cool examples of Awesome Errors and write about them. While
+I could bash my head on the keyboard and paste the output, that'd be quite
+boring to read, so I'll talk about some of the tricky errors that might not
+be obvious to beginners, and how to fix them.
+
+Let the head bashing begin!
+
+## The Basics
+
+Here's some code with an error in it;
+
+  say "Hello world!;
+  say "Local time is {DateTime.now}";
+
+  # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+  # Two terms in a row (runaway multi-line "" quote starting at line 1 maybe?)
+  # at /home/zoffix/test.p6:2
+  # ------> say "⏏Local time is {DateTime.now}";
+  #     expecting any of:
+  #         infix
+  #         infix stopper
+  #         postfix
+  #         statement end
+  #         statement modifier
+  #         statement modifier loop
+
+The first line is missing the closing quote on the string, so everything
+until the opening quote on the second line is still considered part of the
+string. Once the supposedly closing quote is found, Perl 6 sees word "Local,"
+which it identifies as a term. Since two terms in a row are now allowed in
+Perl 6, the compiler throws an error, offering some suggestions on what it was
+expecting, and it detects we're in a string and suggests we check we didn't
+forget a closing quote on line 1.
+
+The `===SORRY!===` part doesn't mean you're running the Canadian version
+of the compiler, but rather that the error is a compile-time (as compared
+to a run-time) error.
+
+## Nom-nom-nom-nom
+
+Here's an amusing error. We have a subroutine that returns things, so we call
+it and use a `for` loop to iterate over the values:
+
+```
+    sub things { 1 … ∞ }
+
+    for things {
+        say "Current stuff is $_";
+    }
+
+    # ===SORRY!===
+    # Function 'things' needs parens to avoid gobbling block
+    # at /home/zoffix/test.p6:5
+    # ------> }⏏<EOL>
+    # Missing block (apparently claimed by 'things')
+    # at /home/zoffix/test.p6:5
+    # ------> }⏏<EOL>
+```
+
+Perl 6 lets you omit parentheses when calling subroutines. The error talks
+about about gobbling blocks. What happens is the block we were hoping to
+give to the `for` loop is actually being passed to the subroutine as an
+argument instead. The second error in the output corroborates by saying
+the `for` loop is missing its block (and makes a suggestion it was taken by
+the our `things` subroutine).
+
+The first error tells us how to fix the issue: `Function 'things' needs parens`,
+so our loop needs to be:
+
+```
+    for things() {
+        say "Current stuff is $_";
+    }
+```
+
+However, were our subroutine actually expecting a block to be passed, no
+parentheses would be necessary. Two code blocks side by side is a "two terms
+in a row" error we've seen above, so Perl 6 knows to pass the first block
+to the subroutine and use the second block as the body of the `for` loop:
+
+```
+    sub things (&code) { code() }
+
+    for things { 1 … ∞ } {
+        say "Current stuff is $_";
+    }
+```
+
+## Did You Mean Levestein?
+
+Here's a cool feature that will not only tell you you're wrong, but also
+point out what you might've meant:
+
+    sub levenshtein {}
+    levestein;
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Undeclared routine:
+    #     levestein used at line 2. Did you mean 'levenshtein'?
+
+When Perl 6 encounters names it doesn't recognize it computes
+[Levenshtein distance](https://en.wikipedia.org/wiki/Levenshtein_distance) for
+the things it *does* know to try to offer a useful suggestion. In the instance
+above it encountered an invocation of a subroutine it didn't know about. It
+noticed we do have a similar subroutine, so it offered it as an alternative.
+No more staring at the screen, trying to figure out where you made the typo!
+
+The feature doesn't consider everything under the moon, however. We we
+to capitalize the sub's name to `Levenshtein`, we would no longer get the
+suggestion, because for things that start with a capital letter, the compiler
+looks figures it's likely a type and not a subroutine name:
+
+    class Levenshtein {}
+    Lvnshtein.new;
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Undeclared name:
+    #    Lvnshtein used at line 2. Did you mean 'Levenshtein'?
+
+## Once You Go Seq, You Never Go Back
+
+Let's say you make a short sequence of Fibonacci numbers. You print it and
+then you'd like to print it again, but this time square each member. What
+happens?
+
+```
+    my $seq = (1, 1, * + * … * > 100);
+    $seq             .join(', ').say;
+    $seq.map({ $_² }).join(', ').say;
+
+    # 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144
+    # This Seq has already been iterated, and its values consumed
+    # (you might solve this by adding .cache on usages of the Seq, or
+    # by assigning the Seq into an array)
+    #   in block <unit> at test.p6 line 3
+```
+
+Ouch! A run-time error. What's happening is the [`Seq`
+type](https://docs.perl6.org/type/Seq)
+we get from the [the sequence
+operator](https://docs.perl6.org/language/operators#index-entry-..._operators)
+doesn't keep stuff around. When you iterate over it, each time it gives you
+a value, it discards it, so once you've iterated over the entire `Seq`, you're
+done.
+
+Above, we're attempting to iterate over it again, and so it cries and complains,
+because it can't do it. The error message does offer two possible solutions.
+We can either use the [`.cache` method](https://docs.perl6.org/routine/cache)
+to obtain a `List` we'll iterate over:
+
+```
+    my $seq = (1, 1, * + * … * > 100).cache;
+    $seq             .join(', ').say;
+    $seq.map({ $_² }).join(', ').say;
+```
+
+Or we can use an [Array](https://docs.perl6.org/type/Array) from the get
+go:
+
+```
+    my @seq = 1, 1, * + * … * > 100;
+    @seq             .join(', ').say;
+    @seq.map({ $_² }).join(', ').say;
+```
+
+## These Aren't The Attributes You're Looking For
+
+Imagine you have a class. In it, you have some private attributes. You got
+a method that does a regex match using the value of that attribute as part of it:
+
+    class {
+        has $!prefix = 'foo';
+        method has-prefix ($text) {
+            so $text ~~ /^ $!prefix/;
+        }
+    }.new.has-prefix('foobar').say;
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Attribute $!prefix not available inside of a regex, since regexes are methods on Cursor.
+    # Consider storing the attribute in a lexical, and using that in the regex.
+    # at /home/zoffix/test.p6:4
+    # ------>         so $text ~~ /^ $!prefix⏏/;
+    #     expecting any of:
+    #         infix stopper
+
+Oops! What happened?
+
+It's useful to understand that as far as the parser is concerned, Perl 6 is
+actually braided from several languages: Perl 6, Quote, and Regex languages
+are parts of braiding. This is why stuff like this works:
+
+    say "foo { "bar" ~ "meow" } ber ";
+
+    # OUTPUT:
+    # foo barmeow ber
+
+Despite the interpolated code block using the same `"` quotes to delimit the
+strings within it as our original string, there's no conflict. However, the
+same mechanism presents us with a limitation in regexes, because in them, the
+looked up attributes belong to the `Cursor` object responsible for the regex.
+
+To avoid the error, simply use a temporary variable to store the `$!prefix` in
+or use the `given` block:
+
+```
+    class {
+        has $!prefix = 'foo';
+        method has-prefix ($text) {
+            given $!prefix { so $text ~~ /^ $_/ }
+        }
+    }.new.has-prefix('foobar').say;
+```
+
+## De-Ranged
+
+Ever tried to access an element of a list that's out of range?
+
+```
+    my @a = <foo bar ber>;
+    say @a[*-42];
+
+    # Effective index out of range. Is: -39, should be in 0..Inf
+    #  in block <unit> at test.p6 line 2
+```
+
+In Perl 6, to index an item from the end of a list, you use funky syntax
+: `[*-42]`. That's actually a closure that takes an argument (which is the
+number of elements in the list), subtracts 42 from it, and the return value
+is used as an actual index.
+
+In the error above, that index ends up being `3 - 42`, or `-39`, which is
+the value we see in the error message. Since indexes cannot be negative,
+we get the error, which also tells us the index must be 0 to positive infinity
+(with any indexes above what the list contains returning `Any` when looked up).
+
+## S/// Is Not Useful
+
+After coding some of our Perl 5 sister language, doing `$foo ~~ S/foo/bar/;`
+as a non-destructive version of `$foo ~~ s/foo/bar/;` comes naturally.
+
+```
+    say "foo" ~~ S/foo/bar/;
+
+    Potential difficulties:
+        Smartmatch with S/// is not useful. You can use given instead: S/// given $foo
+        at /home/zoffix/test.p6:1
+        ------> say "foo" ~~ ⏏S/foo/bar/;
+    False
+```
+
+This is not actually an error, it's a warning. But since we get wrong results,
+it may as well be one.
+
+## A Rose By Any Other Name, Would Still Use Perl 5
+
+If you're an active user of Perl 6's sister language, the Perl 5, you may
+sometimes write Perl-5-isms in your Perl 6 code:
+
+    say "foo" . "bar";
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Unsupported use of . to concatenate strings; in Perl 6 please use ~
+    # at /home/zoffix/test.p6:1
+    # ------> say "foo" .⏏ "bar";
+
+Above, we're attempting to use Perl 5's concatenation operator to concatenate
+two strings. The error mechanism is smart enough to detect such usage
+and to recommend the use of the correct `~` operator instead.
+
+## HEREDOC Or What The Hell Does That Error Mean Anyway
+
+Here's an evil error. It's evil enough that it may have been improved if you're
+reading this far enough in the future from when I'm writing this. Try to
+spot what the problem is... read the error first, as if you were the one
+who wrote (and so, are familiar with) the code:
+
+```
+    my $stuff = qq:to/END/;
+    Blah blah blah
+    END;
+
+    for ^10 {
+        say 'things';
+    }
+
+    for ^20 {
+        say 'moar things';
+    }
+
+    sub foo ($wtf) {
+        say 'oh my!';
+    }
+
+    # ===SORRY!=== Error while compiling /home/zoffix/test.p6
+    # Variable '$wtf' is not declared
+    # at /home/zoffix/test.p6:13
+    # ------> sub foo (⏏$wtf) {
+```
+
+Huh? It's crying about an undeclared variable, but it's pointing to a
+signature of a subroutine. Of course it won't be declared. What sort of
+eCrack is the compiler smoking?
+
+For those who didn't spot the problem: it's the spurious semicolon after
+the closing `END` of the heredoc. The heredoc ends where the closing delimiter
+appears; as far as the compiler is concerned, we've not seen the delimiter
+at `END;`, so it *continues* parsing as if it were still parsing the heredoc.
+A `qq` heredoc lets you interpolate variables, so when the parser gets to the
+`$wtf` variable in the signature, it has no idea it's in a signature of an
+actual code and not just some random text, so it cries about the variable
+being undeclared.
