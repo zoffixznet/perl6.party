@@ -156,8 +156,8 @@ doesn't keep stuff around. When you iterate over it, each time it gives you
 a value, it discards it, so once you've iterated over the entire `Seq`, you're
 done.
 
-Above, we're attempting to iterate over it again, and so the compiler cries
-and complains, because it can't do it. The error message does offer two
+Above, we're attempting to iterate over it again, and so the Rakudo runtime
+cries and complains, because it can't do it. The error message does offer two
 possible solutions.
 We can either use the [`.cache` method](https://docs.perl6.org/routine/cache)
 to obtain a `List` we'll iterate over:
