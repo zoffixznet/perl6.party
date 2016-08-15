@@ -240,7 +240,7 @@ Ever tried to access an element of a list that's out of range?
 ```
 
 In Perl 6, to index an item from the end of a list, you use funky syntax:
-`[*-42]`. That's actuall a closure that takes an argument (which is the
+`[*-42]`. That's actually a closure that takes an argument (which is the
 number of elements in the list), subtracts 42 from it, and the return value
 is used as an actual index. You could use `@a[sub ($total) { $total - 42 }]`
 instead, if you were particularly bored.
