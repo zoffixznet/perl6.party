@@ -5,7 +5,7 @@
 If you're following tech stuff, you probably know by now about the folks
 at Rust land working on [some totally awesome error reporting
 capabilities](https://internals.rust-lang.org/t/new-error-format/3438). Since
-Perl 6 is also known for it's Awesome Errors,
+Perl 6 is also known for its Awesome Errors,
 [mst](https://twitter.com/shadowcat_mst) inquired for some examples to show
 off to the rustaceans, and unfortunately I drew a blank...
 
