@@ -177,8 +177,8 @@ go:
     @seq.map({ $_² }).join(', ').say;
 ```
 
-And even though we're storing the Seq in an Array, it won't get reified until
-actually needed:
+And even though we're storing the `Seq` in an `Array`, it won't get reified
+until it's actually needed:
 
     my @a = 1 … ∞;
     say @a[^10];
