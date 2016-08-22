@@ -1,5 +1,6 @@
 ### Drafts
 
+* 10-Easy-Steps-To-Burn-Yourself-Out-With-An-Open-Source-Project.md
 * Perl-6-Core-Hacking-NQP-QAST-Grammars-Or-Building-Your-Own-Damn-Compiler.md
 * Perl-6-Awesome-Multi-Threading-Herding-A-Hoard-Of-Socks.md
 * Perl-6-Slip-and-Fall--All-About-Listy-Things.md
