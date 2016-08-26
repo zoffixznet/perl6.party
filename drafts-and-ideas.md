@@ -8,6 +8,7 @@
 
 ### Ideas
 
+* Post about Junctions
 * *Perl 6 ♥ Mojolicious: A Great Web Framework Meets a Great Language*:
     examples of using Mojolicious via Inline::Perl5. Build a sample web socket
     app that uses Proc::Async to interface with the shell. Use
