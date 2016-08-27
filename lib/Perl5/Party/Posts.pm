@@ -4,7 +4,7 @@ use base 'Mojo::Base';
 
 use Text::MultiMarkdown qw/markdown/;
 use File::Glob qw/bsd_glob/;
-use Mojo::Util qw/slurp  decode  encode/;
+use Mojo::Util qw/slurp  decode  encode  xml_escape/;
 
 sub all {
     my @posts = bsd_glob 'post/*.md';
@@ -29,6 +29,7 @@ sub load {
     my ($self, $post) = @_;
     return unless -e "post/$post.md";
     my ($meta, $content) = process( decode 'UTF-8', slurp "post/$post.md" );
+    $content = process_irc($content);
     return $meta, markdown $content =~ s/^```$//gmr;
 }
 
@@ -39,5 +40,33 @@ sub process {
     return \%meta, $post;
 }
 
+sub process_irc {
+    my $content = shift;
+    my $in_irc = 0;
+    my @new_content;
+    for ( split /\n/, $content ) {
+        unless ( $in_irc or /^```irc/ ) {
+            push @new_content, $_;
+            next;
+        }
+
+        if ( /^```irc/ ) { $in_irc = 1; next; }
+        if ( /^```/    ) { $in_irc = 0; next; }
+
+        if ( # IRC actions
+            s{^ \* \s+ (\S+)  (.+) }{"<b>* $1</b>"        . xml_escape $2}xe
+        ) {}
+        elsif ( # IRC nick
+            s{^  <([^>]+)> \s (.+) }{"<b>&lt;$1&gt;</b> " . xml_escape $2}xe
+        ) {}
+        else  { $_ = xml_escape $_ }
+
+        s/^/> /;
+        s/$/<br>/;
+
+        push @new_content, $_;
+    }
+    return join "\n", @new_content;
+}
 
 1;
