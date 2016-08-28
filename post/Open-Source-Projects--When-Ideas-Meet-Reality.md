@@ -48,8 +48,8 @@ plans for Perl 6 I could fill two lives with, but I have to manage with just
 one I have. Many of the contributors have jobs, spouses, and kids, and
 they still contribute enourmous amounts of work.
 
-Jeff Goff, quoted at the start of this article, just gave a 9-hour Perl 6
-training seminar, raising €500 for [the Perl 6 core
+Jeff Goff, quoted at the start of this article, just gave a [9-hour Perl 6
+training seminar](https://www.safaribooksonline.com/library/view/oscon-2016-video/9781491965153/part242.html), raising €500 for [the Perl 6 core
 fund](http://www.perlfoundation.org/perl_6_core_development_fund).
 Elizabeth Mattijsen pushed a [huge number of commits](https://github.com/rakudo/rakudo/commits?author=lizmat)
 and is the primary person responsible for making
