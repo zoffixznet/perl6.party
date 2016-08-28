@@ -1,7 +1,6 @@
 %% title: Open Source Projects: When Ideas Meet Reality
 %% date: 2016-08-17
 %% desc: Discussion about proposal of ideas in open source communities
-%% draft: True
 
 Perl 6 is a brand new language, so there's plenty of [opportunity for
 improvement](https://github.com/perl6/perl6-most-wanted/blob/master/most-wanted/modules.md):
