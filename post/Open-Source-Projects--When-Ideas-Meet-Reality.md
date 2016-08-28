@@ -1,5 +1,5 @@
 %% title: Open Source Projects: When Ideas Meet Reality
-%% date: 2016-08-17
+%% date: 2016-08-28
 %% desc: Discussion about proposal of ideas in open source communities
 
 Perl 6 is a brand new language, so there's plenty of [opportunity for
