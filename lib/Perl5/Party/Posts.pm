@@ -29,7 +29,7 @@ sub load {
     my ($self, $post) = @_;
     return unless -e "post/$post.md";
     my ($meta, $content) = process( decode 'UTF-8', slurp "post/$post.md" );
-    $content = process_irc($content);
+    $content = process_module_links(process_irc($content));
     return $meta, markdown $content =~ s/^```$//gmr;
 }
 
@@ -38,6 +38,24 @@ sub process {
     my %meta;
     $meta{ $1 } = $2 while $post =~ s/^%%\s*(\w+)\s*:\s*([^\n]+)\n//;
     return \%meta, $post;
+}
+
+sub process_module_links {
+    my $content = shift;
+
+    return $content =~ s{
+        ``
+        P   (?<lang> [65]):
+        (?: (?<optional_text> .+?) `` )??
+            (?<module_name> [^` ]+ )
+        ``
+    }{
+        my $text = $+{optional_text} // '`' . $+{module_name} . '`';
+        my $url  = $+{lang} eq '6' ? 'https://modules.perl6.org/dist/'
+                                   : 'https://metacpan.org/pod/';
+
+        "[$text]($url" . $+{module_name} . ")";
+    }gexr;
 }
 
 sub process_irc {
@@ -59,7 +77,7 @@ sub process_irc {
         elsif ( # IRC nick
             s{^  <([^>]+)> \s (.+) }{"<b>&lt;$1&gt;</b> " . xml_escape $2}xe
         ) {}
-        else  { $_ = xml_escape $_ }
+        else  { $_ = ('&nbsp;' x 4) . xml_escape $_ }
 
         s/^/> /;
         s/$/<br>/;
