@@ -125,7 +125,6 @@ thing yet, putting the conversation at swift and amicable end
 <bioduds> any for perl6?
 <|Zoffix> bioduds, yeah, I know about them, but am not aware of any
     Perl 6 ones. You should definitely make some!
-<|Zoffix> bioduds, Dave Doyle was also suggesting we make some. So you should :)
 <bioduds> definitely
 <bioduds> I bet if we join we can put up one. I'm still learning P6
 <|Zoffix> \o/
