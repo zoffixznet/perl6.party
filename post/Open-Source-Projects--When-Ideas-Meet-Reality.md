@@ -117,7 +117,8 @@ start, realize it's really damn hard and time consuming, give up, think
 twice before proposing more ideas;
 (3) the person will offer a reason for why they can't do it, which can
 then nicely double as the reason for why no one else did the
-thing yet (*no time? yeah, well, join the club*).
+thing yet, putting the conversation at swift and amicable end
+(*no time? yeah, well, join the club*).
 
 ```irc
 <bioduds> do you guys know about koans?
