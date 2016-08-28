@@ -74,6 +74,11 @@ sub process_irc {
         if ( # IRC actions
             s{^ \* \s+ (\S+)  (.+) }{"<b>* $1</b>"        . xml_escape $2}xe
         ) {}
+        elsif ( # alt IRC nick
+            s{^  <\|([^>]+)> \s (.+) }{
+                "<b class='irc-alt'>&lt;$1&gt;</b> " . xml_escape $2
+            }xe
+        ) {}
         elsif ( # IRC nick
             s{^  <([^>]+)> \s (.+) }{"<b>&lt;$1&gt;</b> " . xml_escape $2}xe
         ) {}
