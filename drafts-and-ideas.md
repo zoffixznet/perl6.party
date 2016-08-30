@@ -8,6 +8,11 @@
 
 ### Ideas
 
+* "Abusing Perl 6 for Fun, Profit, and Utility: Custom Operators" a post about molding the
+language to what your problem domain may need; do custom ops primarily.
+Show how to regular ops to work on custom objects (like the Color.pm6 stuff). 
+This is most likely enough to fill one post, but if not, maybe mention a small
+slang (if the Slangs post now exists, link to it)
 * Post about Junctions
 * *Perl 6 ♥ Mojolicious: A Great Web Framework Meets a Great Language*:
     examples of using Mojolicious via Inline::Perl5. Build a sample web socket
