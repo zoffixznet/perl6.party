@@ -212,3 +212,28 @@ I found [JSONViewer.Stack.Hu](http://jsonviewer.stack.hu/) helpful when
 figuring out what bits of data I wanted to keep.
 
 ### NeuralAnomaly
+
+When I planned this bot, I suspected developing it would be somewhat difficult,
+with lots of thinking... In reality, *writing code for it*
+turned out to be super easy.
+Popping `ssh` into [`Proc::Async`](https://docs.perl6.org/type/Proc::Async)
+was child's play, and the Proc bailed out on non-zero exit codes, which made
+it super easy for me to abort failing stages of the process.
+
+However, it's the supporting infrastructure that proved a bit annoying, but
+was a great learning opportunity. The major roadblock was trying to pass
+the GPG passphrase to the `gpg` (which was easy) and to the `git` when signing
+the tag (which got annoying quick).
+
+Avoiding [idiotic solutions that tell you to write your passphrase
+into world-readable files](http://stackoverflow.com/a/11270814), I went
+to enable the `gpg-agent` by installing `gnupg-agent`, uncommenting
+`use-agent` in `~/.gnupg/gpg.conf`,
+and running `eval $(gpg-agent --daemon --sh)`
+
+That did the trick with starting the agent, *but* `git tag` was now outright
+choking when attempting to sign, telling 'gpg: cancelled by user', even though
+I did naught. I had to
+
+
+
