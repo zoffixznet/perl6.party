@@ -218,9 +218,16 @@ with lots of thinking... In reality, *writing code for it*
 turned out to be super easy.
 Popping `ssh` into [`Proc::Async`](https://docs.perl6.org/type/Proc::Async)
 was child's play, and the Proc bailed out on non-zero exit codes, which made
-it super easy for me to abort failing stages of the process.
+it super easy for me to abort failing stages of the process. I basically
+ended up with Perl-6-super-charged bash script.
 
-However, it's the supporting infrastructure that proved a bit annoying, but
+However, when it came to giving `gpg` and `git tag` the passphrase for the
+key that... is worth its own section
+
+#### *Won't You Take My Passphrase Please*
+
+
+ it's the supporting infrastructure that proved a bit annoying, but
 was a great learning opportunity. The major roadblock was trying to pass
 the GPG passphrase to the `gpg` (which was easy) and to the `git` when signing
 the tag (which got annoying quick).
@@ -234,6 +241,3 @@ and running `eval $(gpg-agent --daemon --sh)`
 That did the trick with starting the agent, *but* `git tag` was now outright
 choking when attempting to sign, telling 'gpg: cancelled by user', even though
 I did naught. I had to
-
-
-
