@@ -14,7 +14,7 @@ by making a release robot. Well, I didn't lie!
 ```
 
 I popped in [some relaxing
-music](https://www.youtube.com/watch?v=9y25snz83ms&feature=youtu.be&t=28s) and
+music](https://youtu.be/5i7qZxICwgQ?list=RD5i7qZxICwgQ) and
 got cracking. Today, I'll talk about the goodies I've made, which touch
 a much broader scope than just releasing Perl 6.
 
