@@ -180,7 +180,7 @@ Here's a little secret: Junctions are designed to be
 though at the time of this writing they will use just one thread, you should
 not rely on them being executed in any predictable order. The auto-threading
 will be implemented by some time in 2018, so stay tuned... your complex
-Junctioned operations that deserve it, might get much faster in a couple
+Junctioned operations that deserve it might get much faster in a couple
 of years without you doing anything.
 
 ## Conclusion
