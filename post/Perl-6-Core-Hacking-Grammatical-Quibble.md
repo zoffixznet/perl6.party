@@ -233,9 +233,80 @@ What follows is another token that showed up in our `--target=parse` output:
     <quibble(%*LANG<Quote>, 'q', $qm)>
 
 Here, we're invoking that token with
-three positional arguments: the Quote language braid, string `q`, and string
+three positional arguments: the `Quote` language braid, string `q`, and string
 `ww` that we saved in the `$qm` variable. I wonder what it's doing with 'em.
-Full speed ahead!
+That's our next stop. Full speed ahead!
 
 ## Nibble Quibble Nimble Nibbler
 
+Here's the full `token quibble` and you can see right away we'd have to
+dig deeper from the get-go:
+
+    token quibble($l, *@base_tweaks) {
+        :my $lang;
+        :my $start;
+        :my $stop;
+        <babble($l, @base_tweaks)>
+        {
+            my $B  := $<babble><B>.ast;
+            $lang  := $B[0];
+            $start := $B[1];
+            $stop  := $B[2];
+        }
+
+        $start <nibble($lang)>
+        [
+            $stop
+            || {
+                $/.CURSOR.typed_panic(
+                    'X::Comp::AdHoc',
+                    payload => "Couldn't find terminator $stop (corresponding $start was at line {
+                        HLL::Compiler.lineof(
+                            $<babble><B>.orig(), $<babble><B>.from()
+                        )
+                    })",
+                    expected => [$stop],
+                )
+            }
+        ]
+
+        {
+            nqp::can($lang, 'herelang')
+            && self.queue_heredoc(
+                $*W.nibble_to_str(
+                    $/,
+                    $<nibble>.ast[1], -> {
+                        "Stopper '" ~ $<nibble> ~ "' too complex for heredoc"
+                    }
+                ),
+                $lang.herelang,
+            )
+        }
+    }
+
+We define three variables and then invoke the `babble` token with the
+same arguments we invoked `quibble` with. Let's find it the same way we
+found all the previous tokens and peek at its guts. For sake of brevity,
+I removed [about half of it](https://github.com/rakudo/rakudo/blob/bc35922/src/Perl6/Grammar.nqp#L111-L125): that portion
+deals with adverbs, which we aren't using in our code at the moment.
+
+    token babble($l, @base_tweaks?) {
+        :my @extra_tweaks;
+
+        # <irrelevant portion redacted>
+
+        $<B>=[<?before .>]
+        {
+            # Work out the delimeters.
+            my $c := $/.CURSOR;
+            my @delims := $c.peek_delimiters($c.target, $c.pos);
+            my $start := @delims[0];
+            my $stop  := @delims[1];
+
+            # Get the language.
+            my $lang := self.quote_lang($l, $start, $stop, @base_tweaks, @extra_tweaks);
+            $<B>.'!make'([$lang, $start, $stop]);
+        }
+    }
+
+We start by assigning to `$<B>
