@@ -1,4 +1,4 @@
-%% title: Perl 6 Core Hacking: Grammatical Quibble
+%% title: Perl 6 Core Hacking: Grammatical Babble
 %% date: 2016-09-09
 %% desc: Following along with fixing a grammar bug
 %% draft: True
