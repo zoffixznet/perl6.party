@@ -233,11 +233,12 @@ What follows is another token that showed up in our `--target=parse` output:
     <quibble(%*LANG<Quote>, 'q', $qm)>
 
 Here, we're invoking that token with
-three positional arguments: the `Quote` language braid, string `q`, and string
+three positional arguments: the [`Quote` language
+braid](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Grammar.nqp#L424), string `q`, and string
 `ww` that we saved in the `$qm` variable. I wonder what it's doing with 'em.
 That's our next stop. Full speed ahead!
 
-## Nibble Quibble Nimble Nibbler
+## Nibble Quibble Babbling Nibbler
 
 Here's the full `token quibble` and you can see right away we'd have to
 dig deeper from the get-go:
@@ -309,4 +310,287 @@ deals with adverbs, which we aren't using in our code at the moment.
         }
     }
 
-We start by assigning to `$<B>
+We start by assigning to the current Cursor postion to the `$<B>` capture
+and then go in to execute the code block. We store the current current Cursor
+into `$c`, and then call `.peek_delimiters` method on it. If we `grep`
+in a built rakudo directory for it, we'll see it's defined [in
+NQP, in `nqp/src/HLL/Grammar.nqp`](https://github.com/perl6/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp#L200), but before we rush out to read its code, notice how it returns
+two delimiters. Hm, let's just print them out?
+
+The `.nqp` extension of the `src/Perl6/Grammar.nqp` we are in signifies we're
+in NQP land, so we need to use [NQP ops](https://github.com/perl6/nqp/blob/master/docs/ops.markdown) only. By adding this line after
+`@delim` is assigned to `$start` and `$stop`, we can find what
+`.peek_delimiters` gives us:
+
+    nqp::say("$start $stop");
+
+Compile! Now, even during compilation, our debug line already gives us an idea
+what these delimiters are all about. Run out problematic code again:
+
+    $ ./perl6 -e '.say for qww<„hello world”>;'
+    < >
+    hello world
+
+The delimiters are the angled bracket delimiters of the `qww`. We're not
+interested in these, so we can ignore `.peek_delimiters` and move on. Next
+up is the `.quote_lang` method. It's got "quote" in the name and we have a
+problem with quotes... sounds like we're getting closer. Let's take a note
+of what arguments we're passing to it:
+
+* `$l`—the [`Quote` language braid](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Grammar.nqp#L4752)
+* `$start`/`$stop`—angled bracket delimiters
+* `@base_tweaks`—that contains string `ww`
+* `@extra_tweaks`—extra adverbs, which we do not have, so the array is empty
+
+Locate `method quote_lang`; it's still in the [`src/Perl6/Grammar.nqp`
+file](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Grammar.nqp#L65):
+
+    method quote_lang($l, $start, $stop, @base_tweaks?, @extra_tweaks?) {
+        sub lang_key() {
+            # <body redacted>
+        }
+        sub con_lang() {
+            # <body redacted>
+        }
+
+        # Get language from cache or derive it.
+        my $key := lang_key();
+        nqp::existskey(%quote_lang_cache, $key) && $key ne 'NOCACHE'
+            ?? %quote_lang_cache{$key}
+            !! (%quote_lang_cache{$key} := con_lang());
+    }
+
+We have two lexical subroutines `lang_key` and `con_lang`, below them
+we store the output of `lang_key` into `$key` which is used in the whole cache
+dance in `%quote_lang_cache`, so we can ignore the `lang_key` sub and go
+straight to `con_lang`, which is called to generate the return value of
+our `quote_lang` method:
+
+    sub con_lang() {
+        my $lang := $l.'!cursor_init'(self.orig(), :p(self.pos()), :shared(self.'!shared'()));
+        for @base_tweaks {
+            $lang := $lang."tweak_$_"(1);
+        }
+
+        for @extra_tweaks {
+            my $t := $_[0];
+            if nqp::can($lang, "tweak_$t") {
+                $lang := $lang."tweak_$t"($_[1]);
+            }
+            else {
+                self.sorry("Unrecognized adverb: :$t");
+            }
+        }
+        nqp::istype($stop,VMArray) ||
+        $start ne $stop ?? $lang.balanced($start, $stop)
+                        !! $lang.unbalanced($stop);
+    }
+
+After initializing Cursor position, `$lang` contains our Quote language braid
+and then we descend into a `for` loop over `@base_tweaks`. For each of them,
+we call method `tweak_$t`, passing it truthy value `1`. Since we have just one
+base tweak, this means we're calling method `tweak_ww` on the Quote braid.
+Let's see what that method is about.
+
+Since the Quote braid is defined in the same file, just search for
+`method tweak_ww`:
+
+    method tweak_ww($v) {
+        $v ?? self.add-postproc("quotewords").apply_tweak(ww)
+           !! self
+    }
+
+Great. The `$v` we gave it is true, so we call `.add-postproc` and then
+`.apply_tweak(ww)`. Looking around we see `.add-postproc` is also used in
+other, non-buggy, quoters, so let's ignore it and jump straight to
+`.apply_tweak`:
+
+    method apply_tweak($role) {
+        my $target := nqp::can(self, 'herelang') ?? self.herelang !! self;
+        $target.HOW.mixin($target, $role);
+        self
+    }
+
+Aha! It's argument is a role and it mixes it into our Quote braid. Let's see
+what that role is about (again, just search the file for [`role ww`](https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Perl6/Grammar.nqp#L4846),
+or simply scroll up a bit):
+
+
+    role ww {
+        token escape:sym<' '> {
+            <?[']> <quote=.LANG('MAIN','quote')>
+        }
+        token escape:sym<‘ ’> {
+            <?[‘]> <quote=.LANG('MAIN','quote')>
+        }
+        token escape:sym<" "> {
+            <?["]> <quote=.LANG('MAIN','quote')>
+        }
+        token escape:sym<“ ”> {
+            <?[“]> <quote=.LANG('MAIN','quote')>
+        }
+        token escape:sym<colonpair> {
+            <?[:]> <!RESTRICTED> <colonpair=.LANG('MAIN','colonpair')>
+        }
+        token escape:sym<#> {
+            <?[#]> <.LANG('MAIN', 'comment')>
+        }
+    }
+
+Oh, boy! Quotes! If this isn't the place were we fix our bug, then I'm a
+ballerina. We found it!
+
+The role we located mixes in some tokens into the Quote braid we are using
+to parse the `qww`'s contents. Our buggy combination of `„”` quotes is
+conspicuously missing from the list. Let's add it!
+
+    token escape:sym<„ ”> {
+        <?[„]> <quote=.LANG('MAIN','quote')>
+    }
+
+Compile! Run our buggy code:
+
+    $ ./perl6 -e '.say for qww<foo „hello world” bar>'
+    foo
+    bar
+
+Oopsie! Well, we certainly found the right place for quote handling, but we
+made the problem worse. What's happening?
+
+## Quotastic Inaction
+
+Our new token sure parses the quotes, but we never added the Actions to...
+well, act on it. Actions classes live next door to Grammars, in
+`src/Perl6/Actions.nqp`. Pop it open and locate the matching method; let's
+say [`method escape:sym<“ ”>`](https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Perl6/Actions.nqp#L9243).
+
+    method escape:sym<' '>($/) { make mark_ww_atom($<quote>.ast); }
+    method escape:sym<" ">($/) { make mark_ww_atom($<quote>.ast); }
+    method escape:sym<‘ ’>($/) { make mark_ww_atom($<quote>.ast); }
+    method escape:sym<“ ”>($/) { make mark_ww_atom($<quote>.ast); }
+
+Let's add our version to the list:
+
+    method escape:sym<„ ”>($/) { make mark_ww_atom($<quote>.ast); }
+
+Compile! Run our buggy code:
+
+    $ ./perl6 -e '.say for qww<foo „hello world” bar>'
+    foo
+    hello world
+    bar
+
+Woohoo! Success! It's no longer buggy. We fixed it! 🎊🎉
+
+But, wait...
+
+## Left out, but not forgotten
+
+Take a look at the [list of all the possible fancy-pants
+quotes](https://docs.perl6.org/language/unicode_texas#Other_acceptable_single_codepoints). Even though our bug report only mentioned the `„”` pair, neither
+`‚‘` nor `｢｣` are in the list of our `role ww` tokens. More than that,
+some left/right quotes, when swapped, work just fine when quoting strings,
+so they should work in `qww` too. However, adding a whole bunch of extra
+tokens and a whole 'nother bunch of actions methods is quite un-awesome.
+Is there a better way?
+
+Let's take a closer look at our tokens:
+
+    token escape:sym<“ ”> {
+        <?[“]> <quote=.LANG('MAIN','quote')>
+    }
+
+The `sym<“ ”>` we can ignore—here it's functioning just as a name. What we
+are left with is a look-ahead for a `“` quote and then assigment to
+`$<quote>` capture the `quote` token from MAIN language braid. So we can
+look-ahead for all of the opening quotes we care about and let the MAIN braid
+take care of all the details.
+
+So, we'll replace all of the quote handling tokens with a this single one:
+
+    token escape:sym<'> {
+        <?[ ' " ‘ ‚ ’ “ „ ” ｢ ]> <quote=.LANG('MAIN','quote')>
+    }
+
+And we replace all of the matching actions method with this single one:
+
+    method escape:sym<'>($/) { make mark_ww_atom($<quote>.ast); }
+
+Compile! Run our code with some quote variations:
+
+    $ ./perl6 -e '.say for qww<„looks like ” ‚we fixed‘ ｢this thing｣>'
+    looks like
+    we fixed
+    this thing
+
+Awesome! Not only did we made all the quotes work right, we also managed to
+clean up the existing tokes and action. All we need now is a test for our fix
+and we're ready to commit.
+
+## Feasting on The Roast
+
+The [Official Perl 6 Test Suite (Roast)](https://github.com/perl6/roast) is
+in `t/spec` inside of the Rakudo build dir. If it's missing, just run
+`make spectest` and abort it after it clones the roast repo into `t/spec`.
+We need to find where to stick our test and `grep` is a good friend at that
+task:
+
+    zoffix@VirtualBox:~/CPANPRC/rakudo/t/spec$ grep -R 'qww' .
+    Binary file ./.git/objects/pack/pack-5bdee39f28283fef4b500859f5b288ea4eec20d7.pack matches
+    ./S02-literals/allomorphic.t:    my @wordlist = qqww[1 2/3 4.5 6e7 8+9i] Z (IntStr, RatStr, RatStr, NumStr, ComplexStr);
+    ./S02-literals/allomorphic.t:        isa-ok $val, Str, "'$val' from qqww[] is a Str";
+    ./S02-literals/allomorphic.t:        nok $val.isa($wrong-type), "'$val' from qqww[] is not a $wrong-type.perl()";
+    ./S02-literals/allomorphic.t:    my @wordlist  = qqww:v[1 2/3 4.5 6e7 8+9i];
+    ./S02-literals/allomorphic.t:    my @written = qqww:v[1 2/3 $num 6e7 8+9i ten];
+    ./S02-literals/allomorphic.t:    is-deeply @angled, @written, "«...» is equivalent to qqww:v[...]";
+    ./S02-literals/quoting.t:    is(qqww[$alpha $beta], <foo bar>, 'qqww');
+    ./S02-literals/quoting.t:    for (<<$a b c>>, qqww{$a b c}, qqw{$a b c}).kv -> $i, $_ {
+    ./S02-literals/quoting.t:    is-deeply qww<a a ‘b b’ ‚b b’ ’b b‘ ’b b‘ ’b b’ ‚b b‘ ‚b b’ “b b” „b b”
+    ./S02-literals/quoting.t:    'fancy quotes in qww work just like regular quotes';
+    ./integration/advent2014-day16.t:    for flat qww/ foo bar 'first second' / Z @a -> $string, $result {
+
+It appears `S02-literals/quoting.t` is a good place for it. Pop open the file.
+At the top of it, increase `plan` number by the number of tests we're
+adding—in this case just one. Then scroll to the end and create a block, with
+a comment in front of it, referencing the RT ticket number for the bug report
+we're fixing.
+
+Inside of it, we'll use [`is-deeply`](https://docs.perl6.org/language/testing#index-entry-is-deeply-is-deeply%28%24value%2C_%24expected%2C_%24description%3F%29) test function that
+uses [`eqv` operator](https://docs.perl6.org/routine/eqv) semantics to do the
+test. So we'll give it a `qww<>` line with whole bunch of quotes and then tell
+it what list of items we expect to get in return. Write the test description
+as well:
+
+    # RT #128304
+    {
+        is-deeply qww<a a ‘b b’ ‚b b’ ’b b‘ ’b b‘ ’b b’ ‚b b‘ ‚b b’ “b b” „b b”
+                ”b b“ ”b b“ ”b b” „b b“ „b b” ｢b b｣ ｢b b｣>,
+            ('a', 'a', |('b b' xx 16)),
+        'fancy quotes in qww work just like regular quotes';
+    }
+
+Back in the Rakudo checkout, run the modified test and ensure it passes:
+
+
+    $ make t/spec/S02-literals/quoting.t
+    # <lots of output>
+    All tests successful.
+    Files=1, Tests=185,  3 wallclock secs ( 0.03 usr  0.01 sys +  2.76 cusr  0.11 csys =  2.91 CPU)
+    Result: PASS
+
+Sweet. Commit the tests and the bug fix and ship them off! We're done!
+
+## Conclusion
+
+When fixing parsing bugs in Perl 6, it's useful to reduce the program to the
+minimum that still reproduces the bug and then use the `--target=parse` command
+line argument, to get the output of the parse tree.
+
+Then, follow those tokens in [`src/Perl6/Grammar.nqp`](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Grammar.nqp),
+which also inherits from [NQP's `src/HLL/Grammar.nqp`](https://github.com/perl6/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp). In conjunction with the actions classes located in
+[`src/Perl6/Actions.nqp`](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Actions.nqp),
+figure what the code is doing and hopefully find where the problem is located.
+
+Fix it. Test it. Ship it.
+
+-Ofun
