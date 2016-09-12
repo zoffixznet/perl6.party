@@ -3,7 +3,7 @@
 %% desc: Following along with fixing a grammar bug
 %% draft: True
 
-Feelin' like bugfixing? Here's a [great grammar
+Feelin' like bugfixing the Perl 6 compiler? Here's a [great grammar
 bugglet](https://rt.perl.org/Ticket/Display.html?id=128304): the `„”` quotes don't appear to work right when used in quoted white-space separated words
 list constructor:
 
@@ -60,8 +60,8 @@ code to execute, we'll give it just the problematic bit; the `qww<>`:
 
 That's great! Each of the lines is prefixed by the name of a token we can find in the grammar, so now we know where to look for the problem.
 
-We know that basic quotes work correctly, so let's dump
-the parse stage for them as well to see if there is any difference between
+We also know that basic quotes work correctly, so let's dump
+the parse stage for them as well, to see if there is any difference between
 the two outputs:
 
     zoffix@leliana:~$ perl6 --target=parse -e 'qww<"hello world">'
@@ -78,13 +78,13 @@ the two outputs:
                 - sym: ww
 
 And... well, other than different quotes, the parse tree is the same. So it
-looks like all the tokens involved are the same, but what is done by those
+looks like all of the tokens involved are the same, but what is done by those
 tokens differs.
 
 We don't have to examine each of the tokens we see in the output.
 The `statementlist`
 and `statement` are tokens matching general statements, the `EXPR` is the
-precedence parser and `value` is one of the values it's operating on. We'll
+precedence parser, and `value` is one of the values it's operating on. We'll
 ignore those, leaving us with this list of suspects:
 
     - quote: qww<„hello world”>
@@ -103,8 +103,9 @@ Get yourself a local [Rakudo repo](https://github.com/rakudo/rakudo/) checkout,
 if you don't already have one, pop open
 [src/Perl6/Grammar.nqp](https://github.com/rakudo/rakudo/blob/83b8b1a/src/Perl6/Grammar.nqp), and get comfortable.
 
-We'll follow our tokens from top of the tree down, so the first thing we need
-to find is `token quote`, `rule quote`, `regex quote`, or `method quote`;
+We'll follow our tokens from the top of the tree down, so the first thing
+we need to find is `token quote`, `rule quote`, `regex quote`, or `method
+quote`;
 search in that order, as the first items are more likely to be the right thing.
 
 In this case, it's [a `token quote`](https://github.com/rakudo/rakudo/blob/83b8b1a/src/Perl6/Grammar.nqp#L3555) which is a
@@ -168,7 +169,7 @@ On line 2, we create a variable, then match literal `q` and then the
 `quote_mod` token. That one was part of our `--target=parse` output and if you
 do locate it the same way we located the `quote` token, you'll notice it's
 a proto regex that, in this case, matches the `ww` bit of our code. The empty
-`{}` block that follows we can ignore (it's a work around for a bug that may
+`{}` block that follows we can ignore (it's a workaround for a bug that may
 have already been fixed when you read this). So far we've matched the `qww`
 bit of our code.
 
@@ -209,7 +210,7 @@ declared and our token match will pass or fail based on that return
 value. The `<!{ ... }>` construct we're using
 will fail if the evaluated code returns a truthy value.
 
-All said and done, all this token does is checks we're not using `#` as a
+All said and done, all this token does is check we're not using `#` as a
 delimiter and aren't trying to call a method or a sub. No signs of the bug
 in this corner of the room. Let's get back up to our `token quote:sym<q>`
 and see what it's doing next:
@@ -327,7 +328,14 @@ the lines where `@delim` is assigned to `$start` and `$stop`, we can find what
 
     nqp::say("$start $stop");
 
-Compile! Even during compilation, by spewing extra stuff, our debug line
+Compile!
+
+    $ perl Configure.pl --gen-moar --gen-nqp --backends=moar &&
+      make &&
+      make test &&
+      make install
+
+Even during compilation, by spewing extra stuff, our debug line
 already gives us an idea what these delimiters are all about. Run our
 problematic code again:
 
@@ -343,7 +351,7 @@ of what arguments we're passing to it:
 
 * `$l`—the [`Quote` language braid](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Grammar.nqp#L4752)
 * `$start`/`$stop`—angled bracket delimiters
-* `@base_tweaks`—that contains string `ww`
+* `@base_tweaks`—contains one element: string `ww`
 * `@extra_tweaks`—extra adverbs, which we do not have, so the array is empty
 
 Locate `method quote_lang`; it's still in the [`src/Perl6/Grammar.nqp`
@@ -447,7 +455,7 @@ ballerina. We found it!
 
 The role we located mixes in some tokens into the Quote braid we are using
 to parse the `qww`'s contents. Our buggy combination of `„”` quotes is
-conspicuously missing from the list. Let's add it!
+conspicuously absent from the list. Let's add it!
 
     token escape:sym<„ ”> {
         <?[„]> <quote=.LANG('MAIN','quote')>
@@ -465,7 +473,7 @@ made the problem worse. What's happening?
 ## Quotastic Inaction
 
 Our new token sure parses the quotes, but we never added the Actions to...
-well, act on it. Actions classes live next door to Grammars, in
+well, act on it. Action classes live next door to Grammars, in
 `src/Perl6/Actions.nqp`. Pop it open and locate the matching method; let's
 say [`method escape:sym<“ ”>`](https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Perl6/Actions.nqp#L9243).
 
@@ -528,7 +536,7 @@ Compile! Run our code with some quote variations:
     we fixed
     this thing
 
-Awesome! Not only did we made all of the quotes work right, we also managed to
+Awesome! Not only did we make all of the quotes work right, we also managed to
 clean up the existing tokens and action methods. All we need now is a test for
 our fix and we're ready to commit.
 
