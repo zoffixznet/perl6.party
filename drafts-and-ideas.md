@@ -8,6 +8,23 @@
 
 ### Ideas
 
+##### Core Hacking
+
+* *Perl 6 Core Hacking: Build and Test Intro*: from the point of someone who
+    know what piece of code needs to be changed: describe all the steps on
+    how to submit that change. Include which repos to clone, how to compile,
+    the MoarVM -> NQP -> Rakudo -> Roast pipeline, how to make change,
+    compile it, add tests for it, test it, and ship it; from start to finish.
+* *Perl 6 Core Hacking: Gut Map*: an "orientation" sort of post that will
+    outline where to find all the repos, bug tickets, and communicate with
+    core members. Give a big picture view of how NQP, MoarVM, Rakudo,
+    and Rakudo Star fit in and interoperate.
+* *Perl 6 Core Hacking: A Yummy Bug Roast*: explanation of how to add stuff
+    to roast: finding `tests needed` tickets, finding the right place
+    to add the test in in roast, testing your changes, fudging mechanism.
+
+##### Others
+
 * "Abusing Perl 6 for Fun, Profit, and Utility: Custom Operators" a post about molding the
 language to what your problem domain may need; do custom ops primarily.
 Show how to regular ops to work on custom objects (like the Color.pm6 stuff). 
@@ -23,10 +40,6 @@ slang (if the Slangs post now exists, link to it)
 * *Perl 6 Slangs: Molding The Language To Suit Your Needs*: talk about
     implementation of `//=` signature defaults, since we gotta make that
     anyway.
-* *Perl 6 Core Hacking: Gut Map*: an "orientation" sort of post that will
-    outline where to find all the repos, bug tickets, and communicate with
-    core members. Give a big picture view of how NQP, MoarVM, Rakudo,
-    and Rakudo Star fit in and interoperate.
 * *Perl 6: These Aren't The Sigils You're Looking For*: primarily to learn
     and explain what the `@`, `%` really are about in Perl 6, as compared
     to Perl 5. If too short, also expound the `\\` "sigil" and maybe twigils
@@ -58,9 +71,5 @@ slang (if the Slangs post now exists, link to it)
     subroutines and so on.
 * *Perl 6 Core Hacking: Gramatically Incorrect*: find a grammar bug and
     explain how to trace and debug these.
-* *Perl 6 Core Hacking: A Yummy Roast*: explanation of how to add stuff
-    to roast: finding `tests needed` tickets, finding the right place
-    to add the test in in roast, testing your changes, fudging mechanism.
-
 
 **Need a lot more Core Hacking posts!!**
