@@ -423,7 +423,7 @@ other, non-buggy, quoters, so let's ignore it and jump straight to
         self
     }
 
-Aha! It's argument is a role and it mixes it into our Quote braid. Let's see
+Aha! Its argument is a role and it mixes it into our Quote braid. Let's see
 what that role is about (again, just search the file for [`role ww`](https://github.com/rakudo/rakudo/blob/94b09ab9280d39438f84cb467d4b3d3042b8f672/src/Perl6/Grammar.nqp#L4846),
 or simply scroll up a bit):
 
