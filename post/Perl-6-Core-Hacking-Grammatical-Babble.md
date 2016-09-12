@@ -24,7 +24,7 @@ output; all `hello world`. Sounds like a fun bug to fix! Let's jump in.
 
 The fact that this piece of code doesn't parse right suggests this is a grammar
 bug. Most of the grammar lives in [src/Perl6/Grammar.nqp](https://github.com/rakudo/rakudo/blob/83b8b1a/src/Perl6/Grammar.nqp), but before we get
-out hands dirty, let's figure out what we should be looking for.
+our hands dirty, let's figure out what we should be looking for.
 
 The `perl6` binary has a `--target` command line parameter that takes one of
 the compilation stages and will cause the output for that stage to be
@@ -34,11 +34,11 @@ print them all:
 
     zoffix@leliana:~$ perl6 --stagestats -e ''
     Stage start      :   0.000
-    Stage parse      :   0.230
+    Stage parse      :   0.077
     Stage syntaxcheck:   0.000
     Stage ast        :   0.000
-    Stage optimize   :   0.002
-    Stage mast       :   0.013
+    Stage optimize   :   0.001
+    Stage mast       :   0.004
     Stage mbc        :   0.000
     Stage moar       :   0.000
 
@@ -60,7 +60,7 @@ code to execute, we'll give it just the problematic bit; the `qww<>`:
 
 That's great! Each of the lines is prefixed by the name of a token we can find in the grammar, so now we know where to look for the problem.
 
-Now, we know that basic quotes work correctly, so let's dump
+We know that basic quotes work correctly, so let's dump
 the parse stage for them as well to see if there is any difference between
 the two outputs:
 
@@ -79,9 +79,10 @@ the two outputs:
 
 And... well, other than different quotes, the parse tree is the same. So it
 looks like all the tokens involved are the same, but what is done by those
-tokens differ.
+tokens differs.
 
-We don't have to each of the tokens we see in the output. The `statementlist`
+We don't have to examine each of the tokens we see in the output.
+The `statementlist`
 and `statement` are tokens matching general statements, the `EXPR` is the
 precedence parser and `value` is one of the values it's operating on. We'll
 ignore those, leaving us with this list of suspects:
@@ -103,7 +104,7 @@ if you don't already have one, pop open
 [src/Perl6/Grammar.nqp](https://github.com/rakudo/rakudo/blob/83b8b1a/src/Perl6/Grammar.nqp), and get comfortable.
 
 We'll follow our tokens from top of the tree down, so the first thing we need
-to find is `token quote`, `rule quote`, or `regex quote`, or `method quote`;
+to find is `token quote`, `rule quote`, `regex quote`, or `method quote`;
 search in that order, as the first items are more likely to be the right thing.
 
 In this case, it's [a `token quote`](https://github.com/rakudo/rakudo/blob/83b8b1a/src/Perl6/Grammar.nqp#L3555) which is a
@@ -166,8 +167,8 @@ omit it:
 On line 2, we create a variable, then match literal `q` and then the
 `quote_mod` token. That one was part of our `--target=parse` output and if you
 do locate it the same way we located the `quote` token, you'll notice it's
-a proto regex that in this case matches the `ww` bit of our code. The empty
-`{}` block the follows we can ignore (it's a work around for a bug that may
+a proto regex that, in this case, matches the `ww` bit of our code. The empty
+`{}` block that follows we can ignore (it's a work around for a bug that may
 have already been fixed when you read this). So far we've matched the `qww`
 bit of our code.
 
@@ -199,7 +200,7 @@ of whitespace.
 Inside the alternation, we use the first-token-match `||` alternation (as
 opposed to longest-token-match `|` one), and the first token is a lookahead
 for a colon `<?[:]>`. If that fails, we stringify the given argument (`~$x`)
-and then call `is_name` method on [World
+and then call `is_name` method on the [World
 object](https://github.com/rakudo/rakudo/blob/83b8b1a/src/Perl6/World.nqp)
 passing it the stringified argument as is and with `&` prepended. The passed
 `~$x` is what our `token quote:sym<q>` token has matched so far (and that is
@@ -241,7 +242,7 @@ That's our next stop. Full speed ahead!
 ## Nibble Quibble Babbling Nibbler
 
 Here's the full `token quibble` and you can see right away we'd have to
-dig deeper from the get-go:
+dig deeper from the get-go, as fifth line is another token match:
 
     token quibble($l, *@base_tweaks) {
         :my $lang;
@@ -287,7 +288,7 @@ dig deeper from the get-go:
 
 We define three variables and then invoke the `babble` token with the
 same arguments we invoked `quibble` with. Let's find it the same way we
-found all the previous tokens and peek at its guts. For sake of brevity,
+found all the previous tokens and peek at its guts. For the sake of brevity,
 I removed [about half of it](https://github.com/rakudo/rakudo/blob/bc35922/src/Perl6/Grammar.nqp#L111-L125): that portion
 deals with adverbs, which we aren't using in our code at the moment.
 
@@ -310,29 +311,32 @@ deals with adverbs, which we aren't using in our code at the moment.
         }
     }
 
-We start by assigning to the current Cursor postion to the `$<B>` capture
-and then go in to execute the code block. We store the current current Cursor
+We start by capturing a lookahead into the `$<B>` capture, which serves to
+update the current Cursor postion,
+and then go in to execute the code block. We store the current Cursor
 into `$c`, and then call `.peek_delimiters` method on it. If we `grep`
 in a built rakudo directory for it, we'll see it's defined [in
 NQP, in `nqp/src/HLL/Grammar.nqp`](https://github.com/perl6/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp#L200), but before we rush out to read its code, notice how it returns
-two delimiters. Hm, let's just print them out?
+two delimiters. Let's just print them out?
 
 The `.nqp` extension of the `src/Perl6/Grammar.nqp` we are in signifies we're
-in NQP land, so we need to use [NQP ops](https://github.com/perl6/nqp/blob/master/docs/ops.markdown) only. By adding this line after
-`@delim` is assigned to `$start` and `$stop`, we can find what
+in NQP land, so we need to use [NQP ops](https://github.com/perl6/nqp/blob/master/docs/ops.markdown) only and not full-blown Perl 6
+code. By adding this line after
+the lines where `@delim` is assigned to `$start` and `$stop`, we can find what
 `.peek_delimiters` gives us:
 
     nqp::say("$start $stop");
 
-Compile! Now, even during compilation, our debug line already gives us an idea
-what these delimiters are all about. Run out problematic code again:
+Compile! Even during compilation, by spewing extra stuff, our debug line
+already gives us an idea what these delimiters are all about. Run our
+problematic code again:
 
     $ ./perl6 -e '.say for qww<„hello world”>;'
     < >
     hello world
 
 The delimiters are the angled bracket delimiters of the `qww`. We're not
-interested in these, so we can ignore `.peek_delimiters` and move on. Next
+interested in those, so we can ignore `.peek_delimiters` and move on. Next
 up is the `.quote_lang` method. It's got "quote" in the name and we have a
 problem with quotes... sounds like we're getting closer. Let's take a note
 of what arguments we're passing to it:
@@ -388,8 +392,8 @@ our `quote_lang` method:
 
 After initializing Cursor position, `$lang` contains our Quote language braid
 and then we descend into a `for` loop over `@base_tweaks`. For each of them,
-we call method `tweak_$t`, passing it truthy value `1`. Since we have just one
-base tweak, this means we're calling method `tweak_ww` on the Quote braid.
+we call method `tweak_$_`, passing it a truthy value `1`. Since we have just
+one base tweak, this means we're calling method `tweak_ww` on the Quote braid.
 Let's see what that method is about.
 
 Since the Quote braid is defined in the same file, just search for
@@ -401,7 +405,8 @@ Since the Quote braid is defined in the same file, just search for
     }
 
 Great. The `$v` we gave it is true, so we call `.add-postproc` and then
-`.apply_tweak(ww)`. Looking around we see `.add-postproc` is also used in
+`.apply_tweak(ww)`. Looking above and below that method, we
+see `.add-postproc` is also used in
 other, non-buggy, quoters, so let's ignore it and jump straight to
 `.apply_tweak`:
 
@@ -501,33 +506,33 @@ Let's take a closer look at our tokens:
     }
 
 The `sym<“ ”>` we can ignore—here it's functioning just as a name. What we
-are left with is a look-ahead for a `“` quote and then assigment to
-`$<quote>` capture the `quote` token from MAIN language braid. So we can
+are left with is a look-ahead for a `“` quote and the assigment of the result
+of the `quote` token from MAIN language braid to `$<quote>` capture. So we can
 look-ahead for all of the opening quotes we care about and let the MAIN braid
 take care of all the details.
 
-So, we'll replace all of the quote handling tokens with a this single one:
+So, let's replace all of the quote handling tokens with this single one:
 
     token escape:sym<'> {
         <?[ ' " ‘ ‚ ’ “ „ ” ｢ ]> <quote=.LANG('MAIN','quote')>
     }
 
-And we replace all of the matching actions method with this single one:
+And replace all of the matching actions methods with this single one:
 
     method escape:sym<'>($/) { make mark_ww_atom($<quote>.ast); }
 
 Compile! Run our code with some quote variations:
 
-    $ ./perl6 -e '.say for qww<„looks like ” ‚we fixed‘ ｢this thing｣>'
+    $ ./perl6 -e '.say for qww<„looks like” ‚we fixed‘ ｢this thing｣>'
     looks like
     we fixed
     this thing
 
-Awesome! Not only did we made all the quotes work right, we also managed to
-clean up the existing tokes and action. All we need now is a test for our fix
-and we're ready to commit.
+Awesome! Not only did we made all of the quotes work right, we also managed to
+clean up the existing tokens and action methods. All we need now is a test for
+our fix and we're ready to commit.
 
-## Feasting on The Roast
+## Feasting on The Bug Roast
 
 The [Official Perl 6 Test Suite (Roast)](https://github.com/perl6/roast) is
 in `t/spec` inside of the Rakudo build dir. If it's missing, just run
@@ -552,12 +557,12 @@ task:
 It appears `S02-literals/quoting.t` is a good place for it. Pop open the file.
 At the top of it, increase `plan` number by the number of tests we're
 adding—in this case just one. Then scroll to the end and create a block, with
-a comment in front of it, referencing the RT ticket number for the bug report
-we're fixing.
+a comment in front of it, referencing the RT ticket number for the [bug
+report](https://rt.perl.org/Ticket/Display.html?id=128304) we're fixing.
 
 Inside of it, we'll use [`is-deeply`](https://docs.perl6.org/language/testing#index-entry-is-deeply-is-deeply%28%24value%2C_%24expected%2C_%24description%3F%29) test function that
 uses [`eqv` operator](https://docs.perl6.org/routine/eqv) semantics to do the
-test. So we'll give it a `qww<>` line with whole bunch of quotes and then tell
+test. We'll give it a `qww<>` line with whole bunch of quotes and then tell
 it what list of items we expect to get in return. Write the test description
 as well:
 
@@ -584,12 +589,14 @@ Sweet. Commit the tests and the bug fix and ship them off! We're done!
 
 When fixing parsing bugs in Perl 6, it's useful to reduce the program to the
 minimum that still reproduces the bug and then use the `--target=parse` command
-line argument, to get the output of the parse tree.
+line argument, to get the output of the parse tree, finding which tokens are
+being matched.
 
 Then, follow those tokens in [`src/Perl6/Grammar.nqp`](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Grammar.nqp),
 which also inherits from [NQP's `src/HLL/Grammar.nqp`](https://github.com/perl6/nqp/blob/4fd4b48afb45c8b25ccf7cfc5e39cb4bd658901d/src/HLL/Grammar.nqp). In conjunction with the actions classes located in
 [`src/Perl6/Actions.nqp`](https://github.com/rakudo/rakudo/blob/04af57c3b3d32353e36614de53396d2b4a08b7be/src/Perl6/Actions.nqp),
-figure what the code is doing and hopefully find where the problem is located.
+follow the code to figure out what it is doing and hopefully find where the
+problem is located.
 
 Fix it. Test it. Ship it.
 
