@@ -69,7 +69,5 @@ slang (if the Slangs post now exists, link to it)
 * *Perl 6: What Ye take So Ye Shall gather*: (shit title?) explanation of
     gather/take. Be sure to include examples of `take`ing from called
     subroutines and so on.
-* *Perl 6 Core Hacking: Gramatically Incorrect*: find a grammar bug and
-    explain how to trace and debug these.
 
 **Need a lot more Core Hacking posts!!**
