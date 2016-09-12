@@ -1,7 +1,6 @@
 %% title: Perl 6 Core Hacking: Grammatical Babble
-%% date: 2016-09-09
+%% date: 2016-09-12
 %% desc: Following along with fixing a grammar bug
-%% draft: True
 
 Feelin' like bugfixing the Perl 6 compiler? Here's a [great grammar
 bugglet](https://rt.perl.org/Ticket/Display.html?id=128304): the `„”` quotes don't appear to work right when used in quoted white-space separated words
