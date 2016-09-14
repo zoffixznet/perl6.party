@@ -1,17 +1,18 @@
 %% title: Perl 6 Core Hacking: Wrong Address; Return To Sender
-%% date: 2016-09-12
+%% date: 2016-09-14
 %% desc: Following along with debugging dispatch bugs
 
 Just as a Christmas present you mailed someone can get misplaced or
-misdelivered, so can the arguments re-dispatched to another method. Let's debug
-a couple of bugs involving just that. It's fun!
+misdelivered, so can the arguments be re-dispatched to the wrong method or lost
+entirely. Let's fix a couple of [Perl 6 compiler](http://rakudo.org/) bugs
+involving just that. It's fun!
 
 ## Bug 1: Lost In Transit
 
 The [first one](https://rt.perl.org/Public/Bug/Display.html?id=129242) involves
 the `.split` method and the different results produced, depending on whether
 it was called on a [`Str`](https://docs.perl6.org/type/Str) object or on
-the [`Int`](https://docs.perl6.org/type/Int):
+an [`Int`](https://docs.perl6.org/type/Int):
 
     dd 123456.split("", :skip-empty)
     # ("", "1", "2", "3", "4", "5", "6", "")
@@ -27,28 +28,26 @@ module](http://modules.perl6.org/dist/CoreHackers::Sourcery) that I detailed
 [elsewhere](/post/Perl-6-Core-Hacking-Wheres-Da-Sauce-Boss), and that's
 also available for use via the `SourceBaby` IRC bot in [`#perl6-dev`](https://webchat.freenode.net/?channels=#perl6-dev):
 
-```irc
-<Zoffix> s: '123456', 'split', \("", :skip-empty)
-<SourceBaby> Zoffix, Sauce is at https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Str.pm#L863
-<Zoffix> s: 123456, 'split', \("", :skip-empty)
-<SourceBaby> Zoffix, Sauce is at https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Cool.pm#L180
-```
+> <b>&lt;Zoffix&gt;</b> s: '123456', 'split', ("", :skip-empty)<br>
+> <b class="irc-alt">&lt;SourceBaby&gt;</b> Zoffix, Sauce is at <a href="https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Str.pm#L863">https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Str.pm#L863</a><br>
+> <b>&lt;Zoffix&gt;</b> s: 123456, 'split', ("", :skip-empty)<br>
+> <b class="irc-alt">&lt;SourceBaby&gt;</b> Zoffix, Sauce is at <a href="https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Cool.pm#L180">https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Cool.pm#L180</a><br>
 
 The bot is triggered with the `s: ` trigger and takes the arguments to give
 to the [`sourcery` subroutine](https://github.com/zoffixznet/perl6-CoreHackers-Sourcery#sourcery-1). In this case, the first argument is the object of
 interest, second is a string with the method name we want to call, and third
-argument is a [`Capture`](https://docs.perl6.org/type/Capture) with argument
+argument is a [`Capture`](https://docs.perl6.org/type/Capture) with arguments
 for that method.
 
 The bot gave different places for each variant, so let's take a look at the
 sauce. First, the [working `Str`
 version](https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Str.pm#L863):
 
-```
- multi method split(Str:D: Str(Cool) $match;;
-    :$v is copy, :$k, :$kv, :$p, :$skip-empty) {
-    ...
-```
+
+    multi method split(Str:D: Str(Cool) $match;;
+        :$v is copy, :$k, :$kv, :$p, :$skip-empty) {
+        ...
+
 
 All good, the sub takes things and a bunch of named parameters that include
 the `:skip-empty` we are attempting to use. How does that compare to
@@ -65,11 +64,11 @@ the [broken `Int` version](https://github.com/rakudo/rakudo/blob/20ed9e2/src/cor
 ```
 
 Well, there's your problem! Calling `.split` on `Int` uses the [`Cool`
-candidate](https://docs.perl6.org/type/Cool) that coerses the invocant to `Str`
-and then calls its `.split` with the arguments it received... but it does a
+candidate](https://docs.perl6.org/type/Cool) that stringifies the invocant
+then calls its `.split` with the arguments it received... but it does a
 very poor job of it.
 
-It's not taking our `:skip-empty` named argument—in fact, none of the
+It's not taking our `:skip-empty` named argument—in fact, it takes none of the
 named args `Str.split` accepts—and a keen eye can also spot that there's no
 candidate to replicate [`Str.split` that takes a list of
 delimiters](https://github.com/rakudo/rakudo/blob/20ed9e2/src/core/Str.pm#L1083)
@@ -80,8 +79,8 @@ A naïve fix would be to replicate all of the `Str.split` candidates in `Cool`,
 but such duplication is exactly why this bug occured in the first place. If the
 job of the method is to simply make the invocant [`Stringy`](https://docs.perl6.org/type/Stringy), that's all it should be doing.
 
-We can stop careing what arguments we have if we use a [`Capture`](https://docs.perl6.org/type/Capture), and so we'll replace all of the Cool.split candidates
-with just a single method:
+We can stop caring what arguments we have if we use a [`Capture`](https://docs.perl6.org/type/Capture), and so we'll replace all of the `Cool.split`
+candidates with just a single method:
 
     method split(Cool: |c) { self.Stringy.split(|c) }
 
@@ -95,15 +94,17 @@ sent to the `Str.split` as-is.
 
 No bug fix comes without a test for it, so we'll grab the [roast repo](https://github.com/perl6/roast/) (it'll auto-clone to `t/spec/`if you run `make spectest`) and use `grep -R split .` to find where to put our tests into.
 
-In this case, `S32-str/split.t` looks like the perfect fit. Pop the file open,
-increase the `plan` number of planned tests to run by one, then at the end
-of the file add a `subtest`. Subtests count as one test and function as a
+In this case, [`S32-str/split.t`](https://github.com/perl6/roast/blob/25168ae7cfd822c8dc7ffdda7a7095a0de09abaa/S32-str/split.t)
+looks like the perfect fit. Pop the file open,
+increase the [`plan` number of planned tests to run](https://github.com/perl6/roast/blob/25168ae7cfd822c8dc7ffdda7a7095a0de09abaa/S32-str/split.t#L7) by one, then at the end
+of the file add a [`subtest`](https://docs.perl6.org/language/testing#index-entry-subtest-subtest%28%26subtests%2C_%24description%3F%29).
+Subtests count as one test and function as a
 mini-test suite with their own plans.
 
 Since now we know that all of the named arguments and even some positonals did
 not work on `Cool`, we need to test all of them. We'll make use of the
 [`is-deeply`](https://docs.perl6.org/language/testing#index-entry-is-deeply-is-deeply%28%24value%2C_%24expected%2C_%24description%3F%29) test routine to which
-we'll give the result of our split and the expectant list of elements we
+we'll give the result of our split and the expected list of elements we
 wish to receive, along with the test's description:
 
     # RT #129242
@@ -145,7 +146,8 @@ Wonderful. Both the test and the fix are ready to ship.
 
 ## Bug 2: Wrong Address; Return To Sender
 
-Another [bugglet of the same category](https://rt.perl.org/Public/Bug/Display.html?id=129256) involves the creation of a `CArray` when using [NativeCall library](https://docs.perl6.org/language/nativecall). NativeCall lets you use
+Another [bugglet of the same category](https://rt.perl.org/Public/Bug/Display.html?id=129256) involves the creation of a `CArray` when using [NativeCall module](https://docs.perl6.org/language/nativecall) included with Rakudo.
+NativeCall lets you use
 C libraries directly in Perl 6, without requiring a C compiler, and `CArray`
 is a [representation of a C array](https://docs.perl6.org/language/nativecall#Arrays).
 
@@ -171,7 +173,7 @@ The author of the report was kind enough to include a small untested patch:
 
 While the suggested fix itself is a no-op—because an empty array is falsy,
 so explicitly checking its `.elems` doesn't add anything—it tells us
-the location of where the problematic code, so let's pop [that file](https://github.com/rakudo/rakudo/blob/a9ed671/lib/NativeCall/Types.pm6#L164) open and locate the culprit:
+the location of where the problematic code likely is, so let's pop [that file](https://github.com/rakudo/rakudo/blob/a9ed671/lib/NativeCall/Types.pm6#L164) open and locate the culprit:
 
     multi method new() { nqp::create(self) }
     multi method new(*@values) { self.new(@values) }
@@ -202,7 +204,7 @@ empty and call [`nextsame`](https://docs.perl6.org/language/functions#index-entr
 While the idea was to end up calling the candidate that takes no arguments,
 we end up calling the second candidate with a slurpy `*@values`, which then
 obliges to make a call to a candidate with a single `Positional`, so we're
-back at square 1, with an empty `Positional` on our hands, reading to
+back at square 1, with an empty `Positional` on our hands, ready to
 `nextsame` it again, to continue the infinite loop our bug is all about.
 
 #### Fix It!
@@ -226,9 +228,11 @@ entirely and just having a single method:
     }
 
 The slurpy takes any arguments. If none were given, it creates an empty
-array, otherwise proceeds to create one with elems. Since we made the change
+array, otherwise proceeds to create one with the given elements. Since we made
+the change
 in a *module,* we don't need to recompile Rakudo, but simply need to explicitly
-tell Rakudo to look for that module with `-Ilib` switch. Test the fix:
+tell Rakudo to look for that module in `lib/` directory with the `-I` switch.
+Test the fix:
 
     $ ./perl6-m -Ilib -MNativeCall -e 'CArray[uint8].new(()).elems.say'
     0
@@ -244,7 +248,8 @@ So she put the multies back in for performance and along the way also added a
 few extra optimizations by reducing the the number of  calls to `.elems` by
 saving the value (into `$n`) after the check, as well as using some [NQP
 ops](https://github.com/perl6/nqp/blob/master/docs/ops.markdown) instead
-of pure Perl 6:
+of pure Perl 6. Instead of redispatching the empty-Positional case, we simply
+call `nqp::create(self)` directly, just as we do it in the no-arg case:
 
     multi method new() { nqp::create(self) }
     multi method new(*@values) { self.new(@values) }
@@ -274,7 +279,7 @@ Perl 6 *language* specification, but a module included with Rakudo compiler,
 the test doesn't go into the [roast](https://github.com/perl6/roast/), but
 into Rakudo's test suite.
 
-The suite is part of the rakudo's repo and all the files live in `t/`
+The suite is part of the Rakudo's repo code and all the files live in `t/`
 (except for `t/spec`, which is where the roast gets cloned into during
 spectests). The NativeCall tests live in `t/04-nativecall/` and we
 are interested in [`t/04-nativecall/05-arrays.t`](https://github.com/rakudo/rakudo/blob/nom/t/04-nativecall/05-arrays.t) specifically.
@@ -301,6 +306,22 @@ argless and empty-arg case that used to hang and the [`is-deeply`
 routine](https://docs.perl6.org/language/testing#index-entry-is-deeply-is-deeply%28%24value%2C_%24expected%2C_%24description%3F%29) to check the versions
 with arguments get created correctly.
 
+Check the new test passes:
+
+    make t/04-nativecall/05-arrays.t
+    # ... lots of output ...
+    All PASS!
+
+And that all the other tests are still fine:
+
+    make test
+    # ... looooots of output ...
+    All PASS!
+
+    TEST_JOBS=8 make spectest
+    # ... loooooooooots of output ...
+    All PASS!
+
 And this finishes off another bug for the day. Job well done!
 
 ## Conclusion
@@ -308,13 +329,14 @@ And this finishes off another bug for the day. Job well done!
 Bugs that appear only with a specific crop of arguments or a specific type of
 an invocant may be due to incorrect dispatch. Ensure the correct candidates
 get called by examining the code and using [`CoreHackers::Sourcery`
-module](http://modules.perl6.org/dist/CoreHackers::Sourcery)/SourceBaby robot.
+module](http://modules.perl6.org/dist/CoreHackers::Sourcery)/SourceBaby robot
+to locate the called code.
 
 When shuttling arguments, make use of [Captures](https://docs.perl6.org/type/Capture) rather than duplicating individual arguments, but also keep
 in mind that a well-placed multi candidate can offer decent performance
 benefits.
 
-Be sure to check out [Perl 6's bug queue](http://rakudo.org/rt/open-all) for
-game to hunt. Happy fixing!
+Be sure to check out the [Perl 6's bug queue](http://rakudo.org/rt/open-all)
+for game to hunt. Happy fixing!
 
 -Ofun
