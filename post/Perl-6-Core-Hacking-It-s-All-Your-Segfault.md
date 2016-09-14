@@ -1,6 +1,7 @@
 %% title: Perl 6 Core Hacking: It's All Your Segfault!
 %% date: 2016-09-12
 %% desc: Following along with debugging a segfault
+%% draft: True
 
 Narrow down the crash:
 
