@@ -14,7 +14,7 @@ by making a release robot. Well, I didn't lie!
 ```
 
 I popped in [some relaxing
-music](https://youtu.be/5i7qZxICwgQ?list=RD5i7qZxICwgQ) and
+music](https://www.youtube.com/watch?v=2eRgh-dNjAk) and
 got cracking. Today, I'll talk about the goodies I've made, which touch
 a much broader scope than just releasing Perl 6.
 
@@ -34,7 +34,7 @@ on the keyboard, which I found apropos, since my app is better than
 [stock RT](https://bestpractical.com/request-tracker) we currently use 😜.
 With the name for the bug app in place, I went to hunt for neat domain names to
 host it on and nearly immediately found the perfectest one:
-**[perl6.fail](https://perl6.fail)**.
+**[perl6.fail](http://perl6.fail)**.
 
 Helping release managers is the smaller side of the utility of the app and
 it aims to address some of the major pain points with RT (or rather with our
@@ -52,17 +52,14 @@ This is one of the first things I solved in R6. The home page lists all
 available tags, along with ticket counts for each tag. Simply clicking the
 tag will show the tickets just for that tag.
 
-![](Image of tags interface)
+![](/assets/pics/release-robots/r6.png)
 
 Simple. Just the way it's supposed to be.
 
-### Searching
+### Searching and Decent Editor
 
-* describe search *
-
-### Decent Editor
-
-* describe MultiMarkdown ticket commenting *
+Once I get more tuits, I plan to also add full-text ticket search and a
+decent Markdown editor for ticket replies.
 
 ### Release Managers
 
@@ -74,7 +71,7 @@ update changelog and mark commits as reviewed.
 
 The release robot has to fetch info from this app to know whether all tickets
 and commits have been reviewed. As such,
-[adding `.json` to the URL](https://perl6.fail/t/BUG.json)
+[adding `.json` to the URL](http://perl6.fail/t/BUG.json)
 of most pages will cause the app provide output in JSON format, rather than
 plain ol' HTML.
 
@@ -130,11 +127,9 @@ Not only all the issues are gone, it now picks up the proper RT tags too and
 not just the ones in the subject line. You can specify multiple tags with a
 comma, to find tickets with a combination of tags.
 
-Most importantly, `buggable` can now search for tickets, which can be
-handy in-chat when trying to decide whether something was or needs to be
-rakudobugged.
-
-* Insert info on search interface *
+Once ticket search is implemented in R6, `buggable` will be able to search for
+tickets, which can be handy in-chat when trying to decide whether something
+was or needs to be rakudobugged.
 
 ## NeuralAnomaly
 
@@ -195,7 +190,13 @@ interfacing, but found the module oddly designed and requiring too many
 requests to obtain information I needed. So I implemented the
 relevant portions of the RT's REST API interface myself.
 
-For user accounts, I <s>stole</s> borrowed,
+For user accounts, I <s>stole</s> borrowed, `RT::Client::REST` authentication
+mechanism, although at the time of this writing, no user-account features
+are available to users (and perl6.fail still runs on plain HTTP). Will "Coke"
+Coleda was very helpful in pointing out a relevant portion of the API that
+let me save making a huge number of requests. And current implementation makes
+just a single request every 10 minutes, asking only for updated tickets since
+last request.
 
 ### Buggable
 
@@ -219,16 +220,16 @@ turned out to be super easy.
 Popping `ssh` into [`Proc::Async`](https://docs.perl6.org/type/Proc::Async)
 was child's play, and the Proc bailed out on non-zero exit codes, which made
 it super easy for me to abort failing stages of the process. I basically
-ended up with Perl-6-super-charged bash script.
+ended up with Perl-6-super-charged bash scripts... quite literally:
+
+![](/assets/pics/release-robots/perl6-bash.png)
 
 However, when it came to giving `gpg` and `git tag` the passphrase for the
-key that... is worth its own section
+key that... is worth its own section.
 
 #### *Won't You Take My Passphrase Please*
 
-
- it's the supporting infrastructure that proved a bit annoying, but
-was a great learning opportunity. The major roadblock was trying to pass
+The major roadblock was trying to pass
 the GPG passphrase to the `gpg` (which was easy) and to the `git` when signing
 the tag (which got annoying quick).
 
@@ -240,4 +241,90 @@ and running `eval $(gpg-agent --daemon --sh)`
 
 That did the trick with starting the agent, *but* `git tag` was now outright
 choking when attempting to sign, telling 'gpg: cancelled by user', even though
-I did naught. I had to
+I did naught.
+
+After several hours of trying things and getting a helping hand from mst,
+I figured it out:
+
+![](/assets/pics/release-robots/mst.png)
+
+After installing a program called `unbuffer`
+(`sudo apt-get install expect-dev`), reading its help page, and
+inserting an appropriate amount of sleeps, I ended up with these
+chunks of code in my release bot that seemed to do the trick when passing
+them to commands requiring keys:
+
+    constant $with-github-credentials is export
+        = "(sleep 6; echo -e '$github-user\\n';"
+        ~ " sleep 6; echo -e '$github-pass\\n'; sleep 12) | unbuffer -p";
+
+    constant $with-gpg-passphrase     is export
+        = "(sleep 6; echo '$gpg-keyphrase'; sleep 12) | unbuffer -p";
+
+    ...
+
+    gpg --batch --no-tty --passphrase-fd 0 -b \\
+        --armor rakudo-$rakudo-ver.tar.gz                           ||
+    \{ echo '$na-fail Rakudo: Sign the tarball'; exit 1; \}
+    $gpg-keyphrase
+
+    ...
+
+    $with-github-credentials git push
+
+After that point, the rest was easy.
+
+#### Step Right Up
+
+After completing full release scripts for NQP and Rakudo and ensuring they
+work, it was time to break them. If a single spectest test failed in
+final tarball testing due to being floppy, you don't want to repeat the whole
+process from scratch. So I broke up release scripts into bite-size pieces
+and made the bot able to run individual pieces on command.
+
+That had a positive unintended effect:
+
+```irc
+<ZoffixW> Neural42, run pre r-clone r-build r-p5 r-stress r-stress-v6c
+<Neural42> ZoffixW, ♥♥♥♥♥♥ Prep done
+<Neural42> ZoffixW, ♥♥♥♥♥♥ Rakudo stresstest (master) OK
+<Neural42> ♥♥♥♥♥♥ Rakudo stresstest (6.c-errata) OK
+<Neural42> ♥♥♥ All Done! ♥♥♥
+<ZoffixW> :D
+<ZoffixW> So the release bot doubles as a stresstester too :)
+```
+
+## The Future
+
+All of these goodies burnt me out a bit—stuff started to feel like "work"
+rather than enjoyment. It wasn't the code, but the testing. There's nothing
+quite like 40-minute test sessions, where a single typo sends you to square
+one. So I plan to take the next month or so "off," working on other
+things in Rakudo. But eventually, I plan to improve both R6 and the release
+robot.
+
+Currently, the bot does not send email announcements and I've not even checked
+whether Wikipedia has an API to make automated updates. R6 also has a ton of
+improvement potential by allowing to view and comment on existing tickets, as
+well as provide useful search features.
+
+
+## Conclusion
+
+This month, Perl 6's release cycle received an awesome upgrade: release steps
+got abstracted into commands to be issued to an IRC bot. More to it, release
+managers no longer have to cram all of their work into a single day, but are
+now free to spread it out throughout the month.
+
+The new website [perl6.fail](http://perl6.fail) makes it easy to locate
+tickets tagged with a particular tag and will be eventually expanded into a
+more usable bug tracker interface.
+
+More than getting just the release robot, the Perl 6 development team now
+also has a spectest robot that will regularly "practice" doing releases,
+spotting any of the issues much sooner than previously was possible.
+
+Things got better.
+
+-Ofun
+
