@@ -1,7 +1,6 @@
 %% title: Perl6.Fail, Release Robots, and Other Goodies
 %% date: 2016-09-17
 %% desc: Description of work done to automate Perl 6 releases
-%% draft: True
 
 *Deconfusion note: if you're just a regular Perl 6 user, you likely use
 and only ever heard of Rakudo Star, which is a distribution that includes
