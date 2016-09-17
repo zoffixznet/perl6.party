@@ -3,6 +3,12 @@
 %% desc: Description of work done to automate Perl 6 releases
 %% draft: True
 
+*Deconfusion note: if you're just a regular Perl 6 user, you likely use
+and only ever heard of Rakudo Star, which is a distribution that includes
+the Rakudo Perl 6 Compiler, some modules, and the docs. This post details a release
+of that compiler* **only,** *which gets released more often than Rakudo Star.
+So please don't think there's a new release, if Star is all you use.*
+
 If you follow [what I write](http://perl6.party), you know that last month
 I messed up a Perl 6 release and vowed to [improve the
 process](/post/I-Botched-A-Perl-6-Release-And-Now-A-Robot-Is-Taking-My-Job),
@@ -65,7 +71,7 @@ decent Markdown editor for ticket replies.
 
 If you log in as a release manager, you get extra bells and whistles in the
 interface that let you mark tickets as was the original plan, as well as
-update changelog and mark commits as reviewed.
+mark commits as reviewed, when updating changelog.
 
 ### API
 
@@ -79,8 +85,8 @@ Speaking of robots...
 
 ## Buggable
 
-Some of you have already seen my prototype fembot `buggable`. She
-was... well, let's just say the name suits her.
+Some of you have already seen my prototype bot `buggable`. It
+was... well, let's just say the name suits it.
 
 ```irc
 <buggable> ☠ [travis build above] One job failed but NOT due to the timeout.
@@ -117,7 +123,7 @@ app I made.
     **PRECOMP:** 9; **@LARRY:** 7; **NATIVECALL:** 7; **NYI:** 6; **IO:** 5; **REGEX:** 5; **BUILD:** 3;
     **MATH:** 3; **REPL:** 3; **GLR:** 2; **OSX:** 2; **WEIRD:** 2; **BOOTSTRAP:** 1; **CONFIGURE:** 1;
     **OO:** 1; **RT:** 1; **SITE:** 1; **SPEC:** 1; **STAR:** 1; **TESTCOMMITTED:** 1;
-    See [https://perl6.fail/](https://perl6.fail/) for details
+    See [http://perl6.fail/](http://perl6.fail/) for details
 <Zoffix> buggable, tag bug,rfc
 <buggable> Zoffix, There are **2 tickets** tagged with **BUG, RFC**;
     See [http://perl6.fail/t/BUG,RFC](http://perl6.fail/t/BUG,RFC) for details
@@ -133,38 +139,30 @@ was or needs to be rakudobugged.
 
 ## NeuralAnomaly
 
-Finally, I'm proud to present the star of the hour, the newest member of the
-release team, and Perl 6's first gender-fluid bot: `NeuralAnomaly`. They
-graciously made the release of the Rakudo Perl 6 Compiler this month,
-successfully replacing me at the job:
+Finally, I'm proud to present the star of the hour and the newest member of the
+release team: `NeuralAnomaly`. It graciously made the release of the Rakudo
+Perl 6 Compiler this month, successfully replacing me at the job:
 
 ```irc
-<Zoffix> NeuralAnomaly, release
-<NeuralAnomaly> Zoffix, testing mode not enabled. This is the REAL DEAL.
-    Guess the number I'm thinking of to proceed.
-<Zoffix> NeuralAnomaly, 17
-<NeuralAnomaly> Zoffix, Woooho! All 117 stil-open tickets since last release
-    reviewed (no blockers). Latest MoarVM release found. Starting testing
-    and will ping you for final confirmation to ship the deliverables. Tell
-    me to `abort` to stop the processes at any time.
-<NeuralAnomaly> Zoffix, if you're feeling particularly naughty, you can watch
-    me at http://perl6.fail/release-progress or go look
-    at some cats http://www.lolcats.com/
-```
-
-&nbsp;
-
-```irc
-<NeuralAnomaly> Zoffix, all tests passed, all things tagged, all files packaged
-    and signed. I'm ready to upload the archives and to email
-    the announcement, just say go.
-<Zoffix> NeuralAnomaly, go
-<NeuralAnomaly> 🎺🎺🎺📯📯📯📯📯📯🌈🌈🌈📦📦📦
-<NeuralAnomaly> The release of **Rakudo #103 2016.09** has now been completed
-<NeuralAnomaly> 🎺🎺🎺📯📯📯📯📯📯🌈🌈🌈📦📦📦
+<Zoffix> NeuralAnomaly, yo
+<NeuralAnomaly> Zoffix, hey
+<Zoffix> NeuralAnomaly, it's time
+<NeuralAnomaly> Zoffix, Oh boy! Really?! We're doing a realease‽‽ YEY!
+<Zoffix> Yup
+<Zoffix> NeuralAnomaly, cut the release
+<NeuralAnomaly> Zoffix, Will do! If you're feeling particularly naughty, you can watch me at http://perl6.fail/release/progress or go look at some cats http://www.lolcats.com/
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Prep done
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ nqp tests OK
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ nqp release tarball tests OK
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ nqp release DONE
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Rakudo stresstest (master) OK
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Rakudo stresstest (6.c-errata) OK
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Rakudo release DONE
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Post: upload tarballs to rakudo.org
+<NeuralAnomaly> Zoffix, 🎺🎺🎺📯📯📯📯📯📯🌈🌈🌈📦📦📦
+<NeuralAnomaly> Zoffix, The release of **Rakudo #103 2016.09** has now been completed
+<NeuralAnomaly> Zoffix, 🎺🎺🎺📯📯📯📯📯📯🌈🌈🌈📦📦📦
 * NeuralAnomaly celebrates with an appropriate amount of fun
-<Zoffix> NeuralAnomaly, thanks for doing the release!
-<NeuralAnomaly> Zoffix, any time, buddy!
 ```
 
 ## The Tech
@@ -192,9 +190,10 @@ relevant portions of the RT's REST API interface myself.
 
 For user accounts, I <s>stole</s> borrowed, `RT::Client::REST` authentication
 mechanism, although at the time of this writing, no user-account features
-are available to users (and perl6.fail still runs on plain HTTP). Will "Coke"
-Coleda was very helpful in pointing out a relevant portion of the API that
-let me save making a huge number of requests. And current implementation makes
+are available to users (and perl6.fail still runs on plain HTTP). And
+Will "Coke" Coleda was very helpful in pointing out a relevant portion of the
+API that let me save making a huge number of requests. And current
+implementation makes
 just a single request every 10 minutes, asking only for updated tickets since
 last request.
 
@@ -203,12 +202,12 @@ last request.
 The bot uses my very own ``P6:`IRC::Client` Perl 6 module``IRC::Client``
 and is pretty thin
 and isn't much to look at. Using ``P6:JSON::Fast`` and ``P6:HTTP::UserAgent``
-modules it accesses R6 using its JSON endpoints to fetch the tag info
-and perform ticket searches.
+modules it accesses [R6](http://perl6.fail) using its JSON endpoints to fetch
+the tag info and perform ticket searches.
 
 Travis features use [Travis API](https://docs.travis-ci.com/api). Since the
 stuff I use does not require authentication, this is nothing more than
-fetching data from an endpoint, decoding JSON, and finding the right data.
+fetching data from an endpoint and decoding JSON.
 I found [JSONViewer.Stack.Hu](http://jsonviewer.stack.hu/) helpful when
 figuring out what bits of data I wanted to keep.
 
@@ -225,7 +224,7 @@ ended up with Perl-6-super-charged bash scripts... quite literally:
 ![](/assets/pics/release-robots/perl6-bash.png)
 
 However, when it came to giving `gpg` and `git tag` the passphrase for the
-key that... is worth its own section.
+key, that... is worth its own section.
 
 #### *Won't You Take My Passphrase Please*
 
@@ -240,15 +239,16 @@ to enable the `gpg-agent` by installing `gnupg-agent`, uncommenting
 and running `eval $(gpg-agent --daemon --sh)`
 
 That did the trick with starting the agent, *but* `git tag` was now outright
-choking when attempting to sign, telling 'gpg: cancelled by user', even though
+choking when attempting to sign, telling me `'gpg: cancelled by user'`,
+even though
 I did naught.
 
 After several hours of trying things and getting a helping hand from mst,
-I figured it out:
+the solution was nowhere in sight:
 
 ![](/assets/pics/release-robots/mst.png)
 
-After installing a program called `unbuffer`
+However, after installing a program called `unbuffer`
 (`sudo apt-get install expect-dev`), reading its help page, and
 inserting an appropriate amount of sleeps, I ended up with these
 chunks of code in my release bot that seemed to do the trick when passing
@@ -272,12 +272,15 @@ them to commands requiring keys:
 
     $with-github-credentials git push
 
-After that point, the rest was easy.
+Echoing like that is not ideal, but this is running in a single-user VM, so
+it'll do for now.
+
+The remaining bits of the scripting were easy.
 
 #### Step Right Up
 
 After completing full release scripts for NQP and Rakudo and ensuring they
-work, it was time to break them. If a single spectest test failed in
+work, it was time to break them. If a single spectest test fails in
 final tarball testing due to being floppy, you don't want to repeat the whole
 process from scratch. So I broke up release scripts into bite-size pieces
 and made the bot able to run individual pieces on command.
@@ -285,14 +288,24 @@ and made the bot able to run individual pieces on command.
 That had a positive unintended effect:
 
 ```irc
-<ZoffixW> Neural42, run pre r-clone r-build r-p5 r-stress r-stress-v6c
-<Neural42> ZoffixW, ♥♥♥♥♥♥ Prep done
-<Neural42> ZoffixW, ♥♥♥♥♥♥ Rakudo stresstest (master) OK
-<Neural42> ♥♥♥♥♥♥ Rakudo stresstest (6.c-errata) OK
-<Neural42> ♥♥♥ All Done! ♥♥♥
-<ZoffixW> :D
-<ZoffixW> So the release bot doubles as a stresstester too :)
+<Zoffix> NeuralAnomaly, run pre r-clone r-build r-p5 r-stress r-stress-v6c
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Prep done
+<NeuralAnomaly> Zoffix, ♥♥♥♥♥♥ Rakudo stresstest (master) OK
+<NeuralAnomaly> ♥♥♥♥♥♥ Rakudo stresstest (6.c-errata) OK
+<NeuralAnomaly> ♥♥♥ All Done! ♥♥♥
+<Zoffix> :D
+<Zoffix> So the release bot doubles as a stresstester too :)
 ```
+
+#### Testing
+
+The most <strike>difficult</strike> annoying phase was testing. Not only
+does the full build runs for about 40 minutes even on my 24-core VM, but I
+had to delete and then re-clone both NQP and Rakudo repos, because their state
+had to be pristine.
+
+After countless hours and hundreds of Rakudos built, I can now recite the build
+process with my eyes closed :)
 
 ## The Future
 
