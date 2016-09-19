@@ -1,6 +1,7 @@
 %% title: Perl 6 Core Hacking: NQP, QAST, Grammars Or Building Your Own Damn Compiler
 %% date: 2016-08-13
 %% desc: Learn the basics of Perl 6 guts by inventing your own language
+%% license: Attribution-NonCommercial-ShareAlike 3.0 Unported https://creativecommons.org/licenses/by-nc-sa/3.0/
 %% draft: True
 
 The Not Quite Perl (NQP) is the language large portions of
@@ -88,4 +89,14 @@ run `./nqp` to get the REPL.
 We have the goal and the tools to accomplish it...  Let's dive in!
 
 ## The Boilerplate
+
+## Credits
+
+This blog post is partly based on [Rakudo and NQP Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course)
+offered by [Edument AB](http://edument.se/), and is published under the same
+[Creative Commons Attribution-NonCommercial-
+ShareAlike 3.0 Unported
+License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+
 
