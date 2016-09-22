@@ -90,13 +90,15 @@ We have the goal and the tools to accomplish it...  Let's dive in!
 
 ## The Boilerplate
 
-## Credits
+## Credits / See Also
 
-This blog post is partly based on the [Rakudo and NQP Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course)
+This blog post is partly based on information from
+the [Rakudo and NQP Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course)
 offered by [Edument AB](http://edument.se/), under the
 [Creative Commons Attribution-NonCommercial-
 ShareAlike 3.0 Unported
-License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
+License](https://creativecommons.org/licenses/by-nc-sa/3.0/). I recommend
+you take that course, to learn more about NQP and Rakudo internals.
 
 
 
