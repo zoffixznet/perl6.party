@@ -1,5 +1,5 @@
 %% title: Perl 6 Core Hacking: NQP, QAST, Grammars Or Building Your Own Damn Compiler
-%% date: 2016-08-13
+%% date: 2016-09-26
 %% desc: Learn the basics of Perl 6 guts by inventing your own language
 %% license: Attribution-NonCommercial-ShareAlike 3.0 Unported https://creativecommons.org/licenses/by-nc-sa/3.0/
 %% draft: True
@@ -12,8 +12,8 @@ execution.
 
 Perl 6 is large and scary, so today, instead of looking at its guts, we'll
 make some of our own, using the same building blocks Rakudo uses. Let's
-build our own compiler for a language we invent! A damn compiler for a
-gooddamm language... literally.
+build our own compiler for a language we invent! A fine damn compiler for a
+fine gooddamm language... literally.
 
 ## The Goal
 
@@ -23,7 +23,7 @@ Here's what our language will have:
 * basic math and string concatenation
 * variables
 * subroutines
-* classes with methods you can call
+* classes with methods you can call (implementing inheritance is left as an exercise)
 
 And here's a bit of syntax. If you're following along, for fun, *change* this
 syntax to make your own very unique language:
@@ -92,8 +92,8 @@ We have the goal and the tools to accomplish it...  Let's dive in!
 
 ## Credits
 
-This blog post is partly based on [Rakudo and NQP Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course)
-offered by [Edument AB](http://edument.se/), and is published under the same
+This blog post is partly based on the [Rakudo and NQP Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course)
+offered by [Edument AB](http://edument.se/), under the
 [Creative Commons Attribution-NonCommercial-
 ShareAlike 3.0 Unported
 License](https://creativecommons.org/licenses/by-nc-sa/3.0/).
