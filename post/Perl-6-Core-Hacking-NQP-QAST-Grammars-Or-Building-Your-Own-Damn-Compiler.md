@@ -135,7 +135,7 @@ itself, such as grammars, actions, and `sub MAIN`:
         $comp.language('damn');
         $comp.parsegrammar(Damn::Grammar);
         $comp.parseactions(Damn::Actions);
-        $comp.command_line(@ARGS, :encoding('utf8'));
+        $comp.command_line(@ARGS, :encoding<utf8>);
     }
 ```
 
@@ -293,6 +293,27 @@ we're using it to define the outer scope for our program, but later will use
 it for subroutines and other goodies too. For now, all we do is give the block
 the `QAST::Stmts` we generated.
 
+Putting the Actions pieces together, we get this:
+
+```
+    class Damn::Actions is HLL::Actions {
+        method TOP($/) {
+            make QAST::Block.new(
+                QAST::Var.new( :decl<param>, :name<ARGS>, :scope<local>, :slurpy ),
+                $<statementlist>.ast,
+            );
+        }
+        method statementlist($/) {
+            my $stmts := QAST::Stmts.new( :node($/) );
+            $stmts.push($_.ast) for $<statement>;
+            make $stmts;
+        }
+        method statement:sym<exasperatedly shout>($/) {
+            make QAST::Op.new( :op<say>, $<quote_EXPR>.ast );
+        }
+    }
+```
+
 The ultimate moment has arrived! A new language is born! Run our REPL and
 let that language greet the world:
 
@@ -322,7 +343,12 @@ If we try to do it right now, we'll get an error:
 ```
 
 The error gives a hint: it seems our program receives an argument (the
-filename), but we aren't asking for one. Think of our program having an
+filename), but we aren't asking for one. In fact, the NQP toolchain already
+can handle reading code from files for us, the issue we're experiencing
+is simply the toolchain trying to give the provided command line arguments
+to our program when it isn't expecting any.
+
+Think of our program having an
 implicit `sub MAIN` that currently has an empty signature. For it to
 accept the command line argument, we need to add a parameter, so we'll modify
 the `QAST::Block` we generate in `method TOP` to include a
@@ -332,9 +358,7 @@ node](https://github.com/perl6/nqp/blob/master/docs/qast.markdown#qastvar):
 ```
     method TOP($/) {
         make QAST::Block.new(
-            QAST::Var.new(
-                :decl<param>, :name<ARGS>, :scope<lexical>, :slurpy
-            ),
+            QAST::Var.new( :decl<param>, :name<ARGS>, :scope<local>, :slurpy ),
             $<statementlist>.ast,
         );
     }
@@ -343,11 +367,12 @@ node](https://github.com/perl6/nqp/blob/master/docs/qast.markdown#qastvar):
 The `:decl` argument says what sort of variable we are creating; in this case,
 it's a parameter. The `:name` can be nearly anything and we're following the
 convention by naming it `ARGS`. It is a `:slurpy` parameter, so we can
-take any number of command line arguments. And we use a lexical `:scope` for it,
-although we won't be using this parameter for anything today.
+take any number of command line arguments. And we use a local `:scope` for it
+(like lexical, but not visible to nested blocks), although we won't be using
+this parameter for anything today.
 
-Stick our `exasperatedly shout 'Hello, World!'` into some file (e.g.  
-`code.damn`) and run our compiler with that file as an argument:
+Stick our `exasperatedly shout 'Hello, World!'` statement into some file
+(e.g. `code.damn`) and run our compiler with that file as an argument:
 
 ```
     $ nqp compiler.nqp code.damn
