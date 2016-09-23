@@ -19,6 +19,7 @@ sub all {
             date    => $meta->{date},
             title   => $meta->{title},
             desc    => $meta->{desc},
+            words   => $meta->{words},
             link    => "/$_",
        };
     }
@@ -37,6 +38,7 @@ sub process {
     my $post = shift;
     my %meta;
     $meta{ $1 } = $2 while $post =~ s/^%%\s*(\w+)\s*:\s*([^\n]+)\n//;
+    $meta{words} = () = $post =~ /\s+/g;
     return \%meta, $post;
 }
 

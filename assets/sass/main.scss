@@ -163,3 +163,17 @@ blockquote p:before{
 .irc-timestamp {
     color: darken($color-body, 50%);
 }
+
+article {
+    .article-description {
+        font-style: italic;
+        opacity: .7;
+        padding-bottom: 10px;
+        border-bottom: 1px solid darken($color-body, 20%);
+    }
+}
+
+.words-count {
+    opacity: .7;
+    font-size: 75%;
+}
