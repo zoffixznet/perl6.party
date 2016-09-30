@@ -24,10 +24,27 @@ Segmentation fault
 =========================
 
 cd nqp/MoarVM
+perl Configure.pl --prefix=/home/zoffix/CPANPRC/rakudo/install --optimize=off
 perl Configure.pl --debug=3 --optimize=1
 make
 make install
 cd ../../
+
+
+## Coverage:
+rm -fr coverage
+mkdir coverage
+MVM_COVERAGE_LOG='coverage/cover-%d' make stresstest
+cd coverage
+cat * | grep 'gen/moar/m-CORE.setting' | sort | uniq > full-cover
+cd ../
+/home/zoffix/CPANPRC/rakudo/install/bin/moar --dump CORE.setting.moarvm > setting
+./perl6 nqp/MoarVM/tools/parse_coverage_report.p6 --annotations=setting coverage/full-cover gen/moar/m-CORE.setting
+firefox coverage/index.html
+
+# Total coverage percentage counter:
+perl6 -e 'my @t = flat "cover".IO.slurp.lines».comb(/<[\d.]>+/); say @t.sum/@t'
+
 
 =========================
 
