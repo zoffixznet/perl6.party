@@ -13,6 +13,8 @@ a much better tool for that purpose in Perl 6. Tags in the META file!
 
 ## Camelia Wants YOU To Tag Your Dists
 
+![](/assets/pics/tag-your-dists.png)
+
 Tags are just a `"tags"` key in your `META6.json` file that points to an array
 of strings. What sort of tags should you use? It's up to you. Pick a couple of
 short words that describe your module best and use those.
