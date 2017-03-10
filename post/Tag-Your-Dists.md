@@ -1,5 +1,5 @@
 %% title: Tag Your Dists
-%% date: 2016-09-17
+%% date: 2017-03-10
 %% desc: Tags support in Perl 6 modules ecosystem
 
 If you ever asked for a name suggestion for your latest shiny Perl 6 module,
