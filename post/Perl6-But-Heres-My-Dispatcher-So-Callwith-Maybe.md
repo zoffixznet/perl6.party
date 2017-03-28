@@ -141,4 +141,19 @@ familiar setup:
     # We're back! The return value is 24
 ```
 
-We've used `callwith 42` to call with an `Int`
+We've used `callwith 42` to use `42` as the argument, instead of the orginal
+string we received. However, the output doesn't quite check out, does it? We
+*do* have an `Int` candidate, so how come the output shows our `callwith`
+called the `Any` candidate instead?
+
+This has to do with the dispatchee chain. When our original
+`foo "I ♥ Perl 6!"` was dispatched, it looked at the `Int` candidate and it
+wasn't good enough, so it went further up the chain to the next wider candidate,
+which is our `Cool` candidate with the `callwith` routine in it. Since it doesn't
+start the dispatch from scratch and instead uses the next matching candidate,
+it gets to the wider-still `Any` and *not* the `Int` candidate.
+
+The output shows the `Any` candiate was called with the `42` we gave to
+`callwith` and not the original `"I ♥ Perl 6!"` string. The rest of the output
+follows a similar pattern: we got the flipped return value back and printed it
+out.
