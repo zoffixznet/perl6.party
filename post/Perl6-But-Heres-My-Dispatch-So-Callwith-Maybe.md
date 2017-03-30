@@ -85,8 +85,8 @@ Let's play with these!
 ## It's all called the same...
 
 The first routine we'll try out is `callsame`. It **call**s the next matching
-with the **same** arguments used for the current candidate and returns that
-candidate's return value.
+candidate with the **same** arguments that were used for the current candidate
+and returns that candidate's return value.
 
 Let's modify our `Middle` candidate to call `callsame` and then print out
 its return value:
@@ -157,8 +157,8 @@ gets called with it and not the `Narrow` candidate?
 
 The reason is that `call____` and `next____` routines use *the same dispatch
 chain* the original call followed. Since the `Narrow` candidate is narrower
-than `Middle` candidate and was rejected for the original call with `Middle`,
-it will no longer be considered in `callwith`. The next candidate `callwith`
+than `Middle` candidate it was rejected, and won't be considered in the
+current chain. The next candidate `callwith`
 will call will be the next candidate that matches **`Middle`**—and that's not
 a typo: `Middle` is the argument we used to initiate the dispatch and so the
 next candidate will be the one that can still take the original arguments. Once
