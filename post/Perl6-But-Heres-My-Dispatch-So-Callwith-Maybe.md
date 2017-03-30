@@ -345,7 +345,7 @@ subs instead of messing with multies!"
 So, let's take a look at more real-worldish examples
 as well as meet the `nextsame` and `nextwith`!
 
-## Who's Next?
+## Next one in line, please
 
 Let's make a class! A class that does Things!
 
