@@ -408,7 +408,7 @@ Our first multi method we added to the class dispatches to `$place`s that
 `.contain` word `home`.
 In the method's body, if `$place`
 also `.contains` word `large`, we use `nextsame`—that is, call
-the next matching candidate with the same argument as the current method. This
+the *next* matching candidate with the same argument as the current method. This
 is the key here. We can't just call the method, since it'd enter an infinite
 loop redispatching to itself. However, since `nextsame` uses the next
 candidate in the same dispatch chain, no loop occurs, and we get to the
