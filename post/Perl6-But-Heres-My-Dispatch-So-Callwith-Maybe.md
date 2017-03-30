@@ -265,8 +265,8 @@ and so is still up in the dispatch chain. What could possibly go wrong!
     #   in block <unit> at z2.p6 line 19
 ```
 
-Oh, right, that! The new arguments we gave to `callwith` do not affect the
-dispatch, so despite there being a candidate that can handle our new arg
+Oh, right, that! The new arguments we gave to `callwith` *do not affect the
+dispatch,* so despite there being a candidate that can handle our new arg
 further up the chain, it's not the **next** candidate that can handle
 **the original args** that `callwith` calls. The result is throwage due to
 failed binding of our new args to the... next callee...
