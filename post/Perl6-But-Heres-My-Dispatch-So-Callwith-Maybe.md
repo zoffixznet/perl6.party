@@ -358,7 +358,7 @@ Let's make a class! A class that does Things!
 
     class Doer does Things { }
 
-    Doer.new.do-it: 'home' # OUTPUT: I am coding at home
+    Doer.do-it: 'home' # OUTPUT: I am coding at home
 ```
 
 We can't touch the `role`, since someone else made it for us and they like it
@@ -386,12 +386,12 @@ the code:
         }
     }
 
-    Doer.new.do-it: 'the bus';       # OUTPUT: I am eating at the bus
-    Doer.new.do-it: 'home';          # OUTPUT: I am sleeping at red home
-    Doer.new.do-it: 'large home';    # OUTPUT: I am sleeping at large home
-    Doer.new.do-it: 'red home';      # OUTPUT: I am eating at home with red roof
-    Doer.new.do-it: 'some new home'; # OUTPUT: I am eating at red home
-    Doer.new.do-it: 'my new place';  # OUTPUT: I am coding at red home
+    Doer.do-it: 'the bus';       # OUTPUT: I am eating at the bus
+    Doer.do-it: 'home';          # OUTPUT: I am sleeping at red home
+    Doer.do-it: 'large home';    # OUTPUT: I am sleeping at large home
+    Doer.do-it: 'red home';      # OUTPUT: I am eating at home with red roof
+    Doer.do-it: 'some new home'; # OUTPUT: I am eating at red home
+    Doer.do-it: 'my new place';  # OUTPUT: I am coding at red home
 ```
 
 With a little bit of extra code and without making a single change in the
