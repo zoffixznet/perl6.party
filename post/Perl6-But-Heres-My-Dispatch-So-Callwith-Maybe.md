@@ -316,7 +316,7 @@ be seen from the output, our call went into `NotPrime` candidate.
 The `nexcallee` is finicky and so looping with it is a challenge, since it'd
 use the loop's or thunk's dispatcher to look for callees in. So the most
 common and saner way to use it is to just get the... next callee. You'd
-primarily need to do if you need to pass the next callee around, e.g. in:
+primarily need to do that if you need to pass the next callee around, e.g. in:
 
     multi pick-winner (Int \s) {
         my &nextone = nextcallee;
@@ -333,9 +333,16 @@ primarily need to do if you need to pass the next callee around, e.g. in:
     # And the winner is...
     # Woot! 3 won
 
-With my reaching the summit of convoluted examples, I can hear cries in the
-audience. What's this stuff's good for, anyway? Just make more subs instead
-of messing with multies! So, let's take a look at more real-worldish examples
+The `Int` candidate takes the `nextcallee` and then fires up a
+[`Promise`](https://docs.perl6.org/language/concurrency) to be executed in
+parallel, after some time out, and then returns. We can't use `nextsame` here,
+because it'd be trying to `nextsame` the Promise's block instead of our
+original routine, and so, the `nextcallee` saves the day.
+
+I think we've reached the summit of convoluted examples now and I can hear
+cries in the audience. "What's this stuff's good for, anyway? Just make more
+subs instead of messing with multies!"
+So, let's take a look at more real-worldish examples
 as well as meet the `nextsame` and `nextwith`!
 
 ## Who's Next?
