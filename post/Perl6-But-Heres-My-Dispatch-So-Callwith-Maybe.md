@@ -399,7 +399,8 @@ role that provides the method, we added a whole bunch of new functionality.
 Let's examine the three new routines we've used.
 
 The `nextsame` and `nextwith` function very similar to their `callsame` and
-`callwith` counterparts, except **they don't return.** So using
+`callwith` counterparts, except **they don't return** and their return value
+will be used as the return value of the current routine. So using
 `nextsame` is like using `return callsame`, but with less typing and with the
 compiler able to do more optimizations.
 
