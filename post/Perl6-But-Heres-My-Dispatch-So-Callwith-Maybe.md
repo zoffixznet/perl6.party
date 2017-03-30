@@ -402,10 +402,12 @@ The `nextsame` and `nextwith` function very similar to their `callsame` and
 `callwith` counterparts, except **they don't return** and their return value
 will be used as the return value of the current routine. So using
 `nextsame` is like using `return callsame`, but with less typing and with the
-compiler able to do more optimizations.
+compiler being able to do more optimizations.
 
-In the first multi method we added, we look for `$place` that `.contains` word
-`home`. If it also `.contains` word `large`, we use `nextsame`—that is, call
+Our first multi method we added to the class dispatches to `$place`s that
+`.contain` word `home`.
+In the method's body, if `$place`
+also `.contains` word `large`, we use `nextsame`—that is, call
 the next matching candidate with the same argument as the current method. This
 is the key here. We can't just call the method, since it'd enter an infinite
 loop redispatching to itself. However, since `nextsame` uses the next
