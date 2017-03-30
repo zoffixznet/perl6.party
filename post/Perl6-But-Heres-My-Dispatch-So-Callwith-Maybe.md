@@ -1,24 +1,23 @@
 %% title: But Here's My Dispatch, So callwith Maybe
 %% date: 2017-03-28
-%% desc: All about nextwith, nextsame, samewith, callwith, and callsame
+%% desc: All about nextwith, nextsame, samewith, callwith, callsame, nextcallee, and lastcall
 %% draft: True
 
 One of the great features of Perl 6 is multi-dispatch. It lets you use the
-same name for your functions, methods, or Grammar tokens and let the type of
-data they're called with or asked to match to determine which version gets
-executed:
+same name for your functions, methods, or [Grammar](https://docs.perl6.org/language/grammars) tokens and let type of
+data they're dealing with to determine which version gets executed:
 
 ```
-    multi fact (0) { 1 }
-    multi fact (UInt \n) { n × samewith n − 1 }
+    multi postfix:<!> (0) { 1 }
+    multi postfix:<!> (UInt \n) { n × samewith n − 1 }
 
-    say fact 5
+    say 5!
 
     # OUTPUT: 120
 ```
 
-While the subject is broad and [there are some docs on it](https://docs.perl6.org/language/functions#Multi-dispatch), there are five special routines I'd
-like to talk about that let you navigate the dispatch-inal maze. They're
+While the subject is broad and [there are some docs on it](https://docs.perl6.org/language/functions#Multi-dispatch), there are 7 special routines I'd
+like to talk about that let you navigate the dispatch maze. They're
 `nextwith`, `nextsame`, `samewith`, `callwith`, `callsame`, `nextcallee`, and
 `lastcall`.
 
@@ -44,15 +43,15 @@ candidate. Sometimes, you may wish to call or simply move to the next matching c
 
 We have three classes, each inheriting from the previous one, so that way
 our `Narrow` class can fit into both `Middle` and `Wide` candidates; `Middle`
-can also fit into `Wide`, but not `Narrow`; and `Wide` fits neither
-into `Middle` nor into `Narrow`. Remember that all three of these classes
-are of type `Any` as well, and so will fit into any candidate that accepts an
-`Any`.
+can also fit into `Wide`, but not into `Narrow`; and `Wide` fits neither
+into `Middle` nor into `Narrow`. Remember that all classes in Perl 6
+are of type [`Any`](http://docs.perl6.org/type/Any) as well, and so will fit
+into any candidate that accepts an `Any`.
 
 For our Callables, we use three multi candidates for routine `foo`:
 one for each of the classes.
 In their bodies, we print what type of multi we called, along with the
-value that was passed as the argument. For the return value, we just use
+value that was passed as the argument. For their return value, we just use
 a string that tells us which multi the return value came from; we'll use these
 a bit later.
 
@@ -65,14 +64,14 @@ This is all plain and boring. However, we can spice it up! While inside of these
 
 ## The Subject
 
-The naming of the five routines follows this convention:
+The naming of the first five routines we'll examine follows this convention:
 
 - `call____` — **call** next matching candidate in the chain
     (and return back here)
-`next____` — just go to **next** matching candidate in the chain (don't return)
-`____same` — use the **same** arguments as used for current candidate
-`____with` — make the operation **with** these new arguments I'm giving
-`samewith` — make the **same** call from scratch, from the start of dispatch
+- `next____` — just go to **next** matching candidate in the chain (don't return)
+- `____same` — use the **same** arguments as used for current candidate
+- `____with` — make the operation **with** these new arguments I'm giving
+- `samewith` — make the **same** call from scratch, from the start of dispatch
     chain, **with** these new arguments.
 
 The `samesame` is not a thing, as that case is best replaced by a regular loop.
