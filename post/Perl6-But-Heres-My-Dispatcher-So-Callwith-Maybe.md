@@ -369,10 +369,10 @@ the code:
     }
 
     class Doin'It does Things {
-        multi method do-it (\place where .contains: 'home' ) {
-            nextsame if place.contains: 'large';
-            nextwith "house with $<color> roof"
-                if place ~~ /$<color>=[red | green | blue]/;
+        multi method do-it ($place where .contains: 'home' ) {
+            nextsame if $place.contains: 'large';
+            nextwith "home with $<color> roof"
+                if $place ~~ /$<color>=[red | green | blue]/;
             samewith 'my new place';
         }
         multi method do-it ('my new place') {
@@ -380,17 +380,161 @@ the code:
         }
     }
 
-    Doin'It.new.do-it: 'the bus';
-    Doin'It.new.do-it: 'home';
-    Doin'It.new.do-it: 'large home';
-    Doin'It.new.do-it: 'red home';
-    Doin'It.new.do-it: 'some new home';
-    Doin'It.new.do-it: 'my new place';
-
-I am eating at the bus
-I am sleeping at red home
-I am sleeping at large home
-I am eating at house with red roof
-I am eating at red home
-I am coding at red home
+    Doin'It.new.do-it: 'the bus';       # OUTPUT: I am eating at the bus
+    Doin'It.new.do-it: 'home';          # OUTPUT: I am sleeping at red home
+    Doin'It.new.do-it: 'large home';    # OUTPUT: I am sleeping at large home
+    Doin'It.new.do-it: 'red home';      # OUTPUT: I am eating at home with red roof
+    Doin'It.new.do-it: 'some new home'; # OUTPUT: I am eating at red home
+    Doin'It.new.do-it: 'my new place';  # OUTPUT: I am coding at red home
 ```
+
+With a little bit of extra code and without making a single change in the
+role that provides the method, we added a whole bunch of new functionality.
+Let's examine the three new routines we've used.
+
+The `nextsame` and `nextwith` function very similar to their `callsame` and
+`callwith` counterparts, except **they don't return.** So using
+`nextsame` is like using `return callsame`, but with less typing and with the
+compiler able to do more optimizations.
+
+In the first multi method we added, we look for `$place` that `.contains` word
+`home`. If it also `.contains` word `large`, we use `nextsame`—that is, call
+the next matching candidate with the same argument as the current method. This
+is the key here. We can't just call the method, since it'd enter an infinite
+loop redispatching to itself. However, since `nextsame` uses the next
+candidate in the same dispatch chain, no loop occurs, and we get to the
+candidate in `role Things` just fine.
+
+Further down in the code, we also take `nextwith` for a spin, if place
+mentions one of three colours. Similar to `nextsame`, it goes to the next
+candidate, except we give it a new argument to use.
+
+Lastly, we come to `samewith`. Unlike the routines we've used earlier, this
+one **restarts** the dispatch from scratch, so it's basically like calling
+the method again, except you don't have to know or use the actual name of it.
+We call `samewith` with a new argument, and from the output we can see the
+new dispatch path took it via the second multi we added to our class, instead
+of continuing from the role's multi as our `next____` versions did.
+
+## Last Call!
+
+The last method in the bag of tricks is `lastcall`. Calling it truncates the
+current dispatch chain, so that `next____` and `call____` routines won't have
+anything else to go to. Here's an example:
+
+```
+    multi foo (Int $_) {
+        say "Int: $_";
+        lastcall   when *.is-prime;
+        nextsame   when *  %% 2;
+        samewith 6 when * !%% 2;
+    }
+    multi foo (Any $x) { say "Any $x" }
+
+    foo 6; say '----';
+    foo 2; say '----';
+    foo 1;
+
+    # OUTPUT:
+    # Int: 6
+    # Any 6
+    # ----
+    # Int: 2
+    # ----
+    # Int: 1
+    # Int: 6
+    # Any 6
+```
+
+All of our invocations to `foo` go to the `Int` candidate first. When the
+number `.is-prime`, we invoke `lastcall`; when it's an even number, we
+invoke `nextsame`; and when it's an odd number, we invoke `samewith`
+using `6` as the argument.
+
+The first number `6` isn't prime, so `lastcall` is never called. It is an even
+number, so we invoke `nextsame` and from the output we see that we've reached
+the `Any` candidate.
+
+However, when we invoke `foo` with `2`, which is both a prime and an even
+number, we call `lastcall` and `nextcall`. However, *because* `lastcall` was
+called and it truncated the dispatch chain, `nextcall` never sees the `Any`
+candidate and so we only have the call to `Int` candidate in the output.
+
+In the last example, we again use a prime number, so `lastcall` gets called
+once more. However, the number is an odd number, so we use `samewith` instead
+of `nextwith`. Since `samewith` re-dispatches from scratch, it doesn't care
+that we truncated the previous chain with `lastcall`. And so, the output shows
+we go through `Int` candidate twice, with the second call using `nextsame`
+to reach the `Any` candidate, since the number we used with `samewith` is not
+a prime and is even.
+
+## Wrapping It Up
+
+To wrap up this article, we'll examine an area where the routines
+we've learned about can come in handy: the wrapping of stuff! Here's the code:
+
+```
+    use soft;
+
+    sub meower (\ッ, |c) {
+        nextwith "🐱 says {ッ}", |c when ッ.gist.contains: 'meow';
+        nextsame
+    }
+
+    &say.wrap: &meower;
+    say 'chirp';
+    say 'moo';
+    say 'meows!';
+
+    # OUTPUT:
+    # chirp
+    # moo
+    # 🐱 says meows!
+```
+
+We use the `soft` pragma to disable inlining so our wrapping is sane. We have
+a `meower` sub that modifies the first argument with `nextwith`
+if it `.contains` word `meow`, passing the rest of the arguments via a capture
+(that's the `|c` bit). All the rest of the calls are passed as is, using
+`nextsame`. We `.wrap` the `meower` onto the `say` routine and, as we can
+see from the output, everything works as advertised.
+
+Here's the key feature of this code: the `meower` **has no idea what sub
+it's being wrapped onto!** Here, we wrap it around `put` routine instead,
+and it works just fine without any changes:
+
+```
+    use soft;
+
+    sub meower (\ッ, |c) {
+        nextwith "🐱 says {ッ}", |c when ッ.gist.contains: 'meow';
+        nextsame
+    }
+
+    &put.wrap: &meower;
+    put 'chirp';
+    put 'moo';
+    put 'meows!';
+
+    # OUTPUT:
+    # chirp
+    # moo
+    # 🐱 says meows!
+```
+
+## Conclusion
+
+Today, we've learned about powerful routines that let you re-use existing
+multi candidates from within other candidates. The `callsame` and `callwith`
+let you redispatch to the next matching candidate in the current dispatch
+chain, either using the same arguments or a new set. The `nextsame` and
+`nextwith` accomplish the same, without returning back to the routine.
+
+The `samewith` sub lets restart the dispatch chain from the start, without
+having to know the name of the current routine. While `lastcall` and
+`nextcallee` and let you manipulate the current dispatch chain by truncating
+it, or shifting the next callee.
+
+Put them to good use!
+
+-Ofun
