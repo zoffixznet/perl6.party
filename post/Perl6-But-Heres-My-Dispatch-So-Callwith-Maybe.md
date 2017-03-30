@@ -1,7 +1,6 @@
 %% title: But Here's My Dispatch, So callwith Maybe
 %% date: 2017-03-28
 %% desc: All about nextwith, nextsame, samewith, callwith, callsame, nextcallee, and lastcall
-%% draft: True
 
 One of the great features of Perl 6 is multi-dispatch. It lets you use the
 same name for your functions, methods, or [Grammar](https://docs.perl6.org/language/grammars) tokens and let type of
