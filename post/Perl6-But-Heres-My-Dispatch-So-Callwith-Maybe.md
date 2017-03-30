@@ -84,9 +84,9 @@ Let's play with these!
 
 ## It's all called the same...
 
-The first to try out is `callsame`. It **call**s the next matching with the
-**same** arguments used for the current candidate and returns that candidate's
-return value.
+The first routine we'll try out is `callsame`. It **call**s the next matching
+with the **same** arguments used for the current candidate and returns that
+candidate's return value.
 
 Let's modify our `Middle` candidate to call `callsame` and then print out
 its return value:
