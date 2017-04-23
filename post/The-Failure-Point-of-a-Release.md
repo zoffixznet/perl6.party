@@ -179,6 +179,7 @@ by another team.
 ## The Present
 
 So here's where we are right now:
+
 - [Latest Rakudo release](http://rakudo.org/downloads/rakudo/) is 2017.04.3
 - It has no horrible bugs, other than [the usual ~1,500
 tickets](https://perl6.fail/)
