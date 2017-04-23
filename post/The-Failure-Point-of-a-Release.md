@@ -230,7 +230,8 @@ guide.
 
 The current test coverage needs to be improved. This month we saw resurrection
 of the tool that reports [Rakudo's coverage](https://perl6.wtf/) as well as
-created a tool for [MoarVM's coverage](https://moarvm.github.io/coverage/).
+created a tool for [MoarVM's coverage](https://moarvm.github.io/coverage/), so
+the work in this area has already started.
 
 In addition, I plan to make a bot that daily tests the full build, runs
 stresstest, and installs a large selection of modules, reporting any of the
