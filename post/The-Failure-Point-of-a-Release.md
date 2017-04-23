@@ -114,7 +114,7 @@ fails, which caused this bug to appear only on a specific OS.
 #### The Curse of `uncurse`
 
 Two days later, on April 21st, an issue due to the merged `uncurse` branch
-[was reported](https://rt.perl.org/Public/Bug/Display.html?id=131187). If an
+[was reported](https://rt.perl.org/Public/Bug/Display.html?id=131187). If
 Grammar action method exists for a token that uses `)>` capture marker, the
 Match of the token ends up including the stuff outside the marker. This
 issue caused failure in [File::Ignore](https://modules.perl6.org/repo/File::Ignore) module.
@@ -142,7 +142,7 @@ us another bug. This time involving case-insensitive regex matching:
 Under some circumstances the match would succeed even when it shouldn't. This
 bug was actually introduced in 2017.03 release, and so wasn't a regression of
 2017.04 releases, but it gave more weight to the idea of us doing the
-2017.03 point release.
+2017.04.3 point release.
 
 The bug was found to be in MoarVM, and so after MoarVM and NQP bumps, it was
 fixed on Rakudo's nom HEAD, while I was sleeping.
