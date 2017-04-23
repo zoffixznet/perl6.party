@@ -253,7 +253,7 @@ What makes this a bit problematic is dependence on NQP and MoarVM projects: a
 version bump
 in them brings all the previous commits around and MoarVM is even released
 by a different team. Keeping three release branches around while doing
-acrobatics with version bumps is less than idea. Moreover, there's a 4th
+acrobatics with version bumps is less than ideal. Moreover, there's a 4th
 player in this all: the Roast repo. Any new tests added to it would fail on
 the frozen release branch, so there might be a need to make a "for release"
 branch of Roast as well.
