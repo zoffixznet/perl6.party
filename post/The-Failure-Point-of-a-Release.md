@@ -260,7 +260,7 @@ branch of Roast as well.
 
 ## Conclusion
 
-So that's the story of 3 point release we made in April. There's plenty of work
+So that's the story of 3 point releases we made in April. There's plenty of work
 to be done to make the release process more robust and less likely to introduce
 issues. While all of it won't be done by the next release, we'll be sure to
 address all of the existing issues.
