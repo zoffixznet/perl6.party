@@ -42,6 +42,7 @@ into the Rakudo Star release. In addition, a bunch of fixes to Staging repo
 went in that allowed to easily create Linux packages.
 
 **Points to note:**
+
 - We rushed some work, due to lengthy Rakudo Star release cycles
 
 #### The Cut and Recut
@@ -64,6 +65,7 @@ I did the release by hand. And since the issue was only in Rakudo itself,
 no NQP or MoarVM releases were done. Just Rakudo.
 
 **Points to note:**
+
 - Tests don't cover every possible thing in existence
 - Some issues can be quickly found by users, even if uncaught by tests
 
@@ -81,6 +83,7 @@ as with the previous point release, the issue was in Rakudo only and did not
 require NQP or MoarVM point releases.
 
 **Points to note:**
+
 - Rakudo needs more coverage for `CompUnit::*` types
 - Releases need to include installation and testing of a selection of Perl 6
 modules
@@ -105,6 +108,7 @@ It turns out that on Linux, `mkdir("/")` silently succeeds, while on OSX it
 fails, which caused this bug to appear only on a specific OS.
 
 **Points to note:**
+
 - We need to test releases on multiple OSes
 
 #### The Curse of `uncurse`
@@ -120,6 +124,7 @@ making yet another point release felt a bit embarrassing and I proposed
 declaring 2017.04 a lemon and basing Rakudo Star off 2017.05 instead.
 
 **Points to note:**
+
 - We rushed some work, due to lengthy Rakudo Star release cycles
 - Releases need to include installation and testing of a selection of Perl 6
 modules
@@ -143,6 +148,7 @@ The bug was found to be in MoarVM, and so after MoarVM and NQP bumps, it was
 fixed on Rakudo's nom HEAD, while I was sleeping.
 
 **Points to note:**
+
 - Tests don't cover every possible thing in existence
 - Releases need to include installation and testing of a selection of Perl 6
 modules
@@ -166,6 +172,7 @@ to do it right, it would need a MoarVM 2017.04.1 release too, which is released
 by another team.
 
 **Points to note:**
+
 - We need to expect exceptional circumstances
 
 ## The Present
@@ -208,6 +215,15 @@ its offers are a bit different from those of Rakudo Star, it will be a
 distribution meant for users, so core devs will have fewer reasons to cram all
 their work into a release.
 
+#### Expect the Unexpected
+
+While point releases are rare, cutting them is error-prone due to lack of
+explicit "Point Release Release Guide" or a bot that knows how to do them.
+
+I plan to teach the release bot to be able to know how to cut a point release
+as well as add a "Point Release Guide" to go along with the regular release
+guide.
+
 #### Test More
 
 The current test coverage needs to be improved. This month we saw resurrection
@@ -237,13 +253,6 @@ acrobatics with version bumps is less than idea. Moreover, there's a 4th
 player in this all: the Roast repo. Any new tests added to it would fail on
 the frozen release branch, so there might be a need to make a "for release"
 branch of Roast as well.
-
-#### Expect the Unexpected
-
-While point releases are rare, cutting them is error-prone due to lack of
-explicit "Point Release Release Guide" or a bot that knows how to do them.
-
-I plan to teach the release bot to be able to know how to cut a point release.
 
 ## Conclusion
 
