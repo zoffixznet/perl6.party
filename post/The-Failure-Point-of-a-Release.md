@@ -249,7 +249,8 @@ a week before actual release. Nothing but critical bug fixes get committed to
 it, so when the release date comes around, we'll have all the code with
 at least a week of usage.
 
-What makes this a bit problematic is NQP and MoarVM projects: a version bump
+What makes this a bit problematic is dependence on NQP and MoarVM projects: a
+version bump
 in them brings all the previous commits around and MoarVM is even released
 by a different team. Keeping three release branches around while doing
 acrobatics with version bumps is less than idea. Moreover, there's a 4th
