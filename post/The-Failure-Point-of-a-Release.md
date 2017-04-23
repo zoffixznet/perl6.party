@@ -156,6 +156,7 @@ modules
 #### The Missing Releases
 
 On Sunday morning, April 23rd, with the regex and uncurse bugs squashed
+on HEAD,
 but still present in latest Rakudo releases, I decided to cut yet another
 point release, the 2017.04.3.
 
