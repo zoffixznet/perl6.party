@@ -56,7 +56,7 @@ Tuesday, April 18th, around 4am EST, my notification bot pinged me, and I
 learned the release had a left over debug statement. Whenever the
 `method Type: $arg` calling form was used, the
 compiler dumped the AST into the screen. This wasn't caught by our suite of
-160,000+ tests, because most of them check values rather than full STDOUT and
+140,000+ tests, because most of them check values rather than full STDOUT and
 STDERR output for every feature of the compiler.
 
 The commit fixing the issued already went in, so I went ahead and cut the
@@ -71,7 +71,7 @@ no NQP or MoarVM releases were done. Just Rakudo.
 
 #### The Precomp Strikes
 
-While the release cut was smooth going, I did it a bit too fast though, as
+While the release cut was a smooth going, I did it a bit too fast, as
 [merely three minutes
 later](https://irclog.perlgeek.de/perl6-dev/2017-04-18#i_14444573) it was
 discovered there was an issue with installation of
@@ -109,7 +109,7 @@ fails, which caused this bug to appear only on a specific OS.
 
 **Points to note:**
 
-- We need to test releases on multiple OSes
+- We need to test installation and use of ecosystem modules on multiple OSes
 
 #### The Curse of `uncurse`
 
@@ -201,7 +201,7 @@ type of issues in the future. The points are:
 - Rakudo needs more coverage for `CompUnit::*` types
 - Releases need to include installation and testing of a selection of Perl 6
 modules
-- We need to test releases on multiple OSes
+- We need to test installation and use of ecosystem modules on multiple OSes
 - Tests don't cover every possible thing in existence
 - We need to expect exceptional circumstances
 
