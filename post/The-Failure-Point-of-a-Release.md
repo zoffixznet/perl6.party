@@ -223,7 +223,7 @@ While point releases are rare, cutting them is error-prone due to lack of
 explicit "Point Release Release Guide" or a bot that knows how to do them.
 
 I plan to teach the release bot to be able to know how to cut a point release
-as well as add a "Point Release Guide" to go along with the regular release
+as well as add a guide for point releases to go along with the regular release
 guide.
 
 #### Test More
