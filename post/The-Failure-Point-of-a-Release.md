@@ -167,7 +167,7 @@ point release, my second nature totally forgot that *this* point release
 also needed releases of MoarVM and NQP, since that's where the fixes for
 regex and uncurse were!
 
-About an hour after I release 2017.04.3, the Rakudo Star release manager
+About an hour after I released 2017.04.3, the Rakudo Star release manager
 asked whether NQP 2017.04.1 release was in the works. It wasn't. Moreover,
 to do it right, it would need a MoarVM 2017.04.1 release too, which is released
 by another team.
