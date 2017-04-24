@@ -55,7 +55,7 @@ called it a day.
 Tuesday, April 18th, around 4am EST, my notification bot pinged me, and I
 learned the release had a left over debug statement. Whenever the
 `method Type: $arg` calling form was used, the
-compiler dumped the AST into the screen. This wasn't caught by our suite of
+compiler dumped the AST onto the screen. This wasn't caught by our suite of
 140,000+ tests, because most of them check values rather than full STDOUT and
 STDERR output for every feature of the compiler.
 
