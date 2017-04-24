@@ -204,7 +204,6 @@ type of issues in the future. The points are:
 - Releases need to include installation and testing of a selection of Perl 6
 modules
 - We need to test installation and use of ecosystem modules on multiple OSes
-- Tests don't cover every possible thing in existence
 - We need to expect exceptional circumstances
 
 So I think this is how we can avoid some of the release problems:
