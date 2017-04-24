@@ -101,7 +101,8 @@ was left alone, without any point releases.
 The cause of the issue was the IO Grant changes to `&mkdir`. It used to return
 an empty list on failure, but was now changed to behave the same way as
 `IO::Path.mkdir` does, and return a `Failure` object, which explodes when sunk.
-The REPL history file code was written using the assumption of empty list and
+The REPL history file code was written using the assumption of empty list
+return value and
 that `mkdir` cannot create non-existent parent directories, so for a
 `/foo/bar.hist` file, it was attempting to create directories `/` and `/foo`.
 It turns out that on Linux, `mkdir("/")` silently succeeds, while on OSX it
