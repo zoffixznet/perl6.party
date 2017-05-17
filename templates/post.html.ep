@@ -2,6 +2,6 @@
 
 <article>
   <p class="article-description">
-    <span class="words-count"><%= $words %> words |</span> <%= $desc %></p>
+    <%= $date %> <span class="words-count">| <%= $words %> words |</span> <%= $desc %></p>
   <%== $post %>
 </article>
