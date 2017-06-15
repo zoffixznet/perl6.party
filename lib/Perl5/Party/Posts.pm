@@ -4,14 +4,15 @@ use base 'Mojo::Base';
 
 use Text::MultiMarkdown qw/markdown/;
 use File::Glob qw/bsd_glob/;
-use Mojo::Util qw/slurp  decode  encode  xml_escape/;
+use Mojo::File qw/path/;
+use Mojo::Util qw/decode  encode  xml_escape/;
 
 sub all {
     my @posts = bsd_glob 'post/*.md';
     s/\.md$// for @posts;
     my @return;
     for ( @posts ) {
-        my $post = decode 'UTF-8', slurp "$_.md";
+        my $post = decode 'UTF-8', path("$_.md")->slurp;
         my ($meta) = process($post);
         next if $meta->{draft};
         push @return, {
@@ -29,7 +30,7 @@ sub all {
 sub load {
     my ($self, $post) = @_;
     return unless -e "post/$post.md";
-    my ($meta, $content) = process( decode 'UTF-8', slurp "post/$post.md" );
+    my ($meta, $content) = process( decode 'UTF-8', path("post/$post.md")->slurp );
     $content = process_module_links(process_irc($content));
     return $meta, markdown $content =~ s/^```$//gmr;
 }
