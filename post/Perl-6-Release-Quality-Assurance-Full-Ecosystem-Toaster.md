@@ -74,7 +74,7 @@ I initially attempted to solve the JSON errors by [looking at an Issue](https://
 [fixing the updater script](https://github.com/perl6/ecosystem/commit/ffe71f7583e5ec8ca8ee38f438d00ff78ade6444), I was still getting invalid JSON errors from `zef` when reading ecosystem data.
 
 It might be due to something in `zef`, but instead of investigating it further, I followed ugexe++'s advice and told zef not to fetch ecosystem in each Proc.
-The broken cache issues were similarly elimited by disabling caching support.
+The broken cache issues were similarly eliminated by disabling caching support.
 And the false positives were eliminated telling each zef instance to install
 the tested module into a separate location.
 
