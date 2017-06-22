@@ -40,7 +40,7 @@ sub load {
     my $prefix = '<a href="https://perl6.party/post/' . $post
         . '" style="display: block; background: #ccc; border-radius: 3px; '
         . 'font-size: 110%; border: 1px dotted #666; text-align: center; '
-        . 'adding: 10px 5px;">Read this article on Perl6.Party</a>'
+        . 'padding: 10px 5px;">Read this article on Perl6.Party</a>'
         . "\n\n";
     return $meta, "$prefix$content", markdown $content;
 }
