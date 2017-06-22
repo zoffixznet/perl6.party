@@ -123,10 +123,6 @@ can feed a [`gather`](https://docs.perl6.org/syntax/gather%20take) not just from
 
     my $seq := gather map &what's-that, 1, 31337, 42, 'meows';
 
-Once again, we can iterate over our `R`Seq`` with a [`for` loop](https://docs.perl6.org/syntax/for), and you can see
-that `R`take`` called from different multies and even nested sub calls still
-delivered the value to our `T`Seq`` successfully:
-
     .say for $seq;
 
     # OUTPUT:
@@ -135,6 +131,9 @@ delivered the value to our `T`Seq`` successfully:
     # The Answer
     # Eww
 
+Once again, we iterated over our new `R`Seq`` with a [`for` loop](https://docs.perl6.org/syntax/for), and you can see
+that `R`take`` called from different multies and even nested sub calls still
+delivered the value to our `T`Seq`` successfully:
 The only limitation is you can't [`gather`](https://docs.perl6.org/syntax/gather%20take) `R`take``s done in another `T`Promise``
 or in code manually [cued](https://docs.perl6.org/routine/cue) in the scheduler:
 
