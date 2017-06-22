@@ -71,7 +71,8 @@ Above, we have a code block with lines of [song lyrics](https://www.youtube.com/
 [`say`](https://docs.perl6.org/routine/say) (print to the screen) and others we
 [`take`](https://docs.perl6.org/routine/take) (to be [`gather`](https://docs.perl6.org/syntax/gather%20take)ed). Just like,
 `R`.say`` can be used as either a method or a subroutine, so you can use
-`R`.take`` as a method or subroutine, there's no real difference.
+`R`.take`` as a method or subroutine, there's no real difference; merely
+convenience.
 
 Now, let's iterate over `$seq-full-of-sunshine` and watch the output:
 
