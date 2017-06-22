@@ -298,4 +298,4 @@ its execution and continue it only when more values are needed.
 In parts II and III, we'll look at other, more exciting, ways of
 creating `T`Seq``s. Stay tuned!
 
--OFun
+-Ofun
