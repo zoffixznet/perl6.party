@@ -169,12 +169,15 @@ to be `R`take``n in a [`react` block](https://docs.perl6.org/language/concurrenc
 
 Or gathering `R`take``s from within a `R`Supply``:
 
-    my $supply = supply { emit take 42 }
+    my $supply = supply {
+        take 42;
+        emit 'Took 42!';
+    }
 
-    my $x := gather react whenever $supply { say "Took $_" }
+    my $x := gather react whenever $supply { .say }
     say $x;
 
-    # OUTPUT: Took 42
+    # OUTPUT: Took 42!
     # (42)
 
 ## Stash into the `cache`

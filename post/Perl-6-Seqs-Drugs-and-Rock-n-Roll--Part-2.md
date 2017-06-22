@@ -1,14 +1,18 @@
-%% title: Perl 6: Seqs, Drugs, And Rock'n'Roll, Part 2
+%% title: Perl 6: Seqs, Drugs, And Rock'n'Roll (Part 2)
 %% date: 2017-06-20
 %% desc: How to make your very own Iterator object
 %% draft: true
 
 This is the second part in the series! Be sure you
-[read Part 1 first](Perl-6-Seqs-Drugs-and-Rock-n-Roll).
+[read Part 1 first](/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll) where we discuss
+what `T`Seq``s are and how to `R`.cache`` them.
+
+Today, we'll take the `T`Seq`` apart and see what's up in it; what drives it;
+and how to make it do exactly what we want.
 
 # PART II: That Iterated Quickly
 
-The main piece that makes a `Seq` do its thang is
+The main piece that makes a `Seq` do its thing is
 an object that does the [`Iterator`](https://docs.perl6.org/type/Iterator)
 role. It's *this* object that knows how to generate the next value, whenever
 we try to pull a value from a `Seq`, or push all of its values somewhere, or
@@ -206,6 +210,9 @@ For the sake of completeness, there's another skipping method defined by
 `.skip-at-least`, except with `.pull-one` semantics for return values. Its
 default implemention involves just calling those two methods, short-circuiting
 and returning `IterationEnd` if the `.skip-at-least` returned a falsy value,
-and is very likely good enough for all `Iterator`s. The method exists as a
+and it is very likely good enough for all `Iterator`s. The method exists as a
 convenience for `Iterator` *users* who call methods on `Iterators` and (at the
-moment) it's not used by any methods that can be called on users' `Seq`s.
+moment) it's not used in core Rakudo Perl 6 by any methods that can be
+called on users' `Seq`s.
+
+## A so, so count...
