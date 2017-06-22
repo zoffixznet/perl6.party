@@ -200,6 +200,11 @@ we didn't use the `@`
 [sigil](https://docs.perl6.org/language/glossary#index-entry-Sigil) that type-
 checks for `T`Positional`` on the variables we stored `T`Seq``s in.
 
+The `T`Seq`` is deemed consumed whenever something asks it for its
+`T`Iterator``, like the `for` loop would. So even if we would've iterated over
+1 item from the `T`Seq``, it would be deemed consumed, and you can't resume
+taking more items using, say, another `for` loop.
+
 As you can imagine, having `T`Seqs`` *always* be one-shot would be somewhat of
 a pain in the butt. A lot of times you can afford to keep the entire sequence
 around, which is the price for being able to access its values more than once,
