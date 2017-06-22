@@ -212,7 +212,7 @@ by the first `for` loop.
 As you can imagine, having `T`Seqs`` *always* be one-shot would be somewhat of
 a pain in the butt. A lot of times you can afford to keep the entire sequence
 around, which is the price for being able to access its values more than once,
-and that's precisely what the [`Seq.cache`method](https://docs.perl6.org/type/Seq#(PositionalBindFailover)_method_cache) does:
+and that's precisely what the [`Seq.cache`method](https://docs.perl6.org/type/Seq#%28PositionalBindFailover%29_method_cache) does:
 
     my $seq := gather { take 42; take 70 };
     $seq.cache;
