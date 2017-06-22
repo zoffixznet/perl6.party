@@ -118,8 +118,8 @@ can feed a [`gather`](https://docs.perl6.org/syntax/gather%20take) not just from
     multi what's-that (Int $ where *.is-prime) { take 'Tis a prime!'          }
     multi what's-that (Numeric)                { take 'Some kind of a number' }
 
-    multi what's-that { how-good-is $^it                   }
-    sub how-good-is   { take rand > ½ ?? 'Tis OK' !! 'Eww' }
+    multi what's-that   { how-good-is $^it                   }
+    sub how-good-is ($) { take rand > ½ ?? 'Tis OK' !! 'Eww' }
 
     my $seq := gather map &what's-that, 1, 31337, 42, 'meows';
 
