@@ -202,8 +202,9 @@ checks for `T`Positional`` on the variables we stored `T`Seq``s in.
 
 The `T`Seq`` is deemed consumed whenever something asks it for its
 `T`Iterator`` after another thing grabbed it, like the `for` loop would.
-For example, even if we iterated over
-just 1 item from the `T`Seq``, it would be deemed entirely consumed, and we wouldn't be able to resume taking more items using, say, another `for` loop.
+For example, even if in the first `for` loop above we iterated over
+just 1 item, we wouldn't be able to resume taking more items in the next `for` loop, as it'd try to ask for the `T`Seq``'s iterator that was already taken
+by the first `for` loop.
 
 As you can imagine, having `T`Seqs`` *always* be one-shot would be somewhat of
 a pain in the butt. A lot of times you can afford to keep the entire sequence
