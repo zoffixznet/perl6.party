@@ -119,7 +119,7 @@ can feed a [`gather`](https://docs.perl6.org/syntax/gather%20take) not just from
     multi what's-that (Numeric)                { take 'Some kind of a number' }
 
     multi what's-that { how-good-is $^it                   }
-    sub how-good-is   { take rand ≥ ½ ?? 'Tis OK' !! 'Eww' }
+    sub how-good-is   { take rand > ½ ?? 'Tis OK' !! 'Eww' }
 
     my $seq := gather map &what's-that, 1, 31337, 42, 'meows';
 
@@ -134,6 +134,7 @@ can feed a [`gather`](https://docs.perl6.org/syntax/gather%20take) not just from
 Once again, we iterated over our new `R`Seq`` with a [`for` loop](https://docs.perl6.org/syntax/for), and you can see
 that `R`take`` called from different multies and even nested sub calls still
 delivered the value to our `T`Seq`` successfully:
+
 The only limitation is you can't [`gather`](https://docs.perl6.org/syntax/gather%20take) `R`take``s done in another `T`Promise``
 or in code manually [cued](https://docs.perl6.org/routine/cue) in the scheduler:
 
