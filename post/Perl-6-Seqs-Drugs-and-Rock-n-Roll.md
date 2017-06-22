@@ -201,7 +201,8 @@ we didn't use the `@`
 checks for `T`Positional`` on the variables we stored `T`Seq``s in.
 
 The `T`Seq`` is deemed consumed whenever something asks it for its
-`T`Iterator``, like the `for` loop would. So even if we iterated over
+`T`Iterator`` after another thing grabbed it, like the `for` loop would.
+For example, even if we iterated over
 just 1 item from the `T`Seq``, it would be deemed entirely consumed, and we wouldn't be able to resume taking more items using, say, another `for` loop.
 
 As you can imagine, having `T`Seqs`` *always* be one-shot would be somewhat of
