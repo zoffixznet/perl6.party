@@ -254,7 +254,9 @@ means you can do this:
 
 We have a `sub` that expects a `T`Positional`` argument and we give it a
 `T`Seq`` which isn't `T`Positional``, yet it all works out, because the binder
-`R`.cache``s our `T`Seq``, thanks to it doing the `T`PositionalBindFailover`` role.
+`R`.cache``s our `T`Seq`` and uses the `List` the `R`.cache`` method returns
+to be the `T`Positional`` to be used, thanks to it doing the
+`T`PositionalBindFailover`` role.
 
 Last, but not least, if you don't care about *all* of your `Seq`'s values
 being generated and cached right there and then, you can simply assign it
