@@ -202,7 +202,7 @@ checks for `T`Positional`` on the variables we stored `T`Seq``s in.
 
 The `T`Seq`` is deemed consumed whenever something asks it for its
 `T`Iterator`` after another thing grabbed it, like the `for` loop would.
-For example, even if in the first `for` loop above we iterated over
+For example, even if in the first `for` loop above we would've iterated over
 just 1 item, we wouldn't be able to resume taking more items in the next `for` loop, as it'd try to ask for the `T`Seq``'s iterator that was already taken
 by the first `for` loop.
 
