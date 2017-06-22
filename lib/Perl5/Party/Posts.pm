@@ -31,8 +31,13 @@ sub load {
     my ($self, $post) = @_;
     return unless -e "post/$post.md";
     my ($meta, $content) = process( decode 'UTF-8', path("post/$post.md")->slurp );
-    $content = process_module_links(process_irc($content));
-    return $meta, markdown $content =~ s/^```$//gmr;
+    $content = process_sub_links(
+                process_type_links(
+                    process_module_links(
+                        process_irc($content))));
+
+    $content =~ s/^```$//gm;
+    return $meta, $content, markdown $content;
 }
 
 sub process {
@@ -41,6 +46,19 @@ sub process {
     $meta{ $1 } = $2 while $post =~ s/^%%\s*(\w+)\s*:\s*([^\n]+)\n//;
     $meta{words} = () = $post =~ /\s+/g;
     return \%meta, $post;
+}
+
+sub process_sub_links {
+    my $content = shift;
+    $content =~ s{`R`([^`]+)``}{
+        my $text = $1;
+        (my $routine = $1) =~ s/^\.//;
+        "[`$text`](https://docs.perl6.org/routine/$routine)"
+    }ger;
+}
+sub process_type_links {
+    my $content = shift;
+    $content =~ s{`T`([^`]+)``}{[`$1`](https://docs.perl6.org/type/$1)}gr;
 }
 
 sub process_module_links {

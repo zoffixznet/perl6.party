@@ -35,9 +35,13 @@ get '/' => sub {
 
 get '/post/#post' => sub {
     my $c = shift;
-    my ($meta, $post) = $posts->load( $c->param('post') );
-    $post or return $c->reply->not_found;
-    $c->stash( %$meta, post => $post, title => $meta->{title} );
+    my ($meta, $markdown, $html) = $posts->load( $c->param('post') );
+    $html or return $c->reply->not_found;
+
+    return $c->render(text => $markdown, format => 'txt')
+        if $c->param('md') or $c->param('markdown');
+
+    $c->stash( %$meta, post => $html, title => $meta->{title} );
 } => 'post';
 
 post '/run' => sub {

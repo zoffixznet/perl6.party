@@ -125,7 +125,20 @@ footer {
 }
 
 a code {
-    color: #337ab7;
+    color: darken(#337ab7, 20%);
+    background: lighten(#f1f1f1, 2%);
+    border-bottom: 1px dotted lighten(#337ab7, 20%);
+    display: inline-block;
+    padding: 0 3px;
+    margin: 0;
+    line-height: 1.3em;
+    font-weight: medium;
+}
+
+a:hover code {
+    text-decoration: none;
+    background: darken(#f1f1f1, 10%);
+    border-bottom-style: solid;
 }
 
 .feed-nav {
@@ -170,6 +183,11 @@ article {
         opacity: .7;
         padding-bottom: 10px;
         border-bottom: 1px solid darken($color-body, 20%);
+    }
+
+    p + ul {
+        margin-top: -25px;
+        margin-bottom: 30px;
     }
 }
 
