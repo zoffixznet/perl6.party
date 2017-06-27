@@ -238,7 +238,7 @@ Basically, we want this:
     # [3 4 1 2]
     # [4 1 2 3]
 
-It'll serve our purpose. For a less "made-up" examples, try to find
+This iterator will serve our purpose. For a less "made-up" example, try to find
 implementations of iterators for `R`combinations`` and `R`permutations``
 routines in [Perl 6 compiler's source code](https://github.com/rakudo/rakudo/).
 
