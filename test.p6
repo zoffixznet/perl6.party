@@ -1,40 +1,58 @@
-    sub powers-under-huge-of {
+    sub rotator (*@stuff) {
         Seq.new: class :: does Iterator {
-            has int $.n is required;
-            has int $!power = 0;
-            has int $!max;
+            has int $!n;
+            has int $!steps = 1;
+            has     @.stuff is required;
 
-            submethod TWEAK { $!max = floor 500_000 × 10.log / $!n.log }
+            submethod TWEAK { $!n = @!stuff − 1 }
 
             method pull-one {
-                $!power ≥ $!max
-                    ?? IterationEnd
-                    !! $!n ** $!power++
+                if $!n-- > 0 {
+                    LEAVE $!steps = 1;
+                    [@!stuff .= rotate: $!steps]
+                }
+                else {
+                    IterationEnd
+                }
             }
-            method count-only         {      −$!power       + $!max }
-            method bool-only          { so    $!power       < $!max }
-            method skip-one           { not ++$!power       > $!max }
-            method skip-at-least (\n) { not  ($!power += n) > $!max }
-        }.new: :$^n
+            method count-only { $!n     }
+            method bool-only  { $!n > 0 }
+            method skip-one {
+                $!n > 0 or return False;
+                $!n--; $!steps++;
+                True
+            }
+            method skip-at-least (\n) {
+                if $!n > all 0, n {
+                    $!steps += n;
+                    $!n     −= n;
+                    True
+                }
+                else {
+                    $!n = 0;
+                    False
+                }
+            }
+        }.new: stuff => [@stuff]
     }
 
-    my $powers := powers-under-huge-of 42;
+    my $rotations := rotator ^5000;
 
-    if $powers {
+    if $rotations {
         say "Time after getting Bool: {now - INIT now}";
 
-        say "We got $powers.elems() powers!";
+        say "We got $rotations.elems() rotations!";
         say "Time after getting count: {now - INIT now}";
 
         say "Fetching last one...";
-        say $powers.skip($powers.elems-1).tail;
+        say "Last one's first 5 elements are: $rotations.tail.head(5)";
         say "Time after getting last elem: {now - INIT now}";
     }
 
-
     # OUTPUT:
-    # Time after getting Bool: 0.0074300
-    # We got 30802 powers!
-    # Time after getting count: 25.6478771
-    # Fetching last 10...
-    # Time after getting last 10 elems: 25.6634408
+    # Time after getting Bool: 0.0087576
+    # We got 4999 rotations!
+    # Time after getting count: 0.00993624
+    # Fetching last one...
+    # Last one's first 5 elements are: 4999 0 1 2 3
+    # Time after getting last elem: 0.0149863

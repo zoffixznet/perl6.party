@@ -226,9 +226,196 @@ the `T`Iterator``. In other words, after finding these methods implemented,
 the user of our `T`Iterator`` can call them and then still `R`.pull-one``
 all the items as if the method were never called.
 
-Since we're already used to our hashing program, let's implement them in it,
-even though these are more likely to be implemented in something like
-`R`combinations`` or `R`permutations`` iterators, where the user can't easily
-figure out the count or booliness based on input data.
+Let's make an `T`Iterator`` that will take an `T`Iterable`` and `R`.rotate`` it
+once per iteration of our `T`Iterator``, until it's `R`tail`` is its `R`head``.
+Basically, we want this:
 
-First, here's the problem we're solving:
+    .say for rotator 1, 2, 3, 4;
+
+    # OUTPUT:
+    # [2 3 4 1]
+    # [3 4 1 2]
+    # [4 1 2 3]
+
+It'll serve our purpose. For a less "made-up" examples, try to find
+implementations of iterators for `R`combinations`` and `R`permutations``
+routines in [Perl 6 compiler's source code](https://github.com/rakudo/rakudo/).
+
+Here's a sub that creates our `T`Seq`` with our shiny `T`Iterator`` along
+with some code that operates on it and some timings for different stages of
+the program:
+
+    sub rotator (*@stuff) {
+        Seq.new: class :: does Iterator {
+            has int $!n;
+            has int $!steps = 1;
+            has     @.stuff is required;
+
+            submethod TWEAK { $!n = @!stuff − 1 }
+
+            method pull-one {
+                if $!n-- > 0 {
+                    LEAVE $!steps = 1;
+                    [@!stuff .= rotate: $!steps]
+                }
+                else {
+                    IterationEnd
+                }
+            }
+            method skip-one {
+                $!n > 0 or return False;
+                $!n--; $!steps++;
+                True
+            }
+            method skip-at-least (\n) {
+                if $!n > all 0, n {
+                    $!steps += n;
+                    $!n     −= n;
+                    True
+                }
+                else {
+                    $!n = 0;
+                    False
+                }
+            }
+        }.new: stuff => [@stuff]
+    }
+
+    my $rotations := rotator ^5000;
+
+    if $rotations {
+        say "Time after getting Bool: {now - INIT now}";
+
+        say "We got $rotations.elems() rotations!";
+        say "Time after getting count: {now - INIT now}";
+
+        say "Fetching last one...";
+        say "Last one's first 5 elements are: $rotations.tail.head(5)";
+        say "Time after getting last elem: {now - INIT now}";
+    }
+
+    # OUTPUT:
+    # Time after getting Bool: 0.0230339
+    # We got 4999 rotations!
+    # Time after getting count: 26.04481484
+    # Fetching last one...
+    # Last one's first 5 elements are: 4999 0 1 2 3
+    # Time after getting last elem: 26.0466234
+
+First things first, let's take a look at what we're doing in our `T`Iterator``.
+We take an `T`Iterable`` (a `T`Range`` object with 5000 elements in this case),
+shallow-clone it (using `[ ... ]` operator) and keep that clone in
+`@!stuff` attribute of our `T`Iterator``. During object instantiation, we
+also save how many items `@!stuff` has in it into `$!n` attribute, inside the
+[`TWEAK` submethod](https://docs.perl6.org/language/objects#index-entry-TWEAK).
+
+For each `R`.pull-one`` of the `T`Iterator``, we `R`.rotate`` our `@!stuff`
+attribute, storing the rotated result back in it, as well as making a shallow
+clone of it, which is what we return for the iteration.
+
+We also already implemented the `R`.skip-one`` and `R`.skip-at-least``
+optimization methods, where we use a private `$!steps` attribute to alter
+how many steps the next `R`.pull-one`` will `R`.rotate`` our `@!stuff` by.
+Whenever `R`.pull-one`` is called, we simply reset `$!steps` to its default
+value of `1` using the [`LEAVE` phaser](https://docs.perl6.org/syntax/LEAVE).
+
+Let's check out how this thing performs! We store
+our precious `T`Seq`` in `$rotations` variable that we first check for
+truthiness, to see if it has any elements in it at all; then we tell the
+world how many rotations we can fish out of that `T`Seq``; lastly, we fetch
+the *last* element of the `T`Seq`` and (for screen space reasons) print the
+first 5 elements of the last rotation.
+
+All three steps—check `R`.Bool``, check `R`.elems``, and fetch last item with
+`R`.tail`` are timed, and the results aren't that pretty. While `R`.Bool`` took
+relatively quick to complete, the `R`.elems`` call took ages (26s)! That's
+actually not all of the damage. Recall from
+[PART I of this series](https://perl6.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll) that both `R`.Bool`` and `R`.elems`` cache the `T`Seq`` unless special
+methods are implemented in the `T`Iterator``. This means that each of those
+rotations we made are still there in memory, using up space for nothing! What
+are we to do? Let's try implementing those special methods
+`R`.Bool`` and `R`.elems`` are looking for!
+
+This only thing we need changed is to add two extra methods to our iterator
+that determinine how many elements we can generate (`R`.count-only``)
+and whether we have any elements to generate (`R`.bool-only``):
+
+        method count-only { $!n     }
+        method bool-only  { $!n > 0 }
+
+For completeness sake, here's our previous example, with these two methods
+added to our `T`Iterator``:
+
+    sub rotator (*@stuff) {
+        Seq.new: class :: does Iterator {
+            has int $!n;
+            has int $!steps = 1;
+            has     @.stuff is required;
+
+            submethod TWEAK { $!n = @!stuff − 1 }
+
+            method count-only { $!n     }
+            method bool-only  { $!n > 0 }
+
+            method pull-one {
+                if $!n-- > 0 {
+                    LEAVE $!steps = 1;
+                    [@!stuff .= rotate: $!steps]
+                }
+                else {
+                    IterationEnd
+                }
+            }
+            method skip-one {
+                $!n > 0 or return False;
+                $!n--; $!steps++;
+                True
+            }
+            method skip-at-least (\n) {
+                if $!n > all 0, n {
+                    $!steps += n;
+                    $!n     −= n;
+                    True
+                }
+                else {
+                    $!n = 0;
+                    False
+                }
+            }
+        }.new: stuff => [@stuff]
+    }
+
+    my $rotations := rotator ^5000;
+
+    if $rotations {
+        say "Time after getting Bool: {now - INIT now}";
+
+        say "We got $rotations.elems() rotations!";
+        say "Time after getting count: {now - INIT now}";
+
+        say "Fetching last one...";
+        say "Last one's first 5 elements are: $rotations.tail.head(5)";
+        say "Time after getting last elem: {now - INIT now}";
+    }
+
+    # OUTPUT:
+    # Time after getting Bool: 0.0087576
+    # We got 4999 rotations!
+    # Time after getting count: 0.00993624
+    # Fetching last one...
+    # Last one's first 5 elements are: 4999 0 1 2 3
+    # Time after getting last elem: 0.0149863
+
+The code is nearly identical, but look at those sweet, sweet timings! Our
+entire program runs about 1,733 *times* faster because our `T`Seq`` can figure
+out *if* and *how many* elements it has *without* having to iterate anything.
+The `.tail` call sees our optimization (side note: that's actually
+[very recent](https://github.com/rakudo/rakudo/commit/9c04dfc4a427da11f5762534e4601fe697b9e127)) and it too
+doesn't have to iterate over anything and can just use our `R`.skip-at-least``
+optimization to skip to the end. And last but not least, our `T`Seq`` is
+*no longer being cached*, so the only things kept in memory are the things
+we care about. It's a huge win-win-win for very little extra code.
+
+But wait... there's more!
+
+## Push it real good...
