@@ -242,7 +242,7 @@ get to those in PART II)
 - ``.Bool`` will ``.cache`` unless the underlying ``Iterator`` provides
     ``.bool-only`` or ``.count-only`` methods
 
-There's one more nicety with ``Seq``s losing their one-shotness that you may
+There's one more nicety with ``Seq|s`` losing their one-shotness that you may
 see refered to as
 ``PositionalBindFailover``.
 It's a [role](https://docs.perl6.org/syntax/role) that indicates to the
@@ -261,7 +261,7 @@ We have a `sub` that expects a ``Positional`` argument and we give it a
 to be the ``Positional`` to be used, thanks to it doing the
 ``PositionalBindFailover`` role.
 
-Last, but not least, if you don't care about *all* of your `Seq`'s values
+Last, but not least, if you don't care about *all* of your ``Seq|'s`` values
 being generated and cached right there and then, you can simply assign it
 to a `@` [sigiled](https://docs.perl6.org/language/glossary#index-entry-Sigil)
 variable, which will [reify](https://docs.perl6.org/language/glossary#index-entry-Reify)
@@ -287,18 +287,18 @@ and not when we actually iterated over the value in the `for` loop.
 
 ## Conclusion
 
-In Perl&nbsp;6, ``Seq``s are one-shot ``Iterables`` that don't keep their
+In Perl&nbsp;6, ``Seq|s`` are one-shot ``Iterable|s`` that don't keep their
 values around, which makes them very useful for iterating over huge, or even
 infinite, sequences. However, it's perfectly possible to cache ``Seq`` values
-and re-use them, if that is needed. In fact, many of the ``Seq``'s methods
+and re-use them, if that is needed. In fact, many of the ``Seq|'s`` methods
 will automatically cache the ``Seq`` for you.
 
-There are several ways to create ``Seq``s, one of which is to use the
+There are several ways to create ``Seq|s``, one of which is to use the
 [`gather`](https://docs.perl6.org/syntax/gather%20take) and ``take`` where
 a [`gather`](https://docs.perl6.org/syntax/gather%20take) block will stop
 its execution and continue it only when more values are needed.
 
-In parts II and III, we'll look at other, more exciting, ways of
-creating ``Seq``s. Stay tuned!
+In parts [II](/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll--Part-2) and III, we'll look at other, more exciting, ways of
+creating ``Seq|s``. Stay tuned!
 
 -Ofun
