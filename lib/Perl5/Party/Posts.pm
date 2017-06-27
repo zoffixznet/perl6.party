@@ -56,7 +56,7 @@ sub process {
 
 sub process_sub_links {
     my $content = shift;
-    $content =~ s{``(\.?[a-z][^`|]+)(?:\|([^`]+))?``}{
+    $content =~ s{``((?:\.|[a-z])[^`|]+)(?:\|([^`]+))?``}{
         my $text = $1;
         my $optional = $2 // "";
         (my $routine = $1) =~ s/^\.//;

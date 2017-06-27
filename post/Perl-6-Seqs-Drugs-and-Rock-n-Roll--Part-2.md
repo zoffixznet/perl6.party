@@ -1,5 +1,5 @@
 %% title: Perl 6: Seqs, Drugs, And Rock'n'Roll (Part 2)
-%% date: 2017-06-20
+%% date: 2017-06-27
 %% desc: How to make your very own Iterator object
 %% draft: true
 
