@@ -418,8 +418,8 @@ The `.tail` call sees our optimization (side note: that's actually
 [very recent](https://github.com/rakudo/rakudo/commit/9c04dfc4a427da11f5762534e4601fe697b9e127)) and it too
 doesn't have to iterate over anything and can just use our `R`.skip-at-least``
 optimization to skip to the end. And last but not least, our `T`Seq`` is
-*no longer being cached*, so the only things kept in memory are the things
-we care about. It's a huge win-win-win for very little extra code.
+*no longer being cached*, so the only things kept around in memory are the
+things we care about. It's a huge win-win-win for very little extra code.
 
 But wait... there's more!
 
