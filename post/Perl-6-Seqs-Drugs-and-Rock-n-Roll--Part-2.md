@@ -342,8 +342,10 @@ This only thing we need changed is to add two extra methods to our iterator
 that determinine how many elements we can generate (`R`.count-only``)
 and whether we have any elements to generate (`R`.bool-only``):
 
-        method count-only { $!n     }
-        method bool-only  { $!n > 0 }
+```
+    method count-only { $!n     }
+    method bool-only  { $!n > 0 }
+```
 
 For completeness sake, here's our previous example, with these two methods
 added to our `T`Iterator``:
