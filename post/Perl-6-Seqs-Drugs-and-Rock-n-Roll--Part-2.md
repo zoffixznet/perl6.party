@@ -228,7 +228,7 @@ the user of our `T`Iterator`` can call them and afterwards should still be
 able to `R`.pull-one`` all of the items, as if the methods were never called.
 
 Let's make an `T`Iterator`` that will take an `T`Iterable`` and `R`.rotate`` it
-once per iteration of our `T`Iterator``, until it's `R`tail`` is its `R`head``.
+once per iteration of our `T`Iterator`` until its `R`tail`` is its `R`head``.
 Basically, we want this:
 
     .say for rotator 1, 2, 3, 4;
