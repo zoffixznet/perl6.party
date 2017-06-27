@@ -304,7 +304,8 @@ the program:
     # Time after getting last elem: 26.0466234
 
 First things first, let's take a look at what we're doing in our `T`Iterator``.
-We take an `T`Iterable`` (a `T`Range`` object with 5000 elements in this case),
+We take an `T`Iterable`` (a `T`Range`` object out of which we can milk 5000
+elements in this case),
 shallow-clone it (using `[ ... ]` operator) and keep that clone in
 `@!stuff` attribute of our `T`Iterator``. During object instantiation, we
 also save how many items `@!stuff` has in it into `$!n` attribute, inside the
