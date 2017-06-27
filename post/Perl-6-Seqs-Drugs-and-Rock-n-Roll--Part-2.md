@@ -412,7 +412,8 @@ methods added to our `T`Iterator``:
 
 The code is nearly identical, but look at those sweet, sweet timings! Our
 entire program runs about 1,733 *times* faster because our `T`Seq`` can figure
-out *if* and *how many* elements it has *without* having to iterate anything.
+out *if* and *how many* elements it has *without* having to iterate or
+rotate anything.
 The `.tail` call sees our optimization (side note: that's actually
 [very recent](https://github.com/rakudo/rakudo/commit/9c04dfc4a427da11f5762534e4601fe697b9e127)) and it too
 doesn't have to iterate over anything and can just use our `R`.skip-at-least``
