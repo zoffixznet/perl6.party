@@ -1,24 +1,19 @@
-
-    sub first-five-primes (*@numbers) {
+    sub evens-up-to {
         Seq.new: class :: does Iterator {
-            has     $.iter;
-            has int $!produced = 0;
+            has int $!n = 0;
+            has int $.limit is required;
             method pull-one {
-                $!produced++ == 5 and return IterationEnd;
-                loop {
-                    my $value := $!iter.pull-one;
-                    return IterationEnd if $value =:= IterationEnd;
-                    return "$value is a prime number" if $value.is-prime;
-                }
+                ($!n += 2) < $!limit ?? $!n !! IterationEnd
             }
-        }.new: iter => @numbers.iterator
+            method push-all (\target --> IterationEnd) {
+                my int $limit = $!limit;
+                my int $n     = $!n;
+                my int $step  = 2;
+                target.push: $n while ($n = $n + $step) < $limit;
+                $!n = $n;
+            }
+        }.new: :$^limit
     }
 
-    .say for first-five-primes ^∞;
-
-    # OUTPUT:
-    # 2 is a prime number
-    # 3 is a prime number
-    # 5 is a prime number
-    # 7 is a prime number
-    # 11 is a prime number
+    my @a = evens-up-to 1_700_000;
+    say now - INIT now; # OUTPUT: 0.6688109
