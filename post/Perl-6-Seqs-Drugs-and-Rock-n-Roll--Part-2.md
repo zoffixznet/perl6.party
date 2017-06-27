@@ -347,8 +347,8 @@ and whether we have any elements to generate (`R`.bool-only``):
     method bool-only  { $!n > 0 }
 ```
 
-For completeness sake, here's our previous example, with these two methods
-added to our `T`Iterator``:
+For the sake of completeness, here is our previous example, with these two
+methods added to our `T`Iterator``:
 
     sub rotator (*@stuff) {
         Seq.new: class :: does Iterator {
