@@ -215,7 +215,7 @@ convenience for `Iterator` *users* who call methods on `Iterators` and (at the
 moment) it's not used in core Rakudo Perl 6 by any methods that can be
 called on users' `Seq`s.
 
-## A so, so count...
+### A so, so count...
 
 There are two more optimization methods possible: `R`.bool-only``
 and `R`.count-only``. The first one returns `True` or `False`, depending on
@@ -423,4 +423,400 @@ things we care about. It's a huge win-win-win for very little extra code.
 
 But wait... there's more!
 
-## Push it real good...
+### Push it real good...
+
+The ``Seq|s`` we looked at so far did heavy work: each generated value took
+a relatively long time to generate. However, ``Seq|s`` are quite versatile
+and at times you'll find that generating a value might be even cheaper than
+calling ``.pull-one`` and storing that value somewhere. For cases like that,
+there're a few more methods we can implement to make our ``Seq`` perform
+better.
+
+For our example, we'll stick with the basics. Our ``Iterator`` will generate
+an sequence of positive
+[even numbers](https://en.wikipedia.org/wiki/Parity_%28mathematics%29) up to
+the wanted limit. Here's what the call to the sub that makes our ``Seq`` looks
+like:
+
+    say evens-up-to 20; # OUTPUT: (2 4 6 8 10 12 14 16 18)
+
+And here's the all of the code for it. The particular operation we'll be
+doing is storing all the values in an ``Array``:
+
+    sub evens-up-to {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            has int $.limit is required;
+            method pull-one { ($!n += 2) < $!limit ?? $!n !! IterationEnd }
+        }.new: :$^limit
+    }
+
+    my @a = evens-up-to 500_000;
+
+    say now - INIT now; # OUTPUT: 1.2895676
+
+For a limit of half a million, the code takes a bit over a second to run.
+However, all we do in our ``Iterator`` is add some numbers together, so a lot
+of the time is actually lost in pulling the values and adding them to the
+``Array``.
+
+In cases like these, implementing a custom ``.push-all`` method on our
+``Iterator`` can help. The method receives one argument that is a
+[reification](https://docs.perl6.org/language/glossary#index-entry-Reify)
+target. We're closer to the "metal" now, so we can't do anything fancy with
+the reification target object other than call `.push` method on it with a
+single value to add to the target. The ``.push-all`` always returns
+[`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd), since it
+exhausts the ``Iterator``, so we'll just pop that value right into the
+return value of the method's ``Signature``:
+
+    sub evens-up-to {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            has int $.limit is required;
+            method pull-one {
+                ($!n += 2) < $!limit ?? $!n !! IterationEnd
+            }
+            method push-all (\target --> IterationEnd) {
+                target.push: $!n while ($!n += 2) < $!limit;
+            }
+        }.new: :$^limit
+    }
+
+    my @a = evens-up-to 500_000;
+    say now - INIT now; # OUTPUT: 0.9662275
+
+Our program is now 30% faster! However, since we're doing all the work in
+``.push-all`` now, we no longer need to carry state around, so we can shave
+off a bit of time by using lexical variables instead of accessing object's
+attributes all the time. Also, (at least currently), the `+=` meta operator
+is more expensive than a simple assignment and a regular `+`; since we're
+trying to squeeze every last bit of juice here, let's get take advantage of
+that as well. So what we have now is this:
+
+    sub evens-up-to {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            has int $.limit is required;
+            method pull-one {
+                ($!n += 2) < $!limit ?? $!n !! IterationEnd
+            }
+            method push-all (\target --> IterationEnd) {
+                my int $limit = $!limit;
+                my int $n     = $!n;
+                target.push: $n while ($n = $n + 2) < $limit;
+                $!n = $n;
+            }
+        }.new: :$^limit
+    }
+
+    my @a = evens-up-to 500_000;
+    say now - INIT now; # OUTPUT: 0.5515191
+
+There we go. Now our program is 2.3 times faster than the original, thanks to
+``.push-all|!`` There are
+[a few more `.push-*` methods](https://docs.perl6.org/type/Iterator) you can
+implement to, for example, do something special in code like...
+
+    for $some-seq -> $a, $b, $c { ... }
+
+...where the ``Iterator`` would be asked to ``.push-exactly`` three items.
+The idea behind them is similar to ``.push-all`` and their utility is ever
+smaller, useful only in particular situations, so I won't be covering them.
+
+It's worth noting the ``.push-all`` can be used only with ``Iterators`` that
+are not lazy, since... well... it expects you to push **all** the items. And
+what exactly are lazy ``Iterator|s``? I'm so glad you asked!
+
+### Lazy Boy
+
+Let's pare down our previous ``Seq`` that generates even numbers down to the
+basics. Let's make it generate an **infinite** list of even numbers:
+
+    sub evens {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            method pull-one { $!n += 2 }
+        }.new
+    }
+
+    put evens
+
+Since the list is infinite, it'd take us an infinite time to fetch them all.
+So what exactly happens when we run the code above? It... quite predictably
+hangs when the ``put`` routine is called; it sits and patiently waits for
+our infinite ``Seq`` to complete. The same issue occurs when trying to
+assign our seq to a
+[`@`-sigiled](https://docs.perl6.org/language/glossary#index-entry-Sigil) variable:
+
+    my @evens = evens # hangs
+
+Or even when trying to pass our ``Seq`` to a sub with a
+[slurpy parameter](https://docs.perl6.org/type/Signature#Slurpy_(A.K.A._Variadic)_Parameters):
+
+    sub meows (*@evens) { say 'Got some evens!' }
+    meows evens # hangs
+
+That's quite an annoying problem. Fortunately, there's a very easy solution
+for it! But first, a minor detour to the land of naming clarification!
+
+#### A rose by any other name would laze as sweet
+
+In Perl 6 some things are or can be made "``lazy``". While it evokes the
+concept of on-demand or "lazy" evaluation, things that are ``lazy`` in Perl 6
+aren't *just* about that. If something ``is-lazy``, it means it always
+wants to be evaluated lazily; fetching only as many items as needed.
+
+For example, a sequence of lines read from a file would want to be ``lazy``,
+as reading them all in at once has the potential to use up all the RAM.
+An infinite sequence would also want to be ``is-lazy`` because
+an ``eager`` evaluation would cause it to hang, as the sequence never
+completes.
+
+So a thing that ``is-lazy`` in Perl 6 can be thought of as being infinite, or
+if not actually infinite, having similar consequences if used eagerly (too
+much CPU time used, too much RAM, etc).
+
+----
+
+Now back to our infinite list of even numbers. It sounds like all we have to
+do is make it lazy and we do that by implementing ``.is-lazy`` method that
+simply returns `True`:
+
+    sub evens {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            method pull-one { $!n += 2 }
+            method is-lazy (--> True) {}
+        }.new
+    }
+
+    sub meows (*@evens) { say 'Got some evens!' }
+
+    put         evens; # OUTPUT: ...
+    my @evens = evens; # doesn't hang
+    meows       evens; # OUTPUT: Got some evens!
+
+The ``put`` routine now detects its dealing with something terribly long and
+just outputs some dots. Assignment to ``Array`` no longer hangs (and will
+instead [reify](https://docs.perl6.org/language/glossary#index-entry-Reify) on
+demand). And the call to a slurpy doesn't hang either and will
+[reify](https://docs.perl6.org/language/glossary#index-entry-Reify) on
+demand.
+
+There's one more ``Iterator`` optimization method left that we should
+discuss...
+
+### A Sinking Ship
+
+Perl 6 has [sink context](https://github.com/perl6/doc/issues/1309), similar
+to "void" context in other language, which means a value is being discarded:
+
+    42;
+
+    # OUTPUT:
+    # WARNINGS for ...:
+    # Useless use of constant integer 42 in sink context (line 1)
+
+The constant `42` in the above program is in sink context—its value isn't
+used anywhere—and since it's nearly pointless to have it like that, the
+compiler warns about it.
+
+Not all sinkage is bad however and sometimes you may find that gorgeous
+``Seq`` you worked so hard on is ruthlessly being sunk by the user! Let's take
+a look at what happens when we sink one of our previous examples, the ``Seq``
+that makes up to `limit` even numbers:
+
+    sub evens-up-to {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            has int $.limit is required;
+            method pull-one {
+                ($!n += 2) < $!limit ?? $!n !! IterationEnd
+            }
+        }.new: :$^limit
+    }
+
+    evens-up-to 5_000_000; # sink our Seq
+
+    say now - INIT now; # OUTPUT: 5.87409072
+
+Ouch! Iterating our ``Seq`` has no side-effects outside of the ``Iterator``
+that it uses, which means it took the program almost six seconds to do
+absolute nothing.
+
+We can remedy the situation by implementing our own ``.sink-all`` method.
+Its default implementation ``.pull-one|s`` until the end of the ``Seq``
+(since ``Seq|s`` may have useful side effects), which is not what we want
+for *our* ``Seq``. So let's implement a ``.sink-all`` that does nothing!
+
+    sub evens-up-to {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            has int $.limit is required;
+            method pull-one {
+                ($!n += 2) < $!limit ?? $!n !! IterationEnd
+            }
+            method sink-all(--> IterationEnd) {}
+        }.new: :$^limit
+    }
+
+    evens-up-to 5_000_000; # sink our Seq
+
+    say now - INIT now; # OUTPUT: 0.0038638
+
+We made our program 1,520 times faster—the perfect speed up for a program
+that does nothing!
+
+However, doing nothing is not the only thing ``.sink-all`` is good for. Use
+it for clean up that would usually be done at the end of iteration (e.g.
+closing a file handle the ``Iterator`` was using). Or simply set the state
+of the system to what it would be at the end of the iteration (e.g. ``.seek``
+a file handle to the end, for sunk ``Seq`` that produces ``lines`` from it).
+Or, as an alternative idea, how about warning the user their code might
+contain an error:
+
+    sub evens-up-to {
+        Seq.new: class :: does Iterator {
+            has int $!n = 0;
+            has int $.limit is required;
+            method pull-one {
+                ($!n += 2) < $!limit ?? $!n !! IterationEnd
+            }
+            method sink-all(--> IterationEnd) {
+                warn "Oh noes! Looks like you sunk all the evens!\n"
+                    ~ 'Why did you make them in the first place?'
+            }
+        }.new: :$^limit
+    }
+
+    evens-up-to 5_000_000; # sink our Seq
+
+    # OUTPUT:
+    # Oh noes! Looks like you sunk all the evens!
+    # Why did you make them in the first place?
+    # ...
+
+That concludes our discussion on optimizing your ``Iterator|s``. Now, let's
+talk about using ``Iterator|s`` others have made.
+
+## It's a marathon, not a sprint
+
+With all the juicy knowledge about ``Iterator|s`` and ``Seq|s`` we now
+possess, we can probably see how this piece of code manages to work without
+hanging, despite being given an infinite ``Range`` of numbers:
+
+    .say for ^∞ .grep(*.is-prime).map(* ~ ' is a prime number').head: 5;
+
+    # OUTPUT:
+    # 2 is a prime number
+    # 3 is a prime number
+    # 5 is a prime number
+    # 7 is a prime number
+    # 11 is a prime number
+
+The infinite ``Range`` probably ``is-lazy``. That ``.grep``
+probably ``.pull-one|s`` until it finds a prime number. The ``.map``
+``.pull-one|s`` each of the ``.grep|'s`` values and modifies them, and
+``.head`` allows at most 5 values to be ``.pull-one|d`` from it.
+
+In short what we have here is a pipe line of ``Seq|s`` and ``Iterator|s`` where
+the ``Iterator`` of the next ``Seq`` is based on the ``Iterator`` of the
+previous one. Let's cook up a ``Seq`` of our own that combines all of the
+steps above:
+
+    sub first-five-primes (*@numbers) {
+        Seq.new: class :: does Iterator {
+            has     $.iter;
+            has int $!produced = 0;
+            method pull-one {
+                $!produced++ == 5 and return IterationEnd;
+                loop {
+                    my $value := $!iter.pull-one;
+                    return IterationEnd if $value =:= IterationEnd;
+                    return "$value is a prime number" if $value.is-prime;
+                }
+            }
+        }.new: iter => @numbers.iterator
+    }
+
+    .say for first-five-primes ^∞;
+
+    # OUTPUT:
+    # 2 is a prime number
+    # 3 is a prime number
+    # 5 is a prime number
+    # 7 is a prime number
+    # 11 is a prime number
+
+Our sub [slurps up](https://docs.perl6.org/type/Signature#Slurpy_(A.K.A._Variadic)_Parameters) its positional argument and then calls
+``.iterator| method`` on the `@numbers` ``Iterable``. This method is available
+on all Perl 6 objects and will let us interface with the object using
+``Iterator`` methods directly.
+
+We save the `@numbers`'s ``Iterator`` in one of the attributes of our
+``Iterator`` as well as create another attribute to keep track of how many
+items we produced. In the ``.pull-one`` method, we first check whether
+we already produced the 5 items we need to produce, and if not, we drop into
+a loop that calls ``.pull-one`` on the *other* ``Iterator``, the one we
+got from `@numbers` ``Array|!``
+
+Now, we already know if the ``Iterator`` does not have any more values for us
+it will return the [`IterationEnd` constant](https://docs.perl6.org/type/Iterator#IterationEnd). A constant whose job is to signal end of
+iteration in across the entire language is finicky to deal with, as you can
+imagine.
+
+To detect it, we need to ensure we use the [binding (`:=`)](https://docs.perl6.org/language/operators#index-entry-Binding_operator), not
+the [assignment (`=`)](https://docs.perl6.org/language/operators#Assignment_Operators) operator. The reason for that is
+pretty much only the [container identity (`=:=`) operator](https://docs.perl6.org/routine/=:=) will accept such a monstrocity, so we can't stuff the value
+we ``.pull-one`` into just any container we please.
+
+If we did find that we received [`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd) from the source ``Iterator``, we simply return
+it to indicate we're done. If not, we repeat the process until we find a prime
+number, which we then put into our desired string and that's what we return
+from our ``.pull-one``.
+
+All the rest of the ``Iterator`` methods we've learned about can be called
+on the source ``Iterator`` in the similar fashion as we've called ``.pull-one``
+in our example.
+
+## Conclusion
+
+Today, we've learned a whole ton of stuff! We now know that ``Seq|s`` are
+powered by ``Iterator`` objects and we can make custom iterators that generate
+any variety of values we can dream about.
+
+The most basic ``Iterator`` has only ``.pull-one`` method that generates
+a single value, or returns [`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd) when it has no values to produce. It's not
+permitted to call ``.pull-one`` again, once it generated
+[`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd) and we
+can write our ``.pull-one`` methods with the expectation that will never
+happen.
+
+There are plenty of optimization opportunities a custom ``Iterator`` can
+take advantage of. If it can cheaply skip through items, it can implement
+``.skip-one`` or ``.skip-at-least`` methods. If it can know how many items
+it'll produce, it can implement ``.bool-only`` and ``.count-only`` methods
+that can avoid a ton of work and memory use when only certain values of a
+``Seq`` are needed. And for squeezing the very last bit of performance, you
+can take advantage of ``.push-all`` and other `.push-*` methods that let you
+push values onto the target directly.
+
+When your ``Iterator`` ``.is-lazy``, things will treat it with extra care and
+not try to fetch all of the items at once. And we can use the ``.sink-all``
+method to avoid work when our ``Seq`` is being sunk, or warn the user of
+potential mistakes in their code.
+
+Lastly, since we now know how to make ``Iterator|s`` and what their methods do,
+we can make use of ``Iterator|s`` coming from other sources and call methods
+on them directly, manipulating them just how we want to.
+
+We've now have all the tools to work with ``Seq`` objects in Perl 6. In the
+PART III of this series, we'll learn how to compactify all that knowledge and
+skillfully build ``Seq|s`` with just a line or two of code, using the sequence
+operator.
+
+Stay tuned!
+
+-Ofun
+

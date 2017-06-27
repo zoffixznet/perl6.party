@@ -31,10 +31,11 @@ sub load {
     my ($self, $post) = @_;
     return unless -e "post/$post.md";
     my ($meta, $content) = process( decode 'UTF-8', path("post/$post.md")->slurp );
-    $content = process_sub_links(
-                process_type_links(
-                    process_module_links(
-                        process_irc($content))));
+    $content =
+                process_sub_links(
+                    process_type_links(
+                        process_module_links(
+                            process_irc($content))));
 
     $content =~ s/^```$//gm;
     my $prefix = '<a href="https://perl6.party/post/' . $post
@@ -55,15 +56,20 @@ sub process {
 
 sub process_sub_links {
     my $content = shift;
-    $content =~ s{`R`([^`]+)``}{
+    $content =~ s{``(\.?[a-z][^`|]+)(?:\|([^`]+))?``}{
         my $text = $1;
+        my $optional = $2 // "";
         (my $routine = $1) =~ s/^\.//;
-        "[`$text`](https://docs.perl6.org/routine/$routine)"
+        "[`$text`$optional](https://docs.perl6.org/routine/$routine)"
     }ger;
 }
 sub process_type_links {
     my $content = shift;
-    $content =~ s{`T`([^`]+)``}{[`$1`](https://docs.perl6.org/type/$1)}gr;
+    $content =~ s{``([A-Z][^`|]+)(?:\|([^`]+))?``}{
+        my $type = $1;
+        my $optional = $2 // "";
+        "[`$type`$optional](https://docs.perl6.org/type/$type)"
+    }ger;
 }
 
 sub process_module_links {
