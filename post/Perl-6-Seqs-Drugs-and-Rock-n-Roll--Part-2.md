@@ -802,7 +802,7 @@ powered by ``Iterator`` objects and we can make custom iterators that generate
 any variety of values we can dream about.
 
 The most basic ``Iterator`` has only ``.pull-one`` method that generates
-a single value, or returns [`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd) when it has no values to produce. It's not
+a single value and returns [`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd) when it has no more values to produce. It's not
 permitted to call ``.pull-one`` again, once it generated
 [`IterationEnd`](https://docs.perl6.org/type/Iterator#IterationEnd) and we
 can write our ``.pull-one`` methods with the expectation that will never
