@@ -201,7 +201,7 @@ optimize skipping over *a bunch of items*, we can implement the
         }
     }
 
-The ``.skip-at-least`` method takes an `Int n` items to skip. It should
+The ``.skip-at-least`` method takes an ``Int`` of items to skip. It should
 skip as many as it can, and return a truthy value if it was able to skip
 `$n` items, and falsy value if the number of skipped items was less than `$n`.
 Now, the user who skips 1,000,000 items will only have to suffer through
