@@ -18,7 +18,7 @@ we try to pull a value from a ``Seq``, or push all of its values somewhere, or
 simply discard all of the remaining values.
 
 Keep in mind that you never need to use ``Iterator|'s`` methods directly,
-when making use of a ``Seq`` as a source of values. They're are called
+when making use of a ``Seq`` as a source of values. They are called
 indirectly under the hood in various Perl 6 constructs. The use case for calling
 those methods yourself is often the time when we're making an ``Iterator``
 that's fed by another ``Iterator``, as we'll see.
