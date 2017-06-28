@@ -182,7 +182,7 @@ However, we can kick it up a notch. While we won't notice a difference with
 our 3-item ``Seq``, that user who was attempting to skip 1,000,000 items won't
 get the 2.2s time to generate the 1,000,000<sup>th</sup> hash. They would also have to wait for 1,000,000 calls to ``.skip-one`` and `@!stuff.shift`. To
 optimize skipping over *a bunch of items*, we can implement the
-``.skip-at-least`` method (for brievity, just our ``Iterator`` class is shown):
+``.skip-at-least`` method (for brevity, just our ``Iterator`` class is shown):
 
     class :: does Iterator {
         has @.stuff;
