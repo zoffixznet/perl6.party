@@ -544,12 +544,12 @@ what exactly are lazy ``Iterator|s``? I'm so glad you asked!
 ### A quick brown fox jumped over the lazy Seq
 
 Let's pare down our previous ``Seq`` that generates even numbers down to the
-basics. Let's make it generate an **infinite** list of even numbers:
+basics. Let's make it generate an **infinite** list of even numbers, using
+an [anonymous state variable](https://docs.perl6.org/syntax/$):
 
     sub evens {
         Seq.new: class :: does Iterator {
-            has int $!n = 0;
-            method pull-one { $!n += 2 }
+            method pull-one { $ += 2 }
         }.new
     }
 
