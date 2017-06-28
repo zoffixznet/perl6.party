@@ -783,7 +783,7 @@ iteration is finicky to deal with, as you can imagine.
 To detect it, we need to ensure we use the [binding (`:=`)](https://docs.perl6.org/language/operators#index-entry-Binding_operator), not
 the [assignment (`=`)](https://docs.perl6.org/language/operators#Assignment_Operators) operator, when storing the
 value we get from ``.pull-one`` in a variable. This is because
-pretty much only the [container identity (`=:=`) operator](https://docs.perl6.org/routine/=:=) will accept such a monstrocity, so we can't stuff the value
+pretty much only the [container identity (`=:=`) operator](https://docs.perl6.org/routine/=:=) will accept such a monstrosity, so we can't stuff the value
 we ``.pull-one`` into just any container we please.
 
 In our example program, if we do find that we received
