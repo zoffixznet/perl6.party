@@ -467,7 +467,7 @@ to run. However, all we do in our ``Iterator`` is add some numbers together,
 so a lot of the time is likely lost in ``.pull-one|ing`` the values and adding
 them to the ``Array``, one by one.
 
-In cases like these, implementing a custom ``.push-all`` method on our
+In cases like this, implementing a custom ``.push-all`` method on our
 ``Iterator`` can help. The method receives one argument that is a
 [reification](https://docs.perl6.org/language/glossary#index-entry-Reify)
 target. We're pretty close to bare "metal" now, so we can't do anything fancy
