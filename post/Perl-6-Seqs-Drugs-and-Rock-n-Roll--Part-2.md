@@ -203,7 +203,7 @@ optimize skipping over *a bunch of items*, we can implement the
 
 The ``.skip-at-least`` method takes an ``Int`` of items to skip. It should
 skip as many as it can, and return a truthy value if it was able to skip
-that many items, and falsy value if the number of skipped items was less than `$n`.
+that many items, and falsy value if the number of skipped items was fewer.
 Now, the user who skips 1,000,000 items will only have to suffer through
 a single ``.splice`` call.
 
