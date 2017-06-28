@@ -467,7 +467,7 @@ to run. However, all we do in our ``Iterator`` is add some numbers together,
 so a lot of the time is likely lost in ``.pull-one|ing`` the values and adding
 them to the ``Array``, one by one.
 
-In cases like this, implementing a custom ``.push-all`` method on our
+In cases like this, implementing a custom ``.push-all`` method in our
 ``Iterator`` can help. The method receives one argument that is a
 [reification](https://docs.perl6.org/language/glossary#index-entry-Reify)
 target. We're pretty close to bare "metal" now, so we can't do anything fancy
@@ -527,9 +527,10 @@ There we go. Now our program is 1.5 times faster than the original, thanks to
 but can come in quite handy when you need it.
 
 There are [a few more `.push-*` methods](https://docs.perl6.org/type/Iterator)
-you can implement to, for example, do something special in code like...
+you can implement to, for example, do something special when your ``Seq``
+is used in codes like...
 
-    for $some-seq -> $a, $b, $c { ... }
+    for $your-seq -> $a, $b, $c { ... }
 
 ...where the ``Iterator`` would be asked to ``.push-exactly`` three items.
 The idea behind them is similar to ``.push-all``: you push stuff onto the
