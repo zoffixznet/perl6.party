@@ -514,8 +514,7 @@ that as well. So what we have now is this:
             method push-all (\target --> IterationEnd) {
                 my int $limit = $!limit;
                 my int $n     = $!n;
-                my int $step  = 2;
-                target.push: $n while ($n = $n + $step) < $limit;
+                target.push: $n while ($n = $n + 2) < $limit;
                 $!n = $n;
             }
         }.new: :$^limit
