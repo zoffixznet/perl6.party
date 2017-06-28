@@ -578,8 +578,9 @@ for it. But first, a minor detour to the land of naming clarification!
 In Perl 6 some things are or can be made "``lazy``". While it evokes the
 concept of on-demand or "lazy" evaluation, which is ubiquitous in
 Perl 6, things that are ``lazy`` in Perl 6
-aren't *just* about that. If something ``is-lazy``, it means it always
-wants to be evaluated lazily; fetching only as many items as needed.
+aren't *just* about that. If something ``is-lazy``, it means it **always**
+wants to be evaluated lazily, fetching only as many items as needed, even in
+"mostly lazy" Perl 6 constructs that would otherwise eagerly consume even from sources that do on-demand generation.
 
 For example, a sequence of lines read from a file would want to be ``lazy``,
 as reading them all in at once has the potential to use up all the RAM.
