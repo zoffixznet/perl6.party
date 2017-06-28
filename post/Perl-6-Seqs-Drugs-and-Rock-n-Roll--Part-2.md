@@ -3,7 +3,7 @@
 %% desc: How to make your very own Iterator object
 
 This is the second part in the series! Be sure you
-[read Part I first](/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll) where we discuss
+[read Part I first](https://perl6.party/post/Perl-6-Seqs-Drugs-and-Rock-n-Roll) where we discuss
 what ``Seq|s`` are and how to ``.cache`` them.
 
 Today, we'll take the ``Seq`` apart and see what's up in it; what drives it;
