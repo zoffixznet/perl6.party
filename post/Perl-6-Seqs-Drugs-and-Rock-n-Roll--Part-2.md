@@ -779,9 +779,7 @@ the *other* ``Iterator``, the one we got from `@numbers` ``Array|.``
 We recently learned that if the ``Iterator`` does not have any more values for
 us,
 it will return the [`IterationEnd` constant](https://docs.perl6.org/type/Iterator#IterationEnd). A constant whose job is to signal the end of
-iteration is finicky to deal with, as you can imagine.
-
-To detect it, we need to ensure we use the [binding (`:=`)](https://docs.perl6.org/language/operators#index-entry-Binding_operator), not
+iteration is finicky to deal with, as you can imagine. To detect it, we need to ensure we use the [binding (`:=`)](https://docs.perl6.org/language/operators#index-entry-Binding_operator), not
 the [assignment (`=`)](https://docs.perl6.org/language/operators#Assignment_Operators) operator, when storing the
 value we get from ``.pull-one`` in a variable. This is because
 pretty much only the [container identity (`=:=`) operator](https://docs.perl6.org/routine/=:=) will accept such a monstrosity, so we can't stuff the value
