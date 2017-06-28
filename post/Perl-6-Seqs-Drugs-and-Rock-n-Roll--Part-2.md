@@ -600,8 +600,7 @@ on our ``Iterator`` that simply returns `True`:
 
     sub evens {
         Seq.new: class :: does Iterator {
-            has int $!n = 0;
-            method pull-one { $!n += 2 }
+            method pull-one { $ += 2 }
             method is-lazy (--> True) {}
         }.new
     }
