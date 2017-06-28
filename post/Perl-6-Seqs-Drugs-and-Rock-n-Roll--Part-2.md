@@ -826,7 +826,7 @@ Lastly, since we know how to make ``Iterator|s`` and what their methods do,
 we can make use of ``Iterator|s`` coming from other sources and call methods
 on them directly, manipulating them just how we want to.
 
-We've now have all the tools to work with ``Seq`` objects in Perl 6. In the
+We now have all the tools to work with ``Seq`` objects in Perl 6. In the
 PART III of this series, we'll learn how to compactify all of that knowledge
 and skillfully build ``Seq|s`` with just a line or two of code, using the
 sequence operator.
