@@ -157,10 +157,10 @@ because even well-meaning people have a hard time realizing Perl 6 is an
 entirely new language.
 
 I'm under no delusion that merely changing the name would instantly make
-everyone love the language. There are still performance problems to takle.
+everyone love the language. There are still performance problems to tackle.
 More bugs to fix. More documentation and tests to write. All these things need
 humans to work on them and humans care about *perception.* The assumption that
-humans will start to use Rakudo simply because it's a better product just
+many humans will start using Rakudo simply because it's a better product just
 does not match reality.
 
 It would be beneficial to change the perception of the Rakudo language.
