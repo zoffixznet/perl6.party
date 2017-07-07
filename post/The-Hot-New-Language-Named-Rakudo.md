@@ -111,7 +111,7 @@ It's also the name that's ripe for the picking to be the name of the language: t
 already have heard the name, so it's familiar; the compiler's repo
 is [`rakudo/rakudo`](https://github.com/rakudo/rakudo), not `perl6/rakudo`;
 newcomers are told to install "Rakudo Star," not "Perl 6 Star"; and having
-an already [bikeshedded](http://bikeshed.org/) name can cut down on irrelevant
+an already [bikesheded](http://bikeshed.org/) name can cut down on irrelevant
 discussions when the need for change itself is controversial.
 
 While it's true that re-using the compiler's name for the language creates an
