@@ -42,7 +42,7 @@ sub load {
         . '" style="display: block; background: #ccc; border-radius: 3px; '
         . 'font-size: 110%; border: 1px dotted #666; text-align: center; '
         . 'padding: 10px 5px;">Read this article on Perl6.Party</a>'
-        . "\n\n";
+        . "\n\n<!-- no-perly-bot -->\n\n";
     return $meta, "$prefix$content", markdown $content;
 }
 
