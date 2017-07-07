@@ -98,7 +98,7 @@ The *Perl* Foundation.
 
 I think the ship for "just renaming" it has sailed a few years before first
 stable language release. However, we don't have to be at the mercy of
-all-or-nothing tacticts, when there are clear benefits to reap from a name
+all-or-nothing tactics, when there are clear benefits to reap from a name
 tweak.
 
 ## Rakudo Perl 6
