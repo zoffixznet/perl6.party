@@ -9,16 +9,19 @@ representative of the majority opinion.*
 ----
 
 When I came to Perl 6 around its first stable Christmas 2015 release,
-"The Name Issue" was in hot debate. From what I understand, the debate raged on
+"The Name Issue" was in hot debate. Put simply: Perl 6 is not a replacement to Perl; Perl 6 is not the "next" Perl; Perl 6 is a very different language
+to Perl; so why does it still have 'Perl' in its name?
+
+From what I understand, the debate raged on
 for years prior to my arrival, so the topic always felt taboo to talk about,
 because it always ended up in a heated discussion, without a solution at end.
-However, we do need a solution.
+However, we *do* need that solution.
 
-At that time, the major argument I heard (and often peddled myself) for why
+The major argument I heard (and often peddled myself) for why
 Perl 6 had 'Perl' in the name was because of brand recognition. The hypothesis
 was that fewer people would bother to use an unknown language "Foo" than a
 recognizable language "Perl". Now, two years later, we can examine whether that
-hypothesis was true and act accordingly.
+hypothesis was true and beneficial and act accordingly.
 
 ## Fo6.d for Thought
 
@@ -30,7 +33,7 @@ version is 6.c "Christmas" and the upcoming version is 6.d "Diwali"
 As some know, despite slinging a lot of code in my spare time, I earn my
 bread under the banner of *Multi-Media Designer*. While one of the "media"
 I work with is Web and so I do get to write some code once in a while, my office
-for the past 8-ish years has been squarely in the *Marketing* Department, not
+for the past 8-ish years has been located squarely in the *Marketing* Department, not
 <abbr title="Information Technology">I.T</abbr>.
 
 As the Rakudo core team was recently penning down the dates for 6.d release, I
@@ -42,7 +45,8 @@ name "Perl 6" isn't quite marketable.
 Ignoring trolls and people whose knowledge of Perl ends with the
 line-noise quips, Perl is the Grandfather of Web, the Queen of Backwards Compatibility, and
 Gluest language of all the Glues. Perl is installed by default on many systems,
-and if you're worthy enough to wield its magic, it's quite damn performant.
+and if you're worthy enough to wield its arcane magic, it's quite damn
+performant.
 
 Rakudo language, on the other hand, is *none* of those things. It's a young
 and hip teenager who doesn't mind breaking long held status quo. Rakudo is the
@@ -124,11 +128,16 @@ core team member who's open to the language name tweak. And I do precicely mean 
 preferable, it stands opposed by existing infrastructure naming and, of course,
 those who believe Perl 6 is a fine name and should be kept unchanged. So by
 tweaking the language name to be "Rakudo Perl 6," we get the benefit of marketing
-a new release of the hot new language "Rakudo 6.d" instead of
-a new release of same-but-slightly-better "Perl 6.d"; we get to keep using
+a new release of a hot new language "Rakudo 6.d" instead of
+a new release of same-name-but-totally-not-Perl-5 "Perl 6.d"; we get to keep
+using
 "perl6" ticket queue on RT, without raising too many confused eyebrows; we
-get to publish blog posts that don't get knee-jerk reactions form non-Perl
-users; we get to attend The Perl Conference; we get to... start anew.
+get to publish Rakudo blog posts that don't get knee-jerk reactions form
+non-Perl users; we get to attend The *Perl* Conference without feeling we
+don't belong; we get to mention how awesome Rakudo is to our peers without
+fearing yet-another pointless "Perl is dead" discussion; we save the trees
+by not reprinting all of the existing "Perl 6" books"; yet we get
+to... start anew.
 
 ## It's The Beginning, Not The End
 
@@ -136,12 +145,23 @@ Humans are funny creatures. We don't like to change our minds, lest we appear
 to not have a clue. We cling to past decisions and things said because
 abandoning them is admitting you were wrong. However, looking at the past
 two years, it's very clear to me the name of "Perl 6" has been detrimental to
-the language and I'm not afraid to admit I was wrong in defending it.
+the language. I'm not afraid to admit I was wrong in defending the "Perl 6" name.
+
+It's an indicator that something's wrong, when you spent days
+writing an amazing technical post but have
+anxiety posting it to [r/programming](https://www.reddit.com/r/programming/)
+because it'll inevitably end up with quips and jokes about Perl being late to
+the party. It's an indicator that something's wrong, when you're apprehensive
+joining a tech discussion to mention how easy the task is to do in "Perl 6,"
+because even well-meaning people have a hard time realizing Perl 6 is an
+entirely new language.
 
 I'm under no delusion that merely changing the name would instantly make
 everyone love the language. There are still performance problems to takle.
 More bugs to fix. More documentation and tests to write. All these things need
-humans to work on them and humans care about perception.
+humans to work on them and humans care about *perception.* The assumption that
+humans will start to use Rakudo simply because it's a better product just
+does not match reality.
 
 It would be beneficial to change the perception of the Rakudo language.
 Ignoring the problem won't do that. Including boiler plate text about Perl 6 being new language that's totally different from Perl 5 at the start of every
