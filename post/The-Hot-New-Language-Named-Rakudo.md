@@ -129,14 +129,14 @@ preferable, it stands opposed by existing infrastructure naming and, of course,
 those who believe Perl 6 is a fine name and should be kept unchanged. So by
 tweaking the language name to be "Rakudo Perl 6," we get the benefit of marketing
 a new release of a hot new language "Rakudo 6.d" instead of
-a new release of same-name-but-totally-not-Perl-5 "Perl 6.d"; we get to keep
+a new release of same-name-but-totally-not-Perl-5 "Perl 6.d". We get to keep
 using
 "perl6" ticket queue on RT, without raising too many confused eyebrows; we
 get to publish Rakudo blog posts that don't get knee-jerk reactions form
 non-Perl users; we get to attend The *Perl* Conference without feeling we
 don't belong; we get to mention how awesome Rakudo is to our peers without
 fearing yet-another pointless "Perl is dead" discussion; we save the trees
-by not reprinting all of the existing "Perl 6" books"; yet we get
+by not reprinting all of the existing "Perl 6" books; yet we get
 to... start anew.
 
 ## It's The Beginning, Not The End
