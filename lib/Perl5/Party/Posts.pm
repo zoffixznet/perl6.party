@@ -38,10 +38,10 @@ sub load {
                             process_irc($content))));
 
     $content =~ s/^```$//gm;
-    my $prefix = '<a href="https://perl6.party/post/' . $post
+    my $prefix = '<a href="https://rakudo.party/post/' . $post
         . '" style="display: block; background: #ccc; border-radius: 3px; '
         . 'font-size: 110%; border: 1px dotted #666; text-align: center; '
-        . 'padding: 10px 5px;">Read this article on Perl6.Party</a>'
+        . 'padding: 10px 5px;">Read this article on Rakudo.Party</a>'
         . "\n\n<!-- no-perly-bot -->\n\n";
     return $meta, "$prefix$content", markdown $content;
 }
