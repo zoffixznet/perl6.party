@@ -211,7 +211,7 @@ At the time of this writing, I've been applying the ideas I discussed in this ar
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/conclusion.png" alt="">
 
-I saw new faces appear in our community, who were gifted shovels and invited to join in the hole digging. I no longer dread reading negative comments on our project's articles, as I know I can view the third option in any feedback given, as well as realize the negative feedback might only be a misunderstanding. I no longer get too wrapped up in decisions that barelly affect me.
+I saw new faces appear in our community, who were gifted shovels and invited to join in the hole digging. I no longer dread reading negative comments on our project's articles, as I know I can view the third option in any feedback given, as well as realize the negative feedback might only be a misunderstanding. I no longer get too wrapped up in decisions that barely affect me.
 
 Working from Audrey's Troll Hugging concept that seeds a positive framework for our community, I think we can expand on it and start hugging each other, as well as the trolls.
 
