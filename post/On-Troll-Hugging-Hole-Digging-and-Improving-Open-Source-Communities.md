@@ -5,7 +5,7 @@
 
 While observing a recent split in a large open source community, I did some self-reflection and thought about the state of the Rakudo community that I am a part of. It involved learning of its huggable past; thinking of its undulating present; as well as looking for its brighter future.
 
-This article is the outcome. These are notes to myself on how to be a better human, but I hope they'll have wider appeal and can improve communities I am a part of.
+This article is the outcome. It contains notes to myself on how to be a better human, but I hope they'll have wider appeal and can improve communities I am a part of.
 
 # Part I: Digging a Hole
 
