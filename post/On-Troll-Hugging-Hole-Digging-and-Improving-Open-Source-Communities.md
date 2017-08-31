@@ -67,16 +67,16 @@ I thought up some Tips for how to improve things; but Tips is too cliché a name
 
 > Always seek to expand our community. Invite people to help us.
 
-A person comes to the edge of the hole you're digging and says: "What the heck are you doing over there?" You explain a few things, the person nods agreeably, wishes you good luck, and continues on their merry ways. It was an amicable interraction, what could be better?
+A person comes to the edge of the hole you're digging and says: "What the heck are you doing over there?" You explain a few things, the person nods agreeably, wishes you good luck, and continues on their merry ways. It was an amicable interraction, but could it be better?
 
-Instead of walking away, they can help the hole grow larger, by picking a site on the edge of it and starting to dig their own patch. On occasion, some by-passers will realize how awesome your hole digging idea is and join you out of their own initiative, but you can greatly improve the chances by gifting the curious passer-by a shovel and actively asking them to join you. Some won't be able to, but it's a lot easier to start digging if you already have a shovel in hand.
+Instead of walking away, the person can instead help the hole grow larger, by picking a site on the edge of it and starting to dig their own patch. On occasion, some passerby will realize how awesome your hole digging idea is and join you out of their own initiative, but you can greatly improve the chances of people joining by gifting the curious passerby a shovel and actively asking them to join you. Some won't be able to, but it's a lot easier to start digging if you already have a shovel in hand.
 
 If someone on the help channel is asking a question, it's possible your project's learning resources could be improved. And best of all, now that you answered the question, that person is most qualified to improve the learning resources in this situation: they both now know the answer and still remember their thinking processes that led to them asking their question.
 
-This works especially well with issues you could fix in less than a minute. It's easy to explain to the person—even to a fresh newcomer—what needs to be done to fix the issue and it gives them experience with working on your project, as well as confidence to try their hand at harder issues in the future.
-
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/gift-a-shovel.png" alt="">
+
+This works especially well with issues you could fix in less than a minute. It's easy to explain to the person—even to a fresh newcomer—what needs to be done to fix the problem and it gives them experience with working on your project, as well as confidence to try their hand at harder issues in the future.
 
 So invite people to join in. Given them appropriate commit bits and guidance on how to get involved. Even people who think your project sucks could be asked to give a helping hand making it better. They just might.
 
@@ -86,7 +86,7 @@ So invite people to join in. Given them appropriate commit bits and guidance on 
 
 The biographical film *Temple Grandin* depicts Professor Temple Grandin's first steps working at a cattle farm, where cows are constantly prodded and, especially by today's standards, abused. Being autistic, Temple was a lot more sensitive to the environmental stimuli that affected cattle behaviour, and she was able to design a much more efficient and humane holding pen and supporting equipment where cows moved with ease, without prodding and with less stress.
 
-I recall the most infuriating scene in the film, when the old timer workers came over to Temple's newly-built, state-of-the-art holding pen, and confused about its purpose, angrily dismantled many of its key pieces. By the time Temple arrived on the job, several cows have drowned on the washing platform, and the workers were pissed off about whatever "idiot" designed this holding pen.
+I recall the most infuriating scene in the film, when the old timer workers came over to Temple's newly-built, state-of-the-art holding pen and, confused about the new design, angrily dismantled many of its key pieces. By the time Temple arrived on the job, several cows have drowned on the washing platform, and the workers were pissed off about whatever "idiot" designed this holding pen.
 
 I was hoping Temple would get back at them: get them fired, insult them, anything really! They're clearly too damn dumb to realize just how much better Temple's equipment is and they shouldn't be allowed anywhere near cattle. Am I right? Not really.
 
@@ -96,7 +96,7 @@ When Rakudo implemented atomic operators that incorporate emoji atom symbol, ove
 
 Temple could lash back at these programmers and ridicule them for not being autistic enough to have the required extra knowledge, or she could patiently explain the missing pieces (like Rakudo's ASCII-only alternatives to all fancy Unicode ops).
 
-If we spend time to patiently explain the missing information, we get potential new community members. If we merely try to prove who's right and who's wrong, at best we'd just be right. Just like Temple and the workers had a common goal, so do we and many of the people we interact with. If you perceive someone is attacking and dismantling your work, perhaps all they're trying to do is understand how it helps us achieve our common goal. Assume positive intent and respond positively.
+If we spend time to patiently explain the missing information, we get potential new community members. If we merely try to prove who's right and who's wrong, at best we'd just be right. Just like Temple and the workers had a common goal, so do we and many of the people we interact with. If you perceive someone as attacking and dismantling your work, perhaps all they're trying to do is understand how it helps us achieve our common goal. Assume positive intent and respond positively.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/feed-hand.png" alt="">
@@ -105,15 +105,17 @@ If we spend time to patiently explain the missing information, we get potential 
 
 > What you do today, the others will follow and do tomorrow.
 
-There's a famed experiment on chimps that demonstrates an interesting quirk in thinking that humans likely possess as well. In a room with several chimps, a bundle of bananas is placed. Whenever any chimp tries to reach for a banana, *all* of the chimps get sprayed with water. The chimps quickly learn not to reach for bananas.
+There's a famed experiment on chimps that demonstrates an interesting quirk in thinking that humans likely possess as well. In a room with several chimps, a bundle of bananas is placed. Whenever *any* chimp tries to reach for a banana, *all* of the chimps get sprayed with water. The chimps quickly learn not to reach for bananas.
 
-A new chimp is placed into the room. When it tries to reach for bananas, the other chimps who know they will get sprayed with water will actually attack the new chimp and prevent it from reaching for the bananas. Now, slowly, one-by-one, start removing the chimps who were sprayed with water in the past and replace them with new chimps who weren't. The pattern remains: whenever a new chimp tries to reach for bananas, all the rest attack it, including the chimps who weren't ever sprayed with water.
+A new chimp is placed into the room. When it tries to reach for bananas, the other chimps who know they will get sprayed with water actually attack the new chimp and prevent it from reaching the bananas. Now, slowly, one-by-one, start removing the chimps who were sprayed with water in the past and replace them with new chimps who weren't. The pattern remains: whenever a new chimp tries to reach for bananas, all the rest attack it, including the chimps who weren't ever sprayed with water.
 
 The surprising discovery of this experiment is eventually you will end up with a room full of chimps, ***none*** *of which were ever sprayed with water*, who will avoid reaching for the bananas and attack any new chimp that tries to. There are two lessons we can learn from these findings.
 
-First, be mindful of your actions; the new chimps will follow your lead. If all the newbie questions are answered with snark and contempt, the people who manage to stick around and learn things will likely continue to respond with snark and contempt to all the new newbies, perpetuating the cycle of negativity. How we treat newcomers, how we treat old timers, how we treat members of other communities, are all patterns that indicate new members of the community how to act. Ensure the patterns you emulate are positive ones.
+First, be mindful of your actions; the new chimps will follow your lead. If all the newbie questions are answered with snark and contempt, the people who manage to stick around and learn things will likely continue to respond with snark and contempt to all the new newbies, perpetuating the cycle of negativity. How we treat newcomers, how we treat old timers, how we treat members of other communities, are all patterns that show new members of the community how to act. Ensure the patterns you leave behind to emulate are positive ones.
 
-Second, avoid attacking chimps who try to reach for bananas. In other words, avoid telling people they can't do something or that something is very hard or impossible. A common pattern is someone says "I'm going to try doing X" and the immediate response is "you can't!". And now the first person's enthusiasm is curbed; they doubt they can succeed. If the first person perceives the naysayer as the expert, they might not even question the judgment and give up right away. And worse yet, the chimp has learned to attack new chimps when they try to reach for the same bananas.
+Second, avoid attacking chimps who try to reach for bananas. In other words, avoid telling people they can't do something or that something is very hard or impossible. A common pattern is someone says "I'm going to try doing X" and the immediate response is "you can't" or "X is useless". Now the first person's enthusiasm is curbed; they doubt they can succeed. If the first person perceives the naysayer as the expert, they might not even question the judgment and give up right away. And worse yet, the chimp has learned to attack new chimps when they try to reach for the same bananas.
+
+Similar issue exists when you claim something can only be done by the super-star chimp. The claim carries the inherent assumption that the task is so hard, it'd be foolish for other chimps to even attempt it. Yes, some tasks are tougher than others, but the only sure way to fail them is to never try them at all.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/footprints.png" alt="">
@@ -122,11 +124,11 @@ Second, avoid attacking chimps who try to reach for bananas. In other words, avo
 
 > Point out unwanted behaviour, regardless of who you are and who the offender is.
 
-If a friend ever invites you to participate in experiment studying authority, you probably should decline, as you might kill someone.
+If a friend ever invites you to participate in an experiment studying authority, you probably should decline, as you might kill someone.
 
-The experiment is this: the man in a lab coat tells you to turn the dial and press the button that gives the person next to you an electric shock. The man in a lab coat writes something down, then tells you to dial in higher numbers and give a larger shock. It's a little fun at first, but as you keep dialing in larger and larger numbers, the person you're shocking appears to be in more and more distress, showing visible signs of severe pain. The scientist tells you to keep going, and you do, shocking your hapless victim with currents far above lethal, until the victim dies. Or rather, until it's revealed the victim was an actor who was faking it all along.
+The experiment is this: the man in a lab coat tells you to turn the dial and press the button that gives the person next to you an electric shock. The man in a lab coat writes something down, then tells you to dial in higher numbers and give a larger shock. It's a little fun at first, but as you keep dialing in larger and larger numbers, the person you're shocking appears to be in more and more distress, showing visible signs of severe pain. The scientist tells you to keep going, and you do, shocking your hapless victim with currents far above lethal, until the victim dies. Or rather, until it's revealed the victim is an actor who was faking it all along.
 
-So what's going on? Why did you just fake-kill a guy? The answer is: authority. You perceived the scientist as an authority in this situation and trusted their judgement of the situation more than your own. A similar experiment showed that more people will follow you when you're J-walking at a busy intersection if you look like an authority (e.g. wearing a business suit and carrying a brief case).
+So what's going on? Why did you just fake-kill a guy? The answer is: authority. You perceived the scientist as an authority in this situation and trusted their judgement of the situation more than your own. A similar experiment showed that when you're jaywalking at a busy intersection, more people will follow and jaywalk with you if you look like an authority (e.g. wearing a business suit and carrying a brief case).
 
 Similar factors are at play when a support chat's "regular" is being abusive to a "newbie". The regular says parsing HTML with regex is wrong and the newbie should use an HTML parser. The newbie, on the other hand, struggled for the whole day to get half the regex working and feels learning to use an HTML parser is far beyond their current skill, so they keep asking for regex help. Tempers flare. Feelings get hurt. Meanwhile, the rest of the people silently look on.
 
@@ -163,16 +165,16 @@ There's not much more to say about this. It's simply a hug.
 
 > People are more important than code.
 
-Think back on the last few heated arguments you had with someone. You likely can easily recall *who* you were arguing with, what you were arguing about is a lot more foggy, and perhaps you don't remember the other party's counter-arguments at all. It's easy to get caught up in the moment and defend your position; after all, there are specifications, studies, and all sorts of best practices you could link to. It's also easy to overestimate the importance of the decision on the current argument in the grand scheme of things.
+Think back on the last few heated arguments you had with someone. You likely can easily recall *who* you were arguing with. *What* you were arguing about is a lot more foggy. And perhaps you don't remember the other party's *counter-arguments* at all.
 
-It's also easy to push too far, and people won't want to dig the dirt hole with you any more.
+It's easy to get caught up in the moment and defend your position to the death; after all, there are specifications, studies, and all sorts of best practices you could link to. It's easy to overestimate the importance of the thing being argued about in the grand scheme of things. It's also easy to push too far and people will not want to dig the dirt hole with you any more.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/people-over-code.png" alt="">
 
-Always remember that people are more important than code. The argument you thought you won won't build more code, train more people, or write more blog posts. At least until the robot uprising, those things get done by people.
+Always remember that people are more important than code. The argument you so desperately tried to win won't build more code, won't train more people, and won't write more blog posts. At least until the robot uprising, those things get done by people. You need to care for them.
 
-First, consider if the argument you're participating is something you even care about. Does it even affect you if the other person tries doing things their way? You'd be surprised how often you'd realize you can just walk away from the argument, without care. But when you can't walk away, consider the impact of your emotional state on the clarity of the discussion. You *always* have the option to re-schedule and ask to discuss it later.
+First, consider if the argument you're participating in is something you even care about. Does it even affect you if the other person tries doing things their way? You'd be surprised how often you'd realize you can just walk away from the argument, without care. But when you can't walk away, consider the impact of your emotional state on the clarity of the discussion. You *always* have the option to re-schedule and ask to discuss it later.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/people-over-code2.png" alt="">
@@ -181,7 +183,7 @@ You need people to dig the hole. Cherish them.
 
 ### Hug 7: Go For The Third Option
 
-> Instead of me being right and you being wrong we both could be right-er.
+> Instead of me being right and you being wrong we both could be right-ish.
 
 When you're in a discussion trying to decide something; or giving criticism; or receiving it; there's a trick you can use to make the process more friendly and palatable. I call it, going for the third option.
 
@@ -190,7 +192,7 @@ Suppose you don't like something I tend to do. You ask me to stop. You grasp for
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/third-option1.png" alt="">
 
-However, there's no *the* "I". Since time parameter is involved, the "I" being reprimanded for offending behaviour is the person in the past. If you're over 30 years old, you can probably easily recall the "you" from a decade or more ago and see that past "you" and the current "you" vastly differ on many ideas.
+However, there's no *the* "I". Since time parameter is involved, the "I" being reprimanded for offending behaviour is the person in the past. If you're over 30 years old, you can probably easily recall the "you" from a decade or more ago and see that past "you" and the current "you" differ vastly on many ideas. The two "you"s are different people.
 
 With that in mind, when discussing my offending behaviour, you and the "I" from the present can work on the third "I", the one in the future. Under this paradigm, the discussion looks like this:
 
@@ -199,22 +201,22 @@ With that in mind, when discussing my offending behaviour, you and the "I" from 
 
 You no longer have the need to be reserved about your criticism and perhaps can discuss things you were originally planning to hold back; things that still matter. And I no longer feel that I'm being attacked—after all, we're examining the past me to figure out how the future me could be better.
 
-The same technique applies to discussions about issues we might disagree about. Instead of trying to list all the things you're right about and all the things I am wrong about, we could work on the third option that combines the best of our ideas, leaving the problematic parts behind, and in the end, we get something we both feel to have had a hand at creating.
+The same technique applies to discussions about issues we might disagree about. Instead of trying to list all the things you're right about and all the things I am wrong about and trying to figure out whose solution "wins", we could work on the entirely new third option that combines the best of our ideas, leaving the parts either of us thinks are problematic behind. In the end, we get something we both feel to have had a hand at creating. We both win.
 
 -----------
 
 # Conclusion
 
-I've been applying the ideas I discussed in this article for about a week, at the time of this writing. I think these ideas have something real behind them, as I feel a lot happier now than a week ago and I see some positive changes around me that I think I could attribute to these ideas.
+At the time of this writing, I've been applying the ideas I discussed in this article for about a week. I think these ideas have something real behind them, as I feel a lot happier now than a week ago and I see some positive changes around me that I think I could attribute to these ideas.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/conclusion.png" alt="">
 
-I saw new faces appear in our community, who were gifted shovels and invited to join in the hole digging. I no longer dread reading negative comments on our project's articles, as I know I can view the third option in any feedback given, as well as realize the negative feedback might only be a misunderstanding.
+I saw new faces appear in our community, who were gifted shovels and invited to join in the hole digging. I no longer dread reading negative comments on our project's articles, as I know I can view the third option in any feedback given, as well as realize the negative feedback might only be a misunderstanding. I no longer get too wrapped up in decisions that barelly affect me.
 
-Working from Audrey's Troll Hugging concept that seeds a positive framework for our community, I think we can expand on it and hug everyone.
+Working from Audrey's Troll Hugging concept that seeds a positive framework for our community, I think we can expand on it and start hugging everyone.
 
-I think we can build something great.
+I think we can build something pretty damn good.
 
-Let's dig in.
+Let's grab our shovels and get digging.
 
