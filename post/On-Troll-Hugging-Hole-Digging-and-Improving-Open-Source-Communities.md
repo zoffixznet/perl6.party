@@ -44,7 +44,7 @@ Those who have been digging the hole the longest are the lowest in it. Anything 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/digging2-fight.png" alt="">
 
-If a fight breaks out, the community's most senior members' would notice the dirt flying down the hole and it's in their best interests to calm the fighting down and resolve the conflict peacefully.
+If a fight breaks out, the community's most senior members would notice the dirt flying down the hole and it's in their best interests to calm the fighting down and resolve the conflict peacefully.
 
 In fact, a particularly gruesome conflict kicks down enough dirt to make the hole shallower, and in severe cases, entirely burried.
 
