@@ -14,7 +14,7 @@ A lot of organizational metaphors involve the act of climbing. You start at the 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/climbing-stairs.jpg" alt="">
 
-The people higher up can pull others up, but the problem is they can also push them down, prevent them from climbing, or even accidentally kick down some dirt in the face. The tip of a hill we're climbing gets narrower and narrower, accommodating fewer and fewer people, until progress stops and everyone freezes, waiting for someone higher up to disappear and free up the space for us to move to.
+The people higher up can pull others up, but the problem is they can also push them down, prevent them from climbing, or even accidentally kick down some dirt in the face. As we get higher and higher, the tip of the hill we're climbing gets narrower and narrower, accommodating fewer and fewer people, until progress stops and everyone freezes, waiting for someone higher up to disappear and free up the space for us to move to.
 
 A more useful metaphor I think is directly the opposite of a dirt hill: a dirt hole. People dig it.
 
