@@ -115,7 +115,7 @@ First, be mindful of your actions; the new chimps will follow your lead. If all 
 
 Second, avoid attacking chimps who try to reach for bananas. In other words, avoid telling people they can't do something or that something is very hard or impossible. A common pattern is someone says "I'm going to try doing X" and the immediate response is "you can't" or "X is useless". Now the first person's enthusiasm is curbed; they doubt they can succeed. If the first person perceives the naysayer as the expert, they might not even question the judgment and give up right away. And worse yet, the chimp has learned to attack new chimps when they try to reach for the same bananas.
 
-Similar issue exists when you claim something can only be done by the super-star chimp. The claim carries the inherent assumption that the task is so hard, it'd be foolish for other chimps to even attempt it. Yes, some tasks are tougher than others, but the only sure way to fail them is to never try them at all.
+Similar issue exists when you claim something can only be done by the super-star chimp. The claim carries the inherent assumption that the task is so hard, it'd be foolish for other chimps to even attempt it. Yes, some tasks are tougher than others, but the only sure way to fail at them is to never try to do them at all.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/footprints.png" alt="">
