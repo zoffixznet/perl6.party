@@ -1,7 +1,6 @@
 %% title: On Troll Hugging, Hole Digging, and Improving Open Source Communities
 %% date: 2017-08-31
 %% desc: How to be better
-%% draft: true
 
 While observing a recent split in a large open source community, I did some self-reflection and thought about the state of the Rakudo community that I am a part of. It involved learning of its huggable past; thinking of its undulating present; as well as looking for its brighter future.
 
@@ -14,9 +13,9 @@ A lot of organizational metaphors involve the act of climbing. You start at the 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/climbing-stairs.jpg" alt="">
 
-The people higher up can pull others up, but the problem is they can also push them down, prevent them from climbing, or even accidentally kick down some dirt in the face. As we get higher and higher, the tip of the hill we're climbing gets narrower and narrower, accommodating fewer and fewer people, until progress stops and everyone freezes, waiting for someone higher up to disappear and free up the space for someone lower down to move up to.
+The people higher up can pull others up to their level, but the problem is they can also push them down, prevent them from climbing, or even accidentally kick down some dirt in the face. As we get higher and higher, the tip of the hill we're climbing gets narrower and narrower, accommodating fewer and fewer people, until progress stops and everyone freezes, waiting for someone higher up to disappear and free up the space for someone lower down to move up to.
 
-A more useful metaphor I think is directly the opposite of a dirt hill: a dirt hole. People dig it.
+A more useful metaphor I think is directly the opposite of a dirt hill: a dirt *hole.* People dig it.
 
 When you are just starting a project, you're alone. It's just you and a shovel. You dig a few feet down and someone comes to the edge of your hole and looks down on you. You are vulnerable. You offer them a shovel and now there's more than one person digging the hole.
 
@@ -69,9 +68,9 @@ I thought up some Tips for how to improve things; but Tips is too cliché a name
 
 A person comes to the edge of the hole you're digging and says: "What the heck are you doing over there?" You explain a few things, the person nods agreeably, wishes you good luck, and continues on their merry ways. It was an amicable interraction, but could it be better?
 
-Instead of walking away, the person can instead help the hole grow larger, by picking a site on the edge of it and starting to dig their own patch. On occasion, some passerby will realize how awesome your hole digging idea is and join you out of their own initiative, but you can greatly improve the chances of people joining by gifting the curious passerby a shovel and actively asking them to join you. Some won't be able to, but it's a lot easier to start digging if you already have a shovel in hand.
+Instead of walking away, the person can help the hole grow larger, by picking a site on the edge of it and starting to dig their own patch. On occasion, some passerby will realize how awesome your hole digging idea is and join you on their own initiative, but you can greatly improve the chances of people joining by gifting the curious passerby a shovel and actively asking them to help you. Some won't be able to, but it's a lot easier to start digging if you already have a shovel in hand.
 
-If someone on the help channel is asking a question, it's possible your project's learning resources could be improved. And best of all, now that you answered the question, that person is most qualified to improve the learning resources in this situation: they both now know the answer and still remember their thinking processes that led to them asking their question.
+If someone on the help channel is asking a question, it's possible your project's learning resources could be improved. Answer the question and then ask that very same person to help improve the learning resources. Now that you answered the question, that person is most qualified to improve the learning resources in this situation: they both now know the answer and still remember their thinking processes that led to them asking their question and the eventual understanding of the answer.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/gift-a-shovel.png" alt="">
@@ -90,7 +89,7 @@ I recall the most infuriating scene in the film, when the old timer workers came
 
 I was hoping Temple would get back at them: get them fired, insult them, anything really! They're clearly too damn dumb to realize just how much better Temple's equipment is and they shouldn't be allowed anywhere near cattle. Am I right? Not really.
 
-Both Temple and the other workers had the same goal: get the cattle washed, dried, and chopped up into delicious burgers. Without autism, however, the workers didn't have a clue why Temple's design was superior. And lacking that understanding, they went back to what they knew does the job. Temple never got back at the workers, but I've seen others (and myself) get back at the "offenders" in very similar circumstances.
+Both Temple and the other workers had the same goal: get the cattle washed, dried, and chopped up into delicious steaks and burgers. Without autism, however, the workers didn't have a clue why Temple's design was superior. And lacking that understanding, they went back to what they knew does the job. Temple never got back at the workers, but I've seen others (and myself) get back at the "offenders" in very similar circumstances.
 
 When Rakudo implemented atomic operators that incorporate emoji atom symbol, over 220 comments were made about them on Reddit. The overall theme was: *how the hell am I supposed to type that and have Rakudo people lost their minds, using an emoji as an operator?* These comments are from programmers who've been using ASCII symbols in their code for decades. Just like Temple's cattle workers, programmers who never learned how to easily type fancy Unicode characters could, understandably, be baffled that an emoji could ever be efficent to use.
 
@@ -150,7 +149,7 @@ The aforementioned Professor Temple Grandin had another useful contribution to h
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/hugging-machine.jpg" alt="">
 
-It's a therapeutic aid for autistics that, in its crude form, consists of two boards and a lever that brings the boards together, pushing them against a person lying in the middle of the machine. Being touched by other humans is unpleasant, distressing, or even scary when you have autism. The relaxing and pleasant feeling from the pressure of the machine's boards is likely similar to how neurotypical people experience a hug from another human.
+It's a therapeutic aid for autistics that, in its crude form, consists of two boards and a lever that brings the boards together, pushing them against the person lying in the middle of the machine. When you have autism, being touched by other humans is unpleasant, distressing, or even scary. The relaxing and pleasant feeling from the pressure of the machine's boards is likely similar to how neurotypical people experience a hug from another human.
 
 I built my own hugging machine! Now, I'm not good at carpentry, so my machine is entirely digital, but on the bright side, anyone can use it:
 
@@ -165,7 +164,7 @@ There's not much more to say about this. It's simply a hug.
 
 > People are more important than code.
 
-Think back on the last few heated arguments you had with someone. You likely can easily recall *who* you were arguing with. *What* you were arguing about is a lot more foggy. And perhaps you don't remember the other party's *counter-arguments* at all.
+Think back on the last few heated arguments you had with someone. You likely can easily recall *who* you were arguing with. *What* you were arguing about is a lot more foggy. And perhaps you don't remember the other party's *counter-arguments* at all. You remember the person, but the argument faded into the unimportance.
 
 It's easy to get caught up in the moment and defend your position to the death; after all, there are specifications, studies, and all sorts of best practices you could link to. It's easy to overestimate the importance of the thing being argued about in the grand scheme of things. It's also easy to push too far and people will not want to dig the dirt hole with you any more.
 
@@ -192,7 +191,7 @@ Suppose you don't like something I tend to do. You ask me to stop. You grasp for
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/third-option1.png" alt="">
 
-However, there's no *the* "I". Since time parameter is involved, the "I" being reprimanded for offending behaviour is the person in the past. If you're over 30 years old, you can probably easily recall the "you" from a decade or more ago and see that past "you" and the current "you" differ vastly on many ideas. The two "you"s are different people.
+However, there's no *the* "I". Since time parameter is involved, the "I" being reprimanded for offending behaviour is the person in the past. If you're over 30 years old, you can probably easily recall the "you" from a decade or more ago and see that the past "you" and the current "you" differ vastly on many ideas. The two "you"s are different people.
 
 With that in mind, when discussing my offending behaviour, you and the "I" from the present can work on the third "I", the one in the future. Under this paradigm, the discussion looks like this:
 
@@ -207,14 +206,14 @@ The same technique applies to discussions about issues we might disagree about. 
 
 # Conclusion
 
-At the time of this writing, I've been applying the ideas I discussed in this article for about a week. I think these ideas have something real behind them, as I feel a lot happier now than a week ago and I see some positive changes around me that I think I could attribute to these ideas.
+At the time of this writing, I've been applying the ideas I discussed in this article for about a week. I think they have something real behind them, as I feel a lot happier now than a week ago and I see some positive changes around me that I think I could attribute to these ideas.
 
 <img class="img-thumbnail img-responsive center-block"
     src="/assets/pics/hug-pics/conclusion.png" alt="">
 
 I saw new faces appear in our community, who were gifted shovels and invited to join in the hole digging. I no longer dread reading negative comments on our project's articles, as I know I can view the third option in any feedback given, as well as realize the negative feedback might only be a misunderstanding. I no longer get too wrapped up in decisions that barelly affect me.
 
-Working from Audrey's Troll Hugging concept that seeds a positive framework for our community, I think we can expand on it and start hugging everyone.
+Working from Audrey's Troll Hugging concept that seeds a positive framework for our community, I think we can expand on it and start hugging each other, as well as the trolls.
 
 I think we can build something pretty damn good.
 

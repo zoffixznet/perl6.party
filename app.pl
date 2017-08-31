@@ -38,8 +38,10 @@ get '/post/#post' => sub {
     my ($meta, $markdown, $html) = $posts->load( $c->param('post') );
     $html or return $c->reply->not_found;
 
-    return $c->render(text => $markdown, format => 'txt')
-        if $c->param('md') or $c->param('markdown');
+    return $c->render(
+        text   => prep_for_blogs_perl_org($markdown),
+        format => 'txt',
+    ) if $c->param('md') or $c->param('markdown');
 
     $c->stash( %$meta, post => $html, title => $meta->{title} );
 } => 'post';
@@ -94,6 +96,12 @@ get '/pull/*password' => sub {
 };
 
 app->start;
+
+sub prep_for_blogs_perl_org {
+    my $markdown = shift;
+    $markdown
+    =~ s{src="/assets/pics/}{ style="display: block; margin: 5px auto;" src="https://rakudo.party/assets/pics/}gr;
+}
 
 sub blog_date_to_feed_date {
     my $date = shift;
