@@ -1,0 +1,220 @@
+%% title: On Troll Hugging, Hole Digging, and Improving Open Source Communities
+%% date: 2017-07-07
+%% desc: How to be better
+%% draft: true
+
+While observing a recent split in a large open source community, I did some self-reflection and thought about the state of the Rakudo community that I am a part of. It involved learning of its huggable past; thinking of its undulating present; as well as looking for its better future.
+
+This article is the outcome. These are notes to myself on how to be a better human, but I hope they'll have wider appeal and can improve communities I am a part of.
+
+# Part I: Digging a Hole
+
+A lot of organizational metaphors involve the act of climbing. You start at the base of a hill or a ladder and you start climbing. The higher you get, the more knowledge, power, and resources you attain. There's a problem with that metaphor: you're facing the backs of the people who came before you and they're not really paying attention to you.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/climbing-stairs.jpg" alt="">
+
+The people higher up can pull others up, but the problem is they can also push them down, prevent them from climbing, or even accidentally kick down some dirt in the face. The tip of a hill we're climbing gets narrower and narrower, accommodating fewer and fewer people, until progress stops and everyone freezes, waiting for someone higher up to disappear and free up the space for us to move to.
+
+A more useful metaphor I think is directly the opposite of a dirt hill: a dirt hole. People dig it.
+
+When you are just starting a project, you're alone. It's just you and a shovel. You dig a few feet down and someone comes to the edge of your hole and looks down on you. You are vulnerable. You offer them a shovel and now there's more than one person digging the hole.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/digging1.png" alt="">
+
+You've been digging longer, so you're a bit further down. You know what the ground is like on that level, and the person above you asks you how to best dig the layers you've already dug through. Once in a while some dirt falls down from their level onto yours, so it's in your best interest to bring them to your level sooner than later. Unlike a hill or a ladder, you have no easy way to kick them off; you have to help them. At the same time, you have to ensure more people come to the edge of the hole and start digging along with you. Otherwise, it'd just be a narrow and deep hole, with no easy way in.
+
+There's a parallel to open source development of a large community project like Rakudo: there's a need for a constant supply of fresh users and volunteers and there's a need for more seasoned members of the community to show the ropes and mentor the less-skilled members. The veterans are too far from the edge of the hole to really know how easy it is to join it, but the newbies are well-aware of the challenges that prevent more people joining.
+No one is more important than someone else; for a well-shaped hole both the veterans and the newcomers need to contribute in their patches of the hole.
+
+Here's a badly shaped hole. The walls are too vertical and are crumbling, and it's tough to navigate the hole.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/digging2-bad-hole.png" alt="">
+
+And here's a well-shaped hole. Everyone's more connected. It's easy to get in and start digging. And even those who dug the deepest can still go and help out those who are about to start.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/digging2-good-hole.png" alt="">
+
+The hole digging metaphor isn't just about the shape of the hole. It's also about people's position within it.
+
+Those who have been digging the hole the longest are the lowest in it. Anything happening up above has great potential to impact those in the lowest ranks: a careless footstep breaks off some dirt and kicks it down the hole.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/digging2-fight.png" alt="">
+
+If a fight breaks out, the community's most senior members' would notice the dirt flying down the hole and it's in their best interests to calm the fighting down and resolve the conflict peacefully.
+
+In fact, a particularly gruesome conflict kicks down enough dirt to make the hole shallower, and in severe cases, entirely burried.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/digging2-fight-kill.png" alt="">
+
+
+--------
+
+# Part II: The Seven Hugs for a Better Community
+
+Audrey Tang, now Taiwan's Minister of Digital, was a prominent Perl&nbsp;6 community member who created the concept of *Troll Hugging*. In a nutshell, it's this: Do not feed trolls, but hug them tenderly until they feel comfortable enough to speak about their authentic selves, and then they turn into beautiful princes(ses).
+
+I've never met Audrey in real-time and only have her inspiring writing to go by, but I'd like to carry forward the concept of troll hugging, as well as include non-trolls in those we aim to hug.
+
+I thought up some Tips for how to improve things; but Tips is too cliché a name, so how about some Hugs instead? The seven Hugs for a better community.
+
+### Hug 1: Gift a Shovel
+
+> Always seek to expand our community. Invite people to help us.
+
+A person comes to the edge of the hole you're digging and says: "What the heck are you doing over there?" You explain a few things, the person nods agreeably, wishes you good luck, and continues on their merry ways. It was an amicable interraction, what could be better?
+
+Instead of walking away, they can help the hole grow larger, by picking a site on the edge of it and starting to dig their own patch. On occasion, some by-passers will realize how awesome your hole digging idea is and join you out of their own initiative, but you can greatly improve the chances by gifting the curious passer-by a shovel and actively asking them to join you. Some won't be able to, but it's a lot easier to start digging if you already have a shovel in hand.
+
+If someone on the help channel is asking a question, it's possible your project's learning resources could be improved. And best of all, now that you answered the question, that person is most qualified to improve the learning resources in this situation: they both now know the answer and still remember their thinking processes that led to them asking their question.
+
+This works especially well with issues you could fix in less than a minute. It's easy to explain to the person—even to a fresh newcomer—what needs to be done to fix the issue and it gives them experience with working on your project, as well as confidence to try their hand at harder issues in the future.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/gift-a-shovel.png" alt="">
+
+So invite people to join in. Given them appropriate commit bits and guidance on how to get involved. Even people who think your project sucks could be asked to give a helping hand making it better. They just might.
+
+### Hug 2: Feed The Hand That Bites You
+
+> Always assume positive intent behind people's words and actions.
+
+The biographical film *Temple Grandin* depicts Professor Temple Grandin's first steps working at a cattle farm, where cows are constantly prodded and, especially by today's standards, abused. Being autistic, Temple was a lot more sensitive to the environmental stimuli that affected cattle behaviour, and she was able to design a much more efficient and humane holding pen and supporting equipment where cows moved with ease, without prodding and with less stress.
+
+I recall the most infuriating scene in the film, when the old timer workers came over to Temple's newly-built, state-of-the-art holding pen, and confused about its purpose, angrily dismantled many of its key pieces. By the time Temple arrived on the job, several cows have drowned on the washing platform, and the workers were pissed off about whatever "idiot" designed this holding pen.
+
+I was hoping Temple would get back at them: get them fired, insult them, anything really! They're clearly too damn dumb to realize just how much better Temple's equipment is and they shouldn't be allowed anywhere near cattle. Am I right? Not really.
+
+Both Temple and the other workers had the same goal: get the cattle washed, dried, and chopped up into delicious burgers. Without autism, however, the workers didn't have a clue why Temple's design was superior. And lacking that understanding, they went back to what they knew does the job. Temple never got back at the workers, but I've seen others (and myself) get back at the "offenders" in very similar circumstances.
+
+When Rakudo implemented atomic operators that incorporate emoji atom symbol, over 220 comments were made about them on Reddit. The overall theme was: *how the hell am I supposed to type that and have Rakudo people lost their minds, using an emoji as an operator?* These comments are from programmers who've been using ASCII symbols in their code for decades. Just like Temple's cattle workers, programmers who never learned how to easily type fancy Unicode characters could, understandably, be baffled that an emoji could ever be efficent to use.
+
+Temple could lash back at these programmers and ridicule them for not being autistic enough to have the required extra knowledge, or she could patiently explain the missing pieces (like Rakudo's ASCII-only alternatives to all fancy Unicode ops).
+
+If we spend time to patiently explain the missing information, we get potential new community members. If we merely try to prove who's right and who's wrong, at best we'd just be right. Just like Temple and the workers had a common goal, so do we and many of the people we interact with. If you perceive someone is attacking and dismantling your work, perhaps all they're trying to do is understand how it helps us achieve our common goal. Assume positive intent and respond positively.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/feed-hand.png" alt="">
+
+### Hug 3: We All Leave Footprints
+
+> What you do today, the others will follow and do tomorrow.
+
+There's a famed experiment on chimps that demonstrates an interesting quirk in thinking that humans likely possess as well. In a room with several chimps, a bundle of bananas is placed. Whenever any chimp tries to reach for a banana, *all* of the chimps get sprayed with water. The chimps quickly learn not to reach for bananas.
+
+A new chimp is placed into the room. When it tries to reach for bananas, the other chimps who know they will get sprayed with water will actually attack the new chimp and prevent it from reaching for the bananas. Now, slowly, one-by-one, start removing the chimps who were sprayed with water in the past and replace them with new chimps who weren't. The pattern remains: whenever a new chimp tries to reach for bananas, all the rest attack it, including the chimps who weren't ever sprayed with water.
+
+The surprising discovery of this experiment is eventually you will end up with a room full of chimps, ***none*** *of which were ever sprayed with water*, who will avoid reaching for the bananas and attack any new chimp that tries to. There are two lessons we can learn from these findings.
+
+First, be mindful of your actions; the new chimps will follow your lead. If all the newbie questions are answered with snark and contempt, the people who manage to stick around and learn things will likely continue to respond with snark and contempt to all the new newbies, perpetuating the cycle of negativity. How we treat newcomers, how we treat old timers, how we treat members of other communities, are all patterns that indicate new members of the community how to act. Ensure the patterns you emulate are positive ones.
+
+Second, avoid attacking chimps who try to reach for bananas. In other words, avoid telling people they can't do something or that something is very hard or impossible. A common pattern is someone says "I'm going to try doing X" and the immediate response is "you can't!". And now the first person's enthusiasm is curbed; they doubt they can succeed. If the first person perceives the naysayer as the expert, they might not even question the judgment and give up right away. And worse yet, the chimp has learned to attack new chimps when they try to reach for the same bananas.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/footprints.png" alt="">
+
+### Hug 4: Speak Up
+
+> Point out unwanted behaviour, regardless of who you are and who the offender is.
+
+If a friend ever invites you to participate in experiment studying authority, you probably should decline, as you might kill someone.
+
+The experiment is this: the man in a lab coat tells you to turn the dial and press the button that gives the person next to you an electric shock. The man in a lab coat writes something down, then tells you to dial in higher numbers and give a larger shock. It's a little fun at first, but as you keep dialing in larger and larger numbers, the person you're shocking appears to be in more and more distress, showing visible signs of severe pain. The scientist tells you to keep going, and you do, shocking your hapless victim with currents far above lethal, until the victim dies. Or rather, until it's revealed the victim was an actor who was faking it all along.
+
+So what's going on? Why did you just fake-kill a guy? The answer is: authority. You perceived the scientist as an authority in this situation and trusted their judgement of the situation more than your own. A similar experiment showed that more people will follow you when you're J-walking at a busy intersection if you look like an authority (e.g. wearing a business suit and carrying a brief case).
+
+Similar factors are at play when a support chat's "regular" is being abusive to a "newbie". The regular says parsing HTML with regex is wrong and the newbie should use an HTML parser. The newbie, on the other hand, struggled for the whole day to get half the regex working and feels learning to use an HTML parser is far beyond their current skill, so they keep asking for regex help. Tempers flare. Feelings get hurt. Meanwhile, the rest of the people silently look on.
+
+Two things can improve such situations. First, if you're a percieved authority, be mindful of your actions, as they set an example for others to follow (see above, Hug 3: We All Leave Footprints).
+
+Second, and even more important: speak up, regardless of who you are. Question the judgement of the scientist who's applying lethal electric shocks. It's important to point out abusive behaviour and request the person to stop it. It's quite possible they're not realizing just how negative their actions are, for reasons ranging from something as simple as being too tired to much more complex like drug addiction or mental illness.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/stop.png" alt="">
+
+Speak up. It's beneficial for all parties involved.
+
+### Hug 5: Simply a Hug
+
+> A simple hug is a positive interruption.
+
+The aforementioned Professor Temple Grandin had another useful contribution to humanity: a hugging machine.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/hugging-machine.jpg" alt="">
+
+It's a therapeutic aid for autistics that, in its crude form, consists of two boards and a lever that brings the boards together, pushing them against a person lying in the middle of the machine. Being touched by other humans is unpleasant, distressing, or even scary when you have autism. The relaxing and pleasant feeling from the pressure of the machine's boards is likely similar to how neurotypical people experience a hug from another human.
+
+I built my own hugging machine! Now, I'm not good at carpentry, so my machine is entirely digital, but on the bright side, anyone can use it:
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/hug-bot.png" alt="">
+
+It's a bot on [#perl6 support chat](https://webchat.freenode.net/?channels=#perl6). Type `.hug` to hug everyone, or type `.hug SomeOne` to hug `SomeOne`. It's a silly, simple thing, but a hug wedged in the middle of a heated, unproductive discussion can quickly shift the tone to something more positive and remind the participants to be kinder to each other.
+
+There's not much more to say about this. It's simply a hug.
+
+### Hug 6: Love Others
+
+> People are more important than code.
+
+Think back on the last few heated arguments you had with someone. You likely can easily recall *who* you were arguing with, what you were arguing about is a lot more foggy, and perhaps you don't remember the other party's counter-arguments at all. It's easy to get caught up in the moment and defend your position; after all, there are specifications, studies, and all sorts of best practices you could link to. It's also easy to overestimate the importance of the decision on the current argument in the grand scheme of things.
+
+It's also easy to push too far, and people won't want to dig the dirt hole with you any more.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/people-over-code.png" alt="">
+
+Always remember that people are more important than code. The argument you thought you won won't build more code, train more people, or write more blog posts. At least until the robot uprising, those things get done by people.
+
+First, consider if the argument you're participating is something you even care about. Does it even affect you if the other person tries doing things their way? You'd be surprised how often you'd realize you can just walk away from the argument, without care. But when you can't walk away, consider the impact of your emotional state on the clarity of the discussion. You *always* have the option to re-schedule and ask to discuss it later.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/people-over-code2.png" alt="">
+
+You need people to dig the hole. Cherish them.
+
+### Hug 7: Go For The Third Option
+
+> Instead of me being right and you being wrong we both could be right-er.
+
+When you're in a discussion trying to decide something; or giving criticism; or receiving it; there's a trick you can use to make the process more friendly and palatable. I call it, going for the third option.
+
+Suppose you don't like something I tend to do. You ask me to stop. You grasp for words, trying to put the request as softly as you can, while I blush and hold back the tears, realizing that I, *the* "I", is a terrible human being. The discussion looks something like this:
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/third-option1.png" alt="">
+
+However, there's no *the* "I". Since time parameter is involved, the "I" being reprimanded for offending behaviour is the person in the past. If you're over 30 years old, you can probably easily recall the "you" from a decade or more ago and see that past "you" and the current "you" vastly differ on many ideas.
+
+With that in mind, when discussing my offending behaviour, you and the "I" from the present can work on the third "I", the one in the future. Under this paradigm, the discussion looks like this:
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/third-option2.png" alt="">
+
+You no longer have the need to be reserved about your criticism and perhaps can discuss things you were originally planning to hold back; things that still matter. And I no longer feel that I'm being attacked—after all, we're examining the past me to figure out how the future me could be better.
+
+The same technique applies to discussions about issues we might disagree about. Instead of trying to list all the things you're right about and all the things I am wrong about, we could work on the third option that combines the best of our ideas, leaving the problematic parts behind, and in the end, we get something we both feel to have had a hand at creating.
+
+-----------
+
+# Conclusion
+
+I've been applying the ideas I discussed in this article for about a week, at the time of this writing. I think these ideas have something real behind them, as I feel a lot happier now than a week ago and I see some positive changes around me that I think I could attribute to these ideas.
+
+<img class="img-thumbnail img-responsive center-block"
+    src="/assets/pics/hug-pics/conclusion.png" alt="">
+
+I saw new faces appear in our community, who were gifted shovels and invited to join in the hole digging. I no longer dread reading negative comments on our project's articles, as I know I can view the third option in any feedback given, as well as realize the negative feedback might only be a misunderstanding.
+
+Working from Audrey's Troll Hugging concept that seeds a positive framework for our community, I think we can expand on it and hug everyone.
+
+I think we can build something great.
+
+Let's dig in.
+
