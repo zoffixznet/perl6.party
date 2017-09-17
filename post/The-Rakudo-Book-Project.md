@@ -39,7 +39,7 @@ roots shoot out, covering more and more volume of the pot. Same is with the book
 White Book alone will let the plant survive, the root coverage will be sparse. However, by the end
 of The Black Book, the reader will be an expert Rakudo programmer.
 
-Those three books are the core of my planned project. They're supplimented by two half-books on each
+Those three books are the core of my planned project. They're supplemented by two half-books on each
 end of the knowledge spectrum. The Green Book will target absolute programming beginners and get them
 up to speed just enough
 so they would be able to comfortably continue their learning using The White Book. On the other end
