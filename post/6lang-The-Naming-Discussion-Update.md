@@ -24,7 +24,7 @@ could be "hijacked."
 There was quite a bit of discussion on
 [r/perl](https://www.reddit.com/r/perl/comments/6lstqu/the_hot_new_language_named_rakudo/),
 [r/perl6](https://www.reddit.com/r/perl6/comments/6lstq3/the_hot_new_language_named_rakudo/), and
-[blogs.perl.org](http://blogs.perl.org/users/zoffix_znet/2017/07/the-hot-new-language-named-rakudo.html#comments). The general mood among of Perl community members who aren't avid 6lang users was that the entirely new name was a good
+[blogs.perl.org](http://blogs.perl.org/users/zoffix_znet/2017/07/the-hot-new-language-named-rakudo.html#comments). The general mood among the Perl community members who aren't avid 6lang users was that the entirely new name was a good
 idea. However, the 6lang users, and especially core devs, overall,
 argued "Perl 6" still had some recognition benefits and should not be removed
 entirely.
