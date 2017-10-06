@@ -16,7 +16,7 @@ to CPAN.
 All of the heavy lifting has been done awhile back, during Perl Toolchain Summit and other times. I wasn't present for it to know the details, but to
 catch up you could
 join [#perl6-toolchain chat](https://webchat.freenode.net/?channels=#perl6-toolchain) and talk to humans or read [the channel log](https://irclog.perlgeek.de/perl6-toolchain/2017-10-06). <abbr
-title="Perl programming] Authors Upload Server">PAUSE</abbr>/CPAN
+title="Perl [programming] Authors Upload Server">PAUSE</abbr>/CPAN
 support for Perl 6 dists was implemented and [zef module installer](https://modules.perl6.org/dist/zef) was trained to check for CPAN dists
 as well as our GitHub/GitLab-based ecosystem (called "p6c").
 
