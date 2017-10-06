@@ -99,7 +99,7 @@ via an uploaded file or a URL.
 The second option is to use [App::Mi6](http://modules.perl6.org/dist/App::Mi6:github)'s `mi6 upload` command.
 
 Shortly after the upload, you'll get an email about whether your upload
-succeeded (you can also see emails on [nttp.perl.org](https://www.nntp.perl.org/group/perl.cpan.uploads/)). Make sure you have a `META6.json` file
+succeeded (you can also see emails on [nntp.perl.org](https://www.nntp.perl.org/group/perl.cpan.uploads/)). Make sure you have a `META6.json` file
 in your dist and that the dist
 version you're uploading is higher than the currently uploaded version. Those
 are the most common upload errors.
