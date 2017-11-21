@@ -71,7 +71,7 @@ unless the string is a '0', in which case we simply return `False`.
 
 The `but` operator has a brother: an infix `does` operator. It behaves very similarly, except
 it does *not* clone <small><i>(N.B.: the shortcut for automatically making roles from non-roles is
-available only on bleeding edge Rakudo, version 2017.11-1-g47ebc4a and up)</i></small>:
+available in `does` only on bleeding edge Rakudo, version 2017.11-1-g47ebc4a and up)</i></small>:
 
     my $o = class { method stuff { 'original' } }.new;
     say $o.stuff; # OUTPUT: «original␤»
@@ -92,5 +92,32 @@ and those Christmas celebrators won't eve know what hit 'em! How about, we overr
     # Enter your name: Zoffix Znet
     # You entered your name as: 🎄 Zoffix Znet 🎄
 
-We can stick our override into a separate module. It doesn't have to be in the same lexical
-scope. 
+That override will work even if we stick it into a module. We can also kick it up a notch
+and mess with enums and cached constants, which likely won't be able to cross the module
+boundary and other implementation-specific cache invalidation:
+
+    True does False;
+    say 42 ?? "tis true" !! "tis false";
+    # OUTPUT: «tis true␤»
+
+So far, that didn't quite have the wanted impact, but let's try coercing our number 
+to a `Bool`:
+
+    True does False;
+    say 42.Bool ?? "tis true" !! "tis false";
+    # OUTPUT: «tis false␤»
+
+There we go! And now, for the final Grinch-worthy touch, we'll mess with numerical
+results of computations on numbers. Rakudo caches `Int` constants. Infix `+` operator
+also uses the `.Bridge` method when computing with numerics of different types. So,
+let's override the `.Bridge` on our constant to return something funky:
+
+    BEGIN 42 does role { method Bridge { 12e0 } }
+    say 42 + 15;   # OUTPUT: «57␤»
+    say 42 + 15e0; # OUTPUT: «27␤»
+
+That's proper evil, sure to ruin any Christmas, but we're only getting started…
+
+## Wrapping It Up
+
+
