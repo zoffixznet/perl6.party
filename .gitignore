@@ -8,3 +8,4 @@ assets/assetpack.db
 assets/cache/
 pull-password
 .precomp
+/test.p6

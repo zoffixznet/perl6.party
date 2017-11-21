@@ -53,7 +53,8 @@ As an example string `'0'` is `True` in Perl 6 but is `False` in Perl 5. Using t
 
     role Perl5Str {
         method Bool {
-            self eq '0' ?? False !! nextsame
+            nextsame unless self eq '0';
+            False
         }
     }
     sub perlify { $^v but Perl5Str };
@@ -62,7 +63,15 @@ As an example string `'0'` is `True` in Perl 6 but is `False` in Perl 5. Using t
     say so perlify '0';     # OUTPUT: «False␤»
     say so perlify '';      # OUTPUT: «False␤»
 
-The `but` operator has a brother: an infix `does` operator. It behaves the same, except it does *not* clone.
+The role provides the `Bool` method that the `so` routine calls. Inside the method,
+we re-dispatch to the original `Bool` method using
+[`nextsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe)
+unless the string is a '0', in which case we simply return `False`.
+
+
+The `but` operator has a brother: an infix `does` operator. It behaves very similarly, except
+it does *not* clone <small><i>(N.B.: the shortcut for automatically making roles from non-roles is
+available only on bleeding edge Rakudo, version 2017.11-1-g47ebc4a and up)</i></small>:
 
     my $o = class { method stuff { 'original' } }.new;
     say $o.stuff; # OUTPUT: «original␤»
@@ -70,3 +79,18 @@ The `but` operator has a brother: an infix `does` operator. It behaves the same,
     $o does role { method stuff { 'modded' } };
     say $o.stuff; # OUTPUT: «modded␤»
 
+Some of the things in a program are globally accessible and in some implementations (e.g. Rakudo),
+certain constants are cached. This means we can get quite naughty in a separate part of a program
+and those Christmas celebrators won't eve know what hit 'em! How about, we override what the
+`prompt` routine reads? They like Christmas? We'll give them some Christmas trees:
+
+    $*IN does role { method get { "🎄 {callsame} 🎄" } }
+
+    say "You entered your name as: {prompt "Enter your name: "}";
+    
+    # OUTPUT (first occurance of "Zoffix Znet" is input typed by the user"):
+    # Enter your name: Zoffix Znet
+    # You entered your name as: 🎄 Zoffix Znet 🎄
+
+We can stick our override into a separate module. It doesn't have to be in the same lexical
+scope. 
