@@ -87,7 +87,7 @@ and those Christmas celebrators won't eve know what hit 'em! How about, we overr
     $*IN does role { method get { "🎄 {callsame} 🎄" } }
 
     say "You entered your name as: {prompt "Enter your name: "}";
-    
+
     # OUTPUT (first occurance of "Zoffix Znet" is input typed by the user"):
     # Enter your name: Zoffix Znet
     # You entered your name as: 🎄 Zoffix Znet 🎄
@@ -100,7 +100,7 @@ boundary and other implementation-specific cache invalidation:
     say 42 ?? "tis true" !! "tis false";
     # OUTPUT: «tis true␤»
 
-So far, that didn't quite have the wanted impact, but let's try coercing our number 
+So far, that didn't quite have the wanted impact, but let's try coercing our number
 to a `Bool`:
 
     True does False;
@@ -120,4 +120,116 @@ That's proper evil, sure to ruin any Christmas, but we're only getting started�
 
 ## Wrapping It Up
 
+What kind of Christmas would it be without wrapped presents?! Oh, for presents we shall have and Perl 6's `.wrap` method provided by `Routine` type will let us wrap 'em up.
 
+    use soft;
+    sub foo { say 'in foo' }
+    &foo.wrap: -> | {
+        say 'in the wrap';
+        callsame;
+        say 'back in the wrap';
+    }
+    foo;
+
+    # OUTPUT:
+    # in the wrap
+    # in foo
+    # back in the wrap
+
+We enable `use soft` pragma to prevent unwanted inlining of routines that would interefere with out wrap. Then, we use a routine we want to wrap as a noun by using it with its `&` sigil and call the `.wrap` method that takes a `Callable`.
+
+The given `Callable`'s signature must be compatible with the one on the wrapped routine (or its `proto` if it's a multi); otherwise we'd not be able to both dispatch to the routine correctly and call the wrapper with the args. In the example above, we simply use an anonymous `Capture` (`|`) to accept all possible arguments.
+
+Inside the `Callable` we have two print statements and make use of [`callsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) to call the next available dispatch candidate, which happens to be our original routine. This comes in handy, since attempting to call `foo` by its name inside the wrapper, we'd start the dispatch over from scratch, resulting in an infinite dispatch loop.
+
+Since methods are `Routine`s, we can wrap them as well. We can get a hold of the `Method` object using `.^lookup` meta method:
+
+    IO::Handle.^lookup('print').wrap: my method (|c) {
+        my &wrapee = nextcallee;
+        wrapee self, "🎄 Ho-ho-ho! 🎄\n";
+        wrapee self, |c
+    };
+
+    print "Hello, World!\n";
+
+    # OUTPUT:
+    # 🎄 Ho-ho-ho! 🎄
+    # Hello, World!
+
+Here, we grab the `.print` method from `IO::Handle` type and `.wrap` it. We wish to make use of `self` inside the method, so we're wrapping using a standalone method (`my method …`) instead of a block or a subroutine. The reason we want to have `self` is to be able to call the very method we're wrapping to print our Christmas-y message. Because our method is detached, the [`callwith` and related routines](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) will need `self` fed to them along with the rest of the args, to ensure we continue dispatch to the right object. Incidentally, the `nextcallee` is the `proto` of the method (if it's a `multi`), not a specific candidate that best matches the original arguments, so [the next candidate ordering](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe#haveyoutriedtocallthemwith...) is slightly different inside the wrap.
+
+Thanks to the `.wrap`, we can alter or even completely redefine behaviour of subroutines and methods, which is sure to be jolly fun when your friends try to use them. Ho-ho-ho!
+
+
+## Invisibility Cloak
+
+The tricks we've played so far are wonderfully terrible, but they're just too obvious too… visible. Since Perl 6 has superb Unicode support, I think we can should search the Unicode characters for some fun mischief. In particular, we're looking for *invisible* characters that are NOT whitespace. Just one is sufficient for our purpose, but these four are fairly invisible on my computer:
+
+    [⁠] U+2060 WORD JOINER [Cf]
+    [⁡] U+2061 FUNCTION APPLICATION [Cf]
+    [⁢] U+2062 INVISIBLE TIMES [Cf]
+    [⁣] U+2063 INVISIBLE SEPARATOR [Cf]
+
+Perl 6 supports custom terms and operators that can consist of any characters, except whitespace. Here's my patented Shrug Operator:
+
+    sub infix:<¯\(°_o)/¯> {
+        ($^a, $^b).pick
+    }
+
+    say 'Coke' ¯\(°_o)/¯ 'Pepsi';
+    # OUTPUT: «Pepsi␤»
+
+And here's a term, made out of non-identifier characters (we could've used the actual characters in the definition as well):
+
+    sub term:«"\c[family: woman woman boy boy]"» {
+        'All you need is loooove!'
+    }
+
+    say 👩‍👩‍👦‍👦; # OUTPUT: «All you need is loooove!␤»
+
+With our invisible non-whitespace characters in hand, we can make *invisible operators and terms!*
+
+    sub infix:«"\c[INVISIBLE TIMES]"» { $^a × $^b }
+    my \r = 42;
+
+    say "Area of the circle is " ~ π⁢r²;
+    # OUTPUT: «Area of the circle is 5541.76944093239␤»
+
+Let's make a `Jolly` module that will export some invisible terms and operators. We'll then sprinkle them into our Christmas-y friends' code:
+
+    unit module Jolly;
+
+    sub   term:«"\c[INVISIBLE TIMES]"» is export { 42 }
+    sub  infix:«"\c[INVISIBLE TIMES]"» is export {
+        $^a × $^b
+    }
+    sub prefix:«"\c[INVISIBLE SEPARATOR]"» (|) is looser(&[,]) is export {
+        say "Ho-ho-ho!";
+    }
+
+We've used the same character for the term and the infix operator. That's fine, as Perl 6 has fairly strict expectation of terms being followed by operators and vice versa, so it'll know when we meant to use the term or when to use the infix operator. Here's the resultant Grinch code, along with the output it produces:
+
+    ⁣say 42⁢⁢;
+
+    # OUTPUT:
+    # 1764
+    # Ho-ho-ho!
+
+
+That'll sure be fun to debug! Here's a list of characters in that line of code, for you to see where we've used our invisible goodies:
+
+    .say for '⁣say 42⁢⁢;'.uninames;
+
+    # OUTPUT:
+    # INVISIBLE SEPARATOR
+    # LATIN SMALL LETTER S
+    # LATIN SMALL LETTER A
+    # LATIN SMALL LETTER Y
+    # SPACE
+    # DIGIT FOUR
+    # DIGIT TWO
+    # INVISIBLE TIMES
+    # INVISIBLE TIMES
+    # SEMICOLON
+
+## Mending Expectations
