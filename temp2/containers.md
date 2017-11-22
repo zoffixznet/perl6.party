@@ -1,6 +1,6 @@
-Containers and Variables of Perl 6
+Perl 6: Sigils, Variables, and Containers
 
-Having a rudimentary understanding of containers is vital for enjoyable programming in Perl 6. They're ubiquitous and not only do they affect the type of variables you get, but also the way `List`s and `Map`s behave when iterated.
+Having a rudimentary understanding of containers is vital for enjoyable programming in Perl 6. They're ubiquitous and not only do they affect the type of variables you get, but dictate how `List`s and `Map`s behave when iterated.
 
 Today, we'll learn the basics of what containers are and how to work with them, but first, I'd like you to temporarily forget *everything* you might know about Perl 6's sigils and variables, especially if you're coming from Perl 5's background. **Everything.**
 
@@ -172,9 +172,7 @@ a `$`-sigiled variable (so no `Scalar` is involved):
     # $(1, 2, 3)
     # Item: 1 2 3
 
-The `.perl` method gaves us an extra insight and showed the second list with a `$` before it, to indicate it's containerized in a `Scalar`. More importantly,
-when we iterated over our `Lists` with the `for` loop, the second `List`
-resulted in just a single iteration: the entire `List`!
+The `.perl` method gaves us an extra insight and showed the second list with a `$` before it, to indicate it's containerized in a `Scalar`. More importantly, when we iterated over our `Lists` with the `for` loop, the second `List` resulted in just a single iteration: the entire `List`!
 
 This behaviour isn't merely of academic interest. Recall that `Array`s (and `Hash`es) create `Scalar` containers for their stuff. This means that even if
 we select an individual list inside the `Array` and try to iterate over it,
@@ -230,7 +228,7 @@ Although it gets the job done as far as deconting goes, it can introduce subtle 
 
 Give up? This program leaks memory… very slowly. Although we're iterating over an infinite list of items, that's not an issue because `.grep` method returns a `Seq` object that doesn't keep already-iterated items around and so memory usage never grows there.
 
-The problematic part is our `|` slip operator. It converts our `Seq` into a `Slip`, which is a type of a `List` and keeps around all of the values we already consumed. Here's a modified version of the program that grows faster, if you wanted to see that in `htop`:
+The problematic part is our `|` slip operator. It converts our `Seq` into a `Slip`, which is a type of a `List` and keeps around all of the values we already consumed. Here's a modified version of the program that grows faster, if you wanted to see that growth in `htop`:
 
     # CAREFUL! Don't consume all of your resources!
     my $primes = ^Inf .map: *.self;
@@ -241,7 +239,120 @@ Let's try it again, but this time using the decont method op:
     my $primes = ^Inf .map: *.self;
     $ = $ for $primes<>;
 
-No growth this time and it can sit and iterate until the end of times. Of course, since we know it's the `Scalar` container that causes containerization and we wish to avoid it here, we can simply *bind* the `Seq` to the variable instead:
+The memory usage is stable now and the program can sit there and iterate until the end of times. Of course, since we know it's the `Scalar` container that causes containerization and we wish to avoid it here, we can simply *bind* the `Seq` to the variable instead:
 
     my $primes := ^Inf .map: *.self;
     $ = $ for $primes;
+
+
+## I Want Less
+
+If you detest sigils, Perl 6 got something you can smile about: sigil-less variables. Just prefix the name with a backslash to indicate you don't want no stinkin' sigils:
+
+    my \Δ = 42;
+    say Δ²; # OUTPUT: «1764␤»
+
+You don't get any free `Scalar`s with such variables and so it makes no difference between binding or assigning to them. They behave similar to how binding a value to a `$`-sigiled variable behaves, including the ability to bind `Scalar`s and make the variable mutable:
+
+    my \Δ = my $ = 42;
+    Δ = 11;
+    say Δ²; # OUTPUT: «121␤»
+
+A more common place where you might see such variables is as parameters of routines, here, these mean you want `is raw` trait applied to the parameter. The meaning exists for the `+` slurpy as well (no backslash is needed), where having it `is raw` means you won't get unwanted `Scalar` containers due to it being an `Array`:
+
+    sub sigiled ($x is raw, +@y) {
+        $x = 100;
+        say flat @y
+    }
+
+    sub sigil-less (\x, +y) {
+        x = 200;
+        say flat y
+    }
+
+    my $x = 42;
+    sigiled    $x, (1, 2), (3, 4); # OUTPUT: «((1 2) (3 4))␤»
+    say $x;                        # OUTPUT: «100␤»
+
+    sigil-less $x, (1, 2), (3, 4); # OUTPUT: «(1 2 3 4)␤»
+    say $x;                        # OUTPUT: «200␤»
+
+## Defaulting on Default Defaults
+
+One awesome feature offered by containers is default values. You may have heard that in Perl 6 `Nil` signals the absense of a value and not a value in itself. Container defaults is where it comes into play:
+
+    my $x is default(42);
+    say $x;   # OUTPUT: «42␤»
+
+    $x = 10;
+    say $x;   # OUTPUT: «10␤»
+
+    $x = Nil;
+    say $x;   # OUTPUT: «42␤»
+
+A container's default value is given to it using the `is default` trait. Its argument is evaluated at compile time and the resultant value is used whenever the container lacks a value. Since `Nil`'s job is to signal just that, assigning a `Nil` into a container will result in the container containing its default value, not a `Nil`.
+
+Defaults can be given to `Array` and `Hash` containers just the same and if you
+wish your containers to contain a `Nil` literally when no value is present, just specify `Nil` as a default:
+
+    my @a is default<meow> = 1, 2, 3;
+    say @a[0, 2, 42]; # OUTPUT: «(1 3 meow)␤»
+
+    @a[0]:delete;
+    say @a[0];        # OUTPUT: «meow␤»
+
+    my %h is default(Nil) = :bar<ber>;
+    say %h<bar foos>; # OUTPUT: «(ber Nil)␤»
+
+    %h<bar>:delete;
+    say %h<bar>       # OUTPUT: «Nil␤»
+
+The container's default has a default default: the explicit type constraint that's present on the container:
+
+    say my Int $y; # OUTPUT: «(Int)␤»
+    say my Mu  $z; # OUTPUT: «(Mu)␤»
+
+    say my Int $i where *.is-prime; # OUTPUT: «(<anon>)␤»
+    $i.new; # OUTPUT: (exception) «You cannot create […]»
+
+If no explit type constraint is present, the default default is an `Any` type object:
+
+    say my $x;    # OUTPUT: «(Any)␤»
+    say $x = Nil; # OUTPUT: «(Any)␤»
+
+Note that the default values you may use in routine signatures for optional parameters are *not* the container defaults and assigning `Nil` to subroutine arguments or into parameters will *not* utilize the defaults from the signature.
+
+## That's All, Folks
+
+That about covers it all. The remaining beasts you'll see in the land of Perl 6 are "twigils": variables with TWO symbols before the name, but as far as containers go, they behave the same as the variables we've convered. The second symbol simply indicates *additional* information, such as whether the
+variable is an implied positional or named parameter…
+
+    sub test { say "$^implied @:parameters[]" }
+    test 'meow', :parameters<says the cat>;
+    # OUTPUT: «meow says the cat␤»
+
+…or whether the variable is a private or public attribute:
+
+    with class Foo {
+        has $!foo = 42;
+        has @.bar = 100;
+        method what's-foo { $!foo }
+    }.new {
+        say .bar;       # OUTPUT: «[100]␤»
+        say .what's-foo # OUTPUT: «42␤»
+    }
+
+That's a journey for another day, however.
+
+## Conclusion
+
+Perl 6 has a rich system of variables and containers that differs vastly from
+Perl 5. It's important to understand the way it works, as affects the way iteration and flattening of lists and hashes behaves.
+
+Assignment to variables offers valuable shortcuts, such as providing `Scalar`, `Array`, or `Hash` containers, depending on the sigil. Binding to variables allows you to bypass such shortcuts, if you so require.
+
+Lastly, sigil-less variables exist in Perl 6 and they have similar behaviour
+to how `$`-sigiled variables with binding work. When used as parameters, these
+variables behave like `is raw` trait was applied to them.
+
+Happy Holidays!
