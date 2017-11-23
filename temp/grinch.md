@@ -312,6 +312,10 @@ Since we'd rather the user not notice our jolly tricks, let's stick the Slang in
         # TODO: business stuff
     }
 
+    # OUTPUT:
+    # ===SORRY!===
+    # Ho-ho-ho! I think you were meant to finish business stuff
+
 We want the slang to run at the compilation time of the script, not the module, so we removed the `BEGIN` phaser and instead stuck the code to be inside `sub EXPORT`, which will run when the module is `use`d. In our script, we now merely have to `use` the module and the Slang gets activated. Awesome!
 
 ## Conclusion
