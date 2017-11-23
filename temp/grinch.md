@@ -232,4 +232,92 @@ That'll sure be fun to debug! Here's a list of characters in that line of code, 
     # INVISIBLE TIMES
     # SEMICOLON
 
-## Mending Expectations
+## Ho-Ho-Ho
+
+Productivity at Christmas time drops to a standstill. People have the holidays and the New Year on their minds. Wouldn't surprise me to see a whole bunch of `TODO` comments in all the codes. But what if we were able to detect and complain about them? There's nothing more Grinch-like than aborting program compilation whenever someone is feeling lazy!
+
+Perl 6 has Slangs. It's an experimental feature that currently does not have an officially supported interface, however, for our purpose, it'll do just fine.
+
+Using Slangs, it's possible to *lexically* mutate Perl 6's grammar and introduce language features and behaviour, just like a Perl 6 core developer would.
+
+    BEGIN $*LANG.refine_slang: 'MAIN',
+        role SomeExtraGrammar {
+            token term:sym<meow> { 'This is not a syntax error' }
+        },
+        role SomeExtraActions {
+            method EXPR (Mu $/) {
+                say "Parsed expression: " ~ $/;
+                nextsame
+            }
+        }
+
+    This is not a syntax error;
+    say 'hehe'
+
+    # OUTPUT:
+    # Parsed expression: This is not a syntax error
+    # Parsed expression: 'hehe'
+    # Parsed expression: say 'hehe'
+    # hehe
+
+The "experimental" part of the feature largely lies in having to rely on the structure of [core Grammar](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Grammar.nqp) and [core Actions](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Actions.nqp) and currently there's no guarantee that will remain unchanged.
+
+For our naughty, Grinchy trick, we'll be modifying behaviour of comments and if we trace what calls [the comment token](https://github.com/rakudo/rakudo/blob/79390147ac6b874f7c01c5818520cc5b31bde042/src/Perl6/Grammar.nqp#L700-L702), we'll find it's actually part of [the `ws` token](https://github.com/rakudo/rakudo/blob/79390147ac6b874f7c01c5818520cc5b31bde042/src/Perl6/Grammar.nqp#L652-L666).
+
+This complicates the matter slightly, as `ws` is such a base token that, along with `comp_unit`, `statementlist`, and `statement`, it can't be modified in the mainline (code outside routines and blocks). The reason is the Slang is loaded *after* the mainline is already being parsed using the stock version of these tokens. The tokens inside `statement` token can be changed even in the mainline, because `statement` token reblesses the grammar, but `ws` does not get such luxury.
+
+But enough talk! Let's code:
+
+    BEGIN $*LANG.refine_slang: 'MAIN', role {
+        token comment:sym<todo> {
+            '#' \s* 'TODO' ':'? \s+ <( \N*
+            { die "Ho-ho-ho! I think you were meant to finish " ~ $/ }
+        }
+    }
+
+    sub business-stuff {
+        # TODO: business stuff
+    }
+
+    # OUTPUT:
+    # ===SORRY!===
+    # Ho-ho-ho! I think you were meant to finish business stuff
+
+We use the `BEGIN` phaser to make the Slang modification happen at compile time, since we're trying to affect how further compilation is performed.
+
+We added a new proto token `comment:sym<todo>` to core Perl 6 grammar that matches what a regular comment would match, except it also looks for the `TODO` our Christmas-y friends decided to leave around. The `\N*` atom captures whatever string the user typed after the TODO and the `<(` match capture marker tells the compiler to exclude the previously matched stuff in the token from the captured text inside the `Match` object stored in the `$/`.
+
+At the end of the token, we simply use a codeblock to `die` with a message
+that tells the user to finish up their TODO. Quite crafty!
+
+Since we'd rather the user not notice our jolly tricks, let's stick the Slang into a module that's to be loaded by the module. We'll just make a slight tweak to the original code:
+
+    # File: ./Jolly.pm6
+    sub EXPORT {
+        $*LANG.refine_slang: 'MAIN', role {
+            token comment:sym<todo> {
+                '#' \s* 'TODO' ':'? \s+ <( \N*
+                { die "Ho-ho-ho! I think you were meant to finish " ~ $/ }
+            }
+        }
+
+        Map.new
+    }
+
+    # File: ./script.p6
+    use lib <.>;
+    use Jolly;
+
+    sub business-stuff {
+        # TODO: business stuff
+    }
+
+We want the slang to run at the compilation time of the script, not the module, so we removed the `BEGIN` phaser and instead stuck the code to be inside `sub EXPORT`, which will run when the module is `use`d. In our script, we now merely have to `use` the module and the Slang gets activated. Awesome!
+
+## Conclusion
+
+Today, we started off the 2017 Perl 6 Advent Calendar by being naughty Grinches and messing with users' programs. We mutated objects using `but` and `does` operators. Wrapped methods and subroutines with our custom routines that implemented extra features. Made invisible terms and operators. And even mutated the language itself to do our bidding.
+
+Over the next 23 days, we'll see more Perl 6 Advent articles, so be sure to check back. And maybe, by the end of it all, our Grinchy hearts will grow three sizes…
+
+-Ofun
