@@ -14,7 +14,7 @@ The very first thing to notice about Perl 6 regexes is whitespace is not signifi
     say '42foos' ~~ /42  foos/;
     # OUTPUT: «｢42foos｣␤»
 
-Comments can be used just the same as in the rest of the code and so can strings. That is, if you plan to match a literal string, you can quote it; spaces *inside* the quoted strings are *not* ignored:
+Comments can be used just the same as in the rest of the code and so can strings. That is, if you plan to match a literal string, you can quote it and not worry about escaping any metacharacters inside. Spaces *inside* the quoted strings are *not* ignored:
 
     say 'I love Perl 6' ~~ /
         I \s+
@@ -32,15 +32,56 @@ match from the regex-specific metacharacters. Ever heard of a "Leaning Toothpick
 
 Perl 6 solves this problem with its corner bracket quoters that have all special characters, including the backslash escapes, disabled. And since Perl 6 regexes allow you to quote your literal match strings, the corner quoters come in handy in this situation:
 
-    say ｢\\zofbox\music\ZofferTunes.mp3｣ ~~ /
-        ｢\\｣ \w+ ｢\｣ \w+ ｢\｣
-        <( # match capture start marker; excludes earlier stuff from result
-        .+
-    /
+    say ｢\\zofbox\MeowMix\ZofferTunes.mp3｣ ~~ /
+        ｢\\｣ $<box>   = \w+
+        ｢\｣  $<album> = \w+
+        ｢\｣  $<tune>  = .+
+    /;
 
-    # OUTPUT: «｢ZofferTunes.mp3｣␤»
+    # OUTPUT:
+    # ｢\\zofbox\MeowMix\ZofferTunes.mp3｣
+    #  box => ｢zofbox｣
+    #  album => ｢MeowMix｣
+    #  tune => ｢ZofferTunes.mp3｣
 
 Not a single backslash that shouldn't be there!
 
 ## Keep The Good Things
 
+Despite being heavily improved, Perl 6 regexes still have many of the familiar elements:
+
+    with "foo42" {
+        say m/ \w+ /;  # ｢foo42｣ # match letter, digit, or _
+        say m/ \d+ /;  # ｢42｣    # match digit (any Unicode digit)
+        say m/ .*  /;  # ｢foo42｣ # 0 or more characters
+        say m/ .+  /;  # ｢foo42｣ # 1 or more characters
+        say m/ .+? /;  # ｢f｣     # 1 or more characters, frugal match
+    }
+
+Although, the `.` metacharacter matches *any* character and does not require any regex modifiers to match a newline character. Similarly, all special-casing was removed from `^` and `$` metacharacters. They match at the start and end of the *string,* not line, and do not have any modifiers to affect their behaviour. To match beginning or end of line, just double these up: `^^` and `$$`. Also, the `$` now always matches the end of string, without paying any regard to the newline character.
+
+    with "foo42\nbar♥\n" {
+        say so m/'♥'    $/; # False
+        say so m/'♥' \n $/; # True
+        say so m/'♥'   $$/; # True
+
+        say so m/ 42   $ /; # False
+        say so m/ 42  $$ /; # True
+        say so m/ ^  bar /; # False
+        say so m/ ^^ bar /; # True
+        say so m/ ^  foo /; # True
+        say so m/ ^^ foo /; # True
+    }
+
+And if you feel a bit overwhelmed with all the new syntax, use the `P5` adverb on the regex to turn on the Perl 5 regex mode:
+
+    say "foo100bar3bar42" ~~ /<.after 3> .+ <.before 42>/;
+    say "foo100bar3bar42" ~~ m:P5/(?<=3).+(?=42)/;
+
+    # OUTPUT:
+    # ｢bar｣
+    # ｢bar｣
+
+Not all of the features are supported by this mode, but it should be sufficient as training wheels, while you learn the more powerful Perl 6 regexes.
+
+## Throw Out The Bad Things
