@@ -141,11 +141,11 @@ What kind of Christmas would it be without wrapped presents?! Oh, for presents w
     # in foo
     # back in the wrap
 
-We enable `use soft` pragma to prevent unwanted inlining of routines that would interefere with out wrap. Then, we use a routine we want to wrap as a noun by using it with its `&` sigil and call the `.wrap` method that takes a `Callable`.
+We enable `use soft` pragma to prevent unwanted inlining of routines that would otherwise interfere with our wrap. Then, we use a routine we want to wrap as a noun by using it with its `&` sigil and call the ``.wrap`` method that takes a ``Callable``.
 
 The given ``Callable``'s signature must be compatible with the one on the wrapped routine (or its `proto` if it's a multi); otherwise we'd not be able to both dispatch to the routine correctly and call the wrapper with the args. In the example above, we simply use an anonymous ``Capture`` (`|`) to accept all possible arguments.
 
-Inside the ``Callable`` we have two print statements and make use of [`callsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) to call the next available dispatch candidate, which happens to be our original routine. This comes in handy, since attempting to call `foo` by its name inside the wrapper, we'd start the dispatch over from scratch, resulting in an infinite dispatch loop.
+Inside the ``Callable`` we have two ``say`` calls and make use of [`callsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) to call the next available dispatch candidate, which happens to be our original routine. This comes in handy, since were we to attempt to call `foo` by its name inside the wrapper, we'd start the dispatch over from scratch, resulting in an infinite dispatch loop.
 
 Since methods are ``Routine``s, we can wrap them as well. We can get a hold of the ``Method`` object using `.^lookup` meta method:
 
@@ -161,21 +161,21 @@ Since methods are ``Routine``s, we can wrap them as well. We can get a hold of t
     # 🎄 Ho-ho-ho! 🎄
     # Hello, World!
 
-Here, we grab the ``.print`` method from ``IO::Handle`` type and ``.wrap`` it. We wish to make use of `self` inside the method, so we're wrapping using a standalone method (`my method …`) instead of a block or a subroutine. The reason we want to have `self` is to be able to call the very method we're wrapping to print our Christmas-y message. Because our method is detached, the [`callwith` and related routines](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) will need `self` fed to them along with the rest of the args, to ensure we continue dispatch to the right object. Incidentally, the `nextcallee` is the `proto` of the method (if it's a `multi`), not a specific candidate that best matches the original arguments, so [the next candidate ordering](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe#haveyoutriedtocallthemwith...) is slightly different inside the wrap.
+Here, we grab the ``.print`` method from ``IO::Handle`` type and ``.wrap`` it. We wish to make use of `self` inside the method, so we're wrapping using a standalone method (`my method …`) instead of a block or a subroutine. The reason we want to have `self` is to be able to call the very method we're wrapping to print our Christmas-y message. Because our method is detached, the [`callwith` and related routines](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) will need `self` fed to them along with the rest of the args, to ensure we continue dispatch to the right object. Incidentally, inside the wrap, the `nextcallee` is the `proto` of the method (if it's a `multi`), not a specific candidate that best matches the original arguments, so [the next candidate ordering](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe#haveyoutriedtocallthemwith...) is slightly different inside the wrap.
 
 Thanks to the ``.wrap``, we can alter or even completely redefine behaviour of subroutines and methods, which is sure to be jolly fun when your friends try to use them. Ho-ho-ho!
 
 
 ## Invisibility Cloak
 
-The tricks we've played so far are wonderfully terrible, but they're just too obvious too… visible. Since Perl 6 has superb Unicode support, I think we can should search the Unicode characters for some fun mischief. In particular, we're looking for *invisible* characters that are NOT whitespace. Just one is sufficient for our purpose, but these four are fairly invisible on my computer:
+The tricks we've played so far are wonderfully terrible, but they're just too obvious and too… visible. Since Perl 6 has superb Unicode support, I think we should search the Unicode characters for some fun mischief. In particular, we're looking for *invisible* characters that are NOT whitespace. Just one is sufficient for our purpose, but these four are fairly invisible on my computer:
 
     [⁠] U+2060 WORD JOINER [Cf]
     [⁡] U+2061 FUNCTION APPLICATION [Cf]
     [⁢] U+2062 INVISIBLE TIMES [Cf]
     [⁣] U+2063 INVISIBLE SEPARATOR [Cf]
 
-Perl 6 supports custom terms and operators that can consist of any characters, except whitespace. Here's my patented Shrug Operator:
+Perl 6 supports custom terms and operators that can consist of any characters, except whitespace. For example, here's my patented *Shrug Operator*:
 
     sub infix:<¯\(°_o)/¯> {
         ($^a, $^b).pick
@@ -187,10 +187,9 @@ Perl 6 supports custom terms and operators that can consist of any characters, e
 And here's a term, made out of non-identifier characters (we could've used the actual characters in the definition as well):
 
     sub term:«"\c[family: woman woman boy boy]"» {
-        'All you need is loooove!'
+        '♫ We— are— ♪ faaaamillyyy ♬'
     }
-
-    say 👩‍👩‍👦‍👦; # OUTPUT: «All you need is loooove!␤»
+    say 👩‍👩‍👦‍👦; # OUTPUT: «♫ We— are— ♪ faaaamillyyy ♬»
 
 With our invisible non-whitespace characters in hand, we can make *invisible operators and terms!*
 
@@ -208,7 +207,9 @@ Let's make a `Jolly` module that will export some invisible terms and operators.
     sub  infix:«"\c[INVISIBLE TIMES]"» is export {
         $^a × $^b
     }
-    sub prefix:«"\c[INVISIBLE SEPARATOR]"» (|) is looser(&[,]) is export {
+    sub prefix:«"\c[INVISIBLE SEPARATOR]"» (|)
+        is looser(&[,]) is export
+    {
         say "Ho-ho-ho!";
     }
 
@@ -267,9 +268,9 @@ Using Slangs, it's possible to *lexically* mutate Perl 6's grammar and introduce
     # Parsed expression: say 'hehe'
     # hehe
 
-The "experimental" part of the feature largely lies in having to rely on the structure of [core Grammar](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Grammar.nqp) and [core Actions](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Actions.nqp) and currently there's no guarantee that will remain unchanged.
+The "experimental" part of the feature largely lies in having to rely on the structure of [core Grammar](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Grammar.nqp) and [core Actions](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Actions.nqp), as currently there's no guarantee that will remain unchanged.
 
-For our naughty, Grinchy trick, we'll be modifying behaviour of comments and if we trace what calls [the comment token](https://github.com/rakudo/rakudo/blob/79390147ac6b874f7c01c5818520cc5b31bde042/src/Perl6/Grammar.nqp#L700-L702), we'll find it's actually part of [the `ws` token](https://github.com/rakudo/rakudo/blob/79390147ac6b874f7c01c5818520cc5b31bde042/src/Perl6/Grammar.nqp#L652-L666).
+For our naughty, Grinchy trick, we'll be modifying behaviour of comments and if we read the code to trace what calls [the comment token](https://github.com/rakudo/rakudo/blob/79390147ac6b874f7c01c5818520cc5b31bde042/src/Perl6/Grammar.nqp#L700-L702), we'll find it's actually part of [the `ws` token](https://github.com/rakudo/rakudo/blob/79390147ac6b874f7c01c5818520cc5b31bde042/src/Perl6/Grammar.nqp#L652-L666).
 
 This complicates the matter slightly, as `ws` is such a base token that, along with `comp_unit`, `statementlist`, and `statement`, it can't be modified in the mainline (code outside routines and blocks). The reason is the Slang is loaded *after* the mainline is already being parsed using the stock version of these tokens. The tokens inside `statement` token can be changed even in the mainline, because `statement` token reblesses the grammar, but `ws` does not get such luxury.
 
@@ -278,7 +279,8 @@ But enough talk! Let's code:
     BEGIN $*LANG.refine_slang: 'MAIN', role {
         token comment:sym<todo> {
             '#' \s* 'TODO' ':'? \s+ <( \N*
-            { die "Ho-ho-ho! I think you were meant to finish " ~ $/ }
+            { die "Ho-ho-ho! I think you were"
+                ~ " meant to finish " ~ $/ }
         }
     }
 
@@ -304,7 +306,8 @@ Since we'd rather the user not notice our jolly tricks, let's stick the Slang in
         $*LANG.refine_slang: 'MAIN', role {
             token comment:sym<todo> {
                 '#' \s* 'TODO' ':'? \s+ <( \N*
-                { die "Ho-ho-ho! I think you were meant to finish " ~ $/ }
+                { die "Ho-ho-ho! I think you were"
+                    ~ " meant to finish " ~ $/ }
             }
         }
 
