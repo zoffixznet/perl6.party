@@ -1,8 +1,10 @@
-The Grinch of Perl 6: A Practical Guide to Ruining Christmas
+%% title: The Grinch of Perl 6: A Practical Guide to Ruining Christmas
+%% date: 2017-12-01
+%% desc: Having some naughty fun with Perl 6
 
 *Look at them! All smiling and happy. Coworkers, friends, and close family members. All enjoying programming in Perl 6 version 6.c "Christmas". Great concurrency primitives, core grammars, and a fantastic object model. It sickens me!*
 
-*But wait a second... wait just a second. I got an idea. An awful idea. I got a wonderful, *awful* idea! We can ruin their "Christmas". All we need is a few tricks up our sleeves. Muahuahahaha!!*
+*But wait a second... wait just a second. I got an idea. An awful idea. I got a wonderful,* **awful** *idea! We can ruin their "Christmas". All we need is a few tricks up our sleeves. Muahuahahaha!!*
 
 -------
 
@@ -12,7 +14,7 @@ Today, we'll show our naughty side and purposefully do naughty things. Sure, the
 
 ## But True does False
 
-Have you heard of the `but` operator? A fun little thing:
+Have you heard of the ``but`` operator? A fun little thing:
 
     say True but False ?? 'Tis true' !! 'Tis false';
     # OUTPUT: «Tis false␤»
@@ -30,7 +32,7 @@ and then mixes in a role provided on the right hand side into the clone:
     say $n.is-even; # OUTPUT: «True␤»
     say $n.^name;   # OUTPUT: «Int+{Evener}␤»
 
-Those aren't roles in the first two examples above. The `but` operator has a handy shortcut: if the thing on the right isn't a role, it creates one for you! The role will have a single method, named after the `.^name` of the object on the right hand side, and the method will simply return the given object. Thus, this…
+Those aren't roles in the first two examples above. The ``but`` operator has a handy shortcut: if the thing on the right isn't a role, it creates one for you! The role will have a single method, named after the `.^name` of the object on the right hand side, and the method will simply return the given object. Thus, this…
 
     put True but 'some boolean'; # OUTPUT: «some boolean␤»
 
@@ -42,14 +44,14 @@ Those aren't roles in the first two examples above. The `but` operator has a han
         }
     } # OUTPUT: «some boolean␤»
 
-The `.^name` of on our string returns `Str`, since it's a `Str` object:
+The `.^name` of on our string returns `Str`, since it's a ``Str`` object:
 
     say 'some boolean'.^name; # OUTPUT: «Str␤»
 
-And so the role provides method named `Str`, which `put` calls to obtain
+And so the role provides method named ``Str``, which ``put`` calls on non-`Str` objects to obtain
 a stringy value to output, causing our boolean to have an altered stringy representation.
 
-As an example string `'0'` is `True` in Perl 6 but is `False` in Perl 5. Using the `but` operator, we can alter a string to behave like Perl 5's version:
+As an example, string `'0'` is `True` in Rakudo Perl 6 but is `False` in Pumpkin Perl 5. Using the ``but`` operator, we can alter a string to behave like Perl 5's version:
 
     role Perl5Str {
         method Bool {
@@ -63,15 +65,15 @@ As an example string `'0'` is `True` in Perl 6 but is `False` in Perl 5. Using t
     say so perlify '0';     # OUTPUT: «False␤»
     say so perlify '';      # OUTPUT: «False␤»
 
-The role provides the `Bool` method that the `so` routine calls. Inside the method,
-we re-dispatch to the original `Bool` method using
+The role provides the ``.Bool`` method that the ``so`` routine calls. Inside the method,
+we re-dispatch to the original ``.Bool`` method using
 [`nextsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe)
 unless the string is a '0', in which case we simply return `False`.
 
 
-The `but` operator has a brother: an infix `does` operator. It behaves very similarly, except
+The ``but`` operator has a brother: an infix ``does`` operator. It behaves very similarly, except
 it does *not* clone <small><i>(N.B.: the shortcut for automatically making roles from non-roles is
-available in `does` only on bleeding edge Rakudo, version 2017.11-1-g47ebc4a and up)</i></small>:
+available in ``does`` only on bleeding edge Rakudo, version 2017.11-1-g47ebc4a and up)</i></small>:
 
     my $o = class { method stuff { 'original' } }.new;
     say $o.stuff; # OUTPUT: «original␤»
@@ -81,15 +83,18 @@ available in `does` only on bleeding edge Rakudo, version 2017.11-1-g47ebc4a and
 
 Some of the things in a program are globally accessible and in some implementations (e.g. Rakudo),
 certain constants are cached. This means we can get quite naughty in a separate part of a program
-and those Christmas celebrators won't eve know what hit 'em! How about, we override what the
-`prompt` routine reads? They like Christmas? We'll give them some Christmas trees:
+and those Christmas celebrators won't even know what hit 'em!
+
+How about, we override what the
+``prompt`` routine reads? They like Christmas? We'll give them some Christmas trees:
 
     $*IN does role { method get { "🎄 {callsame} 🎄" } }
 
-    say "You entered your name as: {prompt "Enter your name: "}";
+    my $name = prompt "Enter your name: ";
+    say "You entered your name as: $name";
 
-    # OUTPUT (first occurance of "Zoffix Znet" is input typed by the user"):
-    # Enter your name: Zoffix Znet
+    # OUTPUT
+    # Enter your name: (typed by user) Zoffix Znet
     # You entered your name as: 🎄 Zoffix Znet 🎄
 
 That override will work even if we stick it into a module. We can also kick it up a notch
@@ -101,15 +106,15 @@ boundary and other implementation-specific cache invalidation:
     # OUTPUT: «tis true␤»
 
 So far, that didn't quite have the wanted impact, but let's try coercing our number
-to a `Bool`:
+to a ``Bool``:
 
     True does False;
     say 42.Bool ?? "tis true" !! "tis false";
     # OUTPUT: «tis false␤»
 
 There we go! And now, for the final Grinch-worthy touch, we'll mess with numerical
-results of computations on numbers. Rakudo caches `Int` constants. Infix `+` operator
-also uses the `.Bridge` method when computing with numerics of different types. So,
+results of computations on numbers. Rakudo caches ``Int`` constants. Infix `+` operator
+also uses the [internalish-ish-ish](https://github.com/perl6/doc/issues/1690) `.Bridge` method when computing with numerics of different types. So,
 let's override the `.Bridge` on our constant to return something funky:
 
     BEGIN 42 does role { method Bridge { 12e0 } }
@@ -120,7 +125,7 @@ That's proper evil, sure to ruin any Christmas, but we're only getting started�
 
 ## Wrapping It Up
 
-What kind of Christmas would it be without wrapped presents?! Oh, for presents we shall have and Perl 6's `.wrap` method provided by `Routine` type will let us wrap 'em up.
+What kind of Christmas would it be without wrapped presents?! Oh, for presents we shall have and Perl 6's ``.wrap`` method provided by ``Routine`` type will let us wrap 'em up, oh so good.
 
     use soft;
     sub foo { say 'in foo' }
@@ -138,11 +143,11 @@ What kind of Christmas would it be without wrapped presents?! Oh, for presents w
 
 We enable `use soft` pragma to prevent unwanted inlining of routines that would interefere with out wrap. Then, we use a routine we want to wrap as a noun by using it with its `&` sigil and call the `.wrap` method that takes a `Callable`.
 
-The given `Callable`'s signature must be compatible with the one on the wrapped routine (or its `proto` if it's a multi); otherwise we'd not be able to both dispatch to the routine correctly and call the wrapper with the args. In the example above, we simply use an anonymous `Capture` (`|`) to accept all possible arguments.
+The given ``Callable``'s signature must be compatible with the one on the wrapped routine (or its `proto` if it's a multi); otherwise we'd not be able to both dispatch to the routine correctly and call the wrapper with the args. In the example above, we simply use an anonymous ``Capture`` (`|`) to accept all possible arguments.
 
-Inside the `Callable` we have two print statements and make use of [`callsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) to call the next available dispatch candidate, which happens to be our original routine. This comes in handy, since attempting to call `foo` by its name inside the wrapper, we'd start the dispatch over from scratch, resulting in an infinite dispatch loop.
+Inside the ``Callable`` we have two print statements and make use of [`callsame` routine](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) to call the next available dispatch candidate, which happens to be our original routine. This comes in handy, since attempting to call `foo` by its name inside the wrapper, we'd start the dispatch over from scratch, resulting in an infinite dispatch loop.
 
-Since methods are `Routine`s, we can wrap them as well. We can get a hold of the `Method` object using `.^lookup` meta method:
+Since methods are ``Routine``s, we can wrap them as well. We can get a hold of the ``Method`` object using `.^lookup` meta method:
 
     IO::Handle.^lookup('print').wrap: my method (|c) {
         my &wrapee = nextcallee;
@@ -156,9 +161,9 @@ Since methods are `Routine`s, we can wrap them as well. We can get a hold of the
     # 🎄 Ho-ho-ho! 🎄
     # Hello, World!
 
-Here, we grab the `.print` method from `IO::Handle` type and `.wrap` it. We wish to make use of `self` inside the method, so we're wrapping using a standalone method (`my method …`) instead of a block or a subroutine. The reason we want to have `self` is to be able to call the very method we're wrapping to print our Christmas-y message. Because our method is detached, the [`callwith` and related routines](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) will need `self` fed to them along with the rest of the args, to ensure we continue dispatch to the right object. Incidentally, the `nextcallee` is the `proto` of the method (if it's a `multi`), not a specific candidate that best matches the original arguments, so [the next candidate ordering](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe#haveyoutriedtocallthemwith...) is slightly different inside the wrap.
+Here, we grab the ``.print`` method from ``IO::Handle`` type and ``.wrap`` it. We wish to make use of `self` inside the method, so we're wrapping using a standalone method (`my method …`) instead of a block or a subroutine. The reason we want to have `self` is to be able to call the very method we're wrapping to print our Christmas-y message. Because our method is detached, the [`callwith` and related routines](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe) will need `self` fed to them along with the rest of the args, to ensure we continue dispatch to the right object. Incidentally, the `nextcallee` is the `proto` of the method (if it's a `multi`), not a specific candidate that best matches the original arguments, so [the next candidate ordering](https://rakudo.party/post/Perl6-But-Heres-My-Dispatch-So-Callwith-Maybe#haveyoutriedtocallthemwith...) is slightly different inside the wrap.
 
-Thanks to the `.wrap`, we can alter or even completely redefine behaviour of subroutines and methods, which is sure to be jolly fun when your friends try to use them. Ho-ho-ho!
+Thanks to the ``.wrap``, we can alter or even completely redefine behaviour of subroutines and methods, which is sure to be jolly fun when your friends try to use them. Ho-ho-ho!
 
 
 ## Invisibility Cloak
@@ -242,7 +247,9 @@ Using Slangs, it's possible to *lexically* mutate Perl 6's grammar and introduce
 
     BEGIN $*LANG.refine_slang: 'MAIN',
         role SomeExtraGrammar {
-            token term:sym<meow> { 'This is not a syntax error' }
+            token term:sym<meow> {
+                'This is not a syntax error'
+            }
         },
         role SomeExtraActions {
             method EXPR (Mu $/) {
@@ -283,11 +290,11 @@ But enough talk! Let's code:
     # ===SORRY!===
     # Ho-ho-ho! I think you were meant to finish business stuff
 
-We use the `BEGIN` phaser to make the Slang modification happen at compile time, since we're trying to affect how further compilation is performed.
+We use the [`BEGIN` phaser](https://docs.perl6.org/language/phasers) to make the Slang modification happen at compile time, since we're trying to affect how further compilation is performed.
 
 We added a new proto token `comment:sym<todo>` to core Perl 6 grammar that matches what a regular comment would match, except it also looks for the `TODO` our Christmas-y friends decided to leave around. The `\N*` atom captures whatever string the user typed after the TODO and the `<(` match capture marker tells the compiler to exclude the previously matched stuff in the token from the captured text inside the `Match` object stored in the `$/`.
 
-At the end of the token, we simply use a codeblock to `die` with a message
+At the end of the token, we simply use a code block to ``die`` with a message
 that tells the user to finish up their TODO. Quite crafty!
 
 Since we'd rather the user not notice our jolly tricks, let's stick the Slang into a module that's to be loaded by the module. We'll just make a slight tweak to the original code:
@@ -316,7 +323,8 @@ Since we'd rather the user not notice our jolly tricks, let's stick the Slang in
     # ===SORRY!===
     # Ho-ho-ho! I think you were meant to finish business stuff
 
-We want the slang to run at the compilation time of the script, not the module, so we removed the `BEGIN` phaser and instead stuck the code to be inside `sub EXPORT`, which will run when the module is `use`d. In our script, we now merely have to `use` the module and the Slang gets activated. Awesome!
+We want the slang to run at the compilation time of the script, not the module, so we removed the `BEGIN` phaser and instead stuck the code to be inside
+[`sub EXPORT`](https://docs.perl6.org/language/modules#index-entry-sub_EXPORT), which will run when the module is `use`d. In our script, we now merely have to `use` the module and the Slang gets activated. Awesome!
 
 ## Conclusion
 
