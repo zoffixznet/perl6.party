@@ -28,7 +28,8 @@ sub all {
 }
 
 sub load {
-    my ($self, $post) = @_;
+    my ($self, $post, $prefix_mode) = @_;
+    $prefix_mode //= '';
     return unless -e "post/$post.md";
     my ($meta, $content) = process( decode 'UTF-8', path("post/$post.md")->slurp );
     $content =
@@ -38,11 +39,17 @@ sub load {
                             process_irc($content))));
 
     $content =~ s/^```$//gm;
-    my $prefix = '<a href="https://rakudo.party/post/' . $post
-        . '" style="display: block; background: #ccc; border-radius: 3px; '
-        . 'font-size: 110%; border: 1px dotted #666; text-align: center; '
-        . 'padding: 10px 5px;">Read this article on Rakudo.Party</a>'
-        . "\n\n<!-- no-perly-bot -->\n\n";
+    my $prefix = '';
+    if ($prefix_mode eq 'advent') {
+        $prefix = "# $meta->{title}\n\n";
+    }
+    elsif ($prefix_mode) {
+        $prefix = '<a href="https://rakudo.party/post/' . $post
+            . '" style="display: block; background: #ccc; border-radius: 3px; '
+            . 'font-size: 110%; border: 1px dotted #666; text-align: center; '
+            . 'padding: 10px 5px;">Read this article on Rakudo.Party</a>'
+            . "\n\n<!-- no-perly-bot -->\n\n";
+    }
     return $meta, "$prefix$content", markdown $content;
 }
 

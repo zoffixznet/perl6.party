@@ -35,13 +35,16 @@ get '/' => sub {
 
 get '/post/#post' => sub {
     my $c = shift;
-    my ($meta, $markdown, $html) = $posts->load( $c->param('post') );
+    my ($meta, $markdown, $html) = $posts->load(
+        $c->param('post'),
+        $c->param('md'),
+    );
     $html or return $c->reply->not_found;
 
     return $c->render(
         text   => prep_for_blogs_perl_org($markdown),
         format => 'txt',
-    ) if $c->param('md') or $c->param('markdown');
+    ) if length $c->param('md');
 
     $c->stash( %$meta, post => $html, title => $meta->{title} );
 } => 'post';
