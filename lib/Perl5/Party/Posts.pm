@@ -63,12 +63,20 @@ sub process {
 
 sub process_sub_links {
     my $content = shift;
-    $content =~ s{``((?:\.|[a-z])[^`|]+)(?:\|([^`]+))?``}{
+    $content =~ s{
+        ``
+        (
+            (?:\.|[a-z]) [^`|]+ # routine or method
+            | \|  # the slip operator
+        )
+        (?: \| ([^`]+) )?
+        ``
+    }{
         my $text = $1;
         my $optional = $2 // "";
         (my $routine = $1) =~ s/^\.//;
         "[`$text`$optional](https://docs.perl6.org/routine/$routine)"
-    }ger;
+    }gerx;
 }
 sub process_type_links {
     my $content = shift;

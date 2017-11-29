@@ -1,6 +1,7 @@
 %% title: The Grinch of Perl 6: A Practical Guide to Ruining Christmas
 %% date: 2017-12-01
 %% desc: Having some naughty fun with Perl 6
+%% draft: true
 
 *Look at them! All smiling and happy. Coworkers, friends, and close family members. All enjoying programming in Perl 6 version 6.c "Christmas". Great concurrency primitives, core grammars, and a fantastic object model. It sickens me!*
 
