@@ -11,7 +11,7 @@ may be implemented that users would want to know about.
 In the past, for things with very large impact, we made blog
 posts, but there
 are lots of small things that fly under the radar, unless you actively
-pay a lot of attention [Rakudo Perl 6's core
+pay a lot of attention to [Rakudo Perl 6's core
 development](https://p6weekly.wordpress.com/).
 
 To help *all* of our users to be aware of important issues, we're
