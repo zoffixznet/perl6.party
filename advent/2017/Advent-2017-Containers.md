@@ -106,8 +106,7 @@ Our code became a lot shorter, but we can toss out a couple more characters. Jus
 
 Nice and concise.
 
-Similar ideas are behind `%`- and `&`-sigiled variables. The `%` sigil implies
- a type-constraint on ``Associative`` role and offers the same shortcuts for assignment (giving you a ``Hash``) and creates ``Scalar`` containers for the values. The `&`-sigiled variables type-constrain on role ``Callable`` and assignment behaves similar to `$` sigils, giving a free ``Scalar`` container whose value you can modify:
+Similar ideas are behind `%`- and `&`-sigiled variables. The `%` sigil implies  a type-constraint on ``Associative`` role and offers the same shortcuts for assignment (giving you a ``Hash``) and creates ``Scalar`` containers for the values. The `&`-sigiled variables type-constrain on role ``Callable`` and assignment behaves similar to `$` sigils, giving a free ``Scalar`` container whose value you can modify:
 
     my  %hash = :42foo, :bar<ber>;
     say %hash;  # OUTPUT: «{bar => ber, foo => 42}␤»
@@ -121,7 +120,7 @@ Similar ideas are behind `%`- and `&`-sigiled variables. The `%` sigil implies
 
 ## The One and Only
 
-Earlier we learned that *assignment* to `$`-sigiled variables gives you a free ``Scalar`` container. Since scalars, as the same suggests, contain just one thing… what exactly happens if you put a ``List`` into a ``Scalar``? After all, the Universe remains unimploded  when you try to do that:
+Earlier we learned that *assignment* to `$`-sigiled variables gives you a free ``Scalar`` container. Since scalars, as the name suggests, contain just one thing… what exactly happens if you put a ``List`` into a ``Scalar``? After all, the Universe remains unimploded  when you try to do that:
 
     my  $listish = (1, 2, 3);
     say $listish; # OUTPUT: «(1 2 3)␤»
@@ -231,17 +230,17 @@ The problematic part is our ``|`` slip operator. It converts our ``Seq`` into a 
 
     # CAREFUL! Don't consume all of your resources!
     my $primes = ^∞ .map: *.self;
-    $ = $ for |$primes;
+    Nil for |$primes;
 
 Let's try it again, but this time using the decont method op:
 
     my $primes = ^∞ .map: *.self;
-    $ = $ for $primes<>;
+    Nil for $primes<>;
 
 The memory usage is stable now and the program can sit there and iterate until the end of times. Of course, since we know it's the ``Scalar`` container that causes containerization and we wish to avoid it here, we can simply *bind* the ``Seq`` to the variable instead:
 
     my $primes := ^∞ .map: *.self;
-    $ = $ for $primes;
+    Nil for $primes;
 
 
 ## I Want Less
