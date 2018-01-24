@@ -6,14 +6,19 @@
 Over the past month, I spent some time in Rakudo's QAST land writing a few
 optimizations, fixing bugs involving warnings, as well as squashing a monster
 hive of 10 thunk scoping bugs with a single commit. In today's article,
-we'll g over that last feat in detail, as well as learn what QAST is and how
+we'll go over that last feat in detail, as well as learn what QAST is and how
 to work with it.
 
-## Dumping QAST
+# PART I: The QAST
 
 QAST stands for *"Q" Abstract Syntax Tree*. The "Q" is there because it's
 one-after "P", and "P" used to be there to stand for *"Parrot"*, the name of
-an earlier, experimental Perl 6 implementation. Every Rakudo Perl 6 program
+an earlier, experimental Perl 6 implementation. Let's see what QAST is all
+about!
+
+## Dumping QAST
+
+Every Rakudo Perl 6 program
 compiles down to a tree of QAST nodes and you can dump that tree if you specify
 `--target=ast` or `--target=optimize` command line option to `perl6` when
 compiling a program or a module:
@@ -88,6 +93,24 @@ four files in [`Atom` editor](https://github.com/perl6/Atom-as-a-Perl6-IDE).
 and `Actions.nqp` (the `$*W` dynamic variable contains a `Perl6::World`
 object). Lastly, `Optimizer.nqp` contains Rakudo's static optimizer.
 
+The root (of all evil) is the [`QAST::Node` object](https://github.com/perl6/nqp/blob/master/src/QAST/Node.nqp), with all the other QAST nodes
+being its subclasses. Let's review some of the popular ones:
+
+### QAST::Op
+### QAST::*Val
+    QAST::SVal, QAST::IVal, QAST::NVal, QAST::WVal
+
+### QAST::Var
+### QAST::Stmts
+### QAST::Block
+### QAST::Want
+### Others
+
+A few more QAST nodes exist. They're out of scope of this article, but
+you may wish to read [the documentation](https://github.com/perl6/nqp/blob/master/docs/qast.markdown) or, since some of them are
+do not appear in those docs, go straight
+[to the source](https://github.com/perl6/nqp/tree/master/src/QAST).
+
 ## Executing QAST Trees
 
 Having a decent familarity with
@@ -126,10 +149,16 @@ without having to stick it into `src/Perl6/Actions.nqp` or similar file first.
 To some extent, it's possible to do that with a regular Perl 6 program. We'll
 simply access `Perl6::World` object in `$*W` variable inside a `BEGIN` block
 where it still exists, and call `.compile_time_evaluate` method, giving it
-an empty param as first positional (it expects a `Match` object for the tree)
-and our QAST tree as second positional:
+an empty param as the first positional (it expects a `Match` object for
+the tree) and our QAST tree as the second positional:
 
     use QAST:from<NQP>;
     BEGIN $*W.compile_time_evaluate: $,
       QAST::Op.new: :op<say>,
         QAST::SVal.new: :value('Hello, World!');
+
+The one caveat with this method is we're using full-blown Perl 6 language,
+whereas in `src/Perl6/Actions.nqp` and related files, as `.nqp` extension
+suggests, we're using NQP language only. Keep an eye out for strange
+explosions; it's possible your QAST tree that explodes in Perl 6 will compile
+just fine in the land of pure NQP.
