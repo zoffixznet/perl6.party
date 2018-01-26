@@ -23,6 +23,7 @@ compiles down to a tree of QAST nodes and you can dump that tree if you specify
 `--target=ast` or `--target=optimize` command line option to `perl6` when
 compiling a program or a module:
 
+```
     $ perl6 --target=ast -e 'say "Hello, World!"'
     [...]
     - QAST::Op(call &say) <sunk> :statement_id<?> say \"Hello, World!\"
@@ -31,6 +32,7 @@ compiling a program or a module:
         - Ss
         - QAST::SVal(Hello, World!)
     [...]
+```
 
 The difference between the `--target=ast` and `--target=optimize` is that
 the former shows the QAST tree as soon as it has been generated, while
@@ -342,11 +344,14 @@ A fairly easy and straightforward optimization that can bring a lot of benefit.
 
 # PART II: A Thunk in The Trunk
 
+-------
+
 *Note: it took me three evenings to debug and fix the following tickets. To
 learn the solution I tried many dead ends that I won't be covering, to keep
 you from getting bored, and instead will instantly jump to conclusions. The
-point is that fixing core bugs is a lot easier than may seem from reading this
-article—you just need to be willing to spend some time on them.*
+point I'm making is that fixing core bugs is a lot easier than may seem
+from reading this article—you just need to be willing to spend some time
+on them.*
 
 ---------------
 
@@ -389,8 +394,8 @@ of 10 different manifestations of a bug. The other tickets are
 [RT#128054](https://rt.perl.org/Ticket/Display.html?id=128054),
 [RT#126413](https://rt.perl.org/Ticket/Display.html?id=126413),
 [RT#126984](https://rt.perl.org/Ticket/Display.html?id=126984), and
-[RT#132172](https://rt.perl.org/Ticket/Display.html?id=132172). Quite a bug
-hive!
+[RT#132172](https://rt.perl.org/Ticket/Display.html?id=132172).
+Quite a bug hive!
 
 ## Test It Out
 
