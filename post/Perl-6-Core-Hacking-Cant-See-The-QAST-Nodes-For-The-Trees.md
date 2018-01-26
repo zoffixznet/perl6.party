@@ -342,6 +342,14 @@ A fairly easy and straightforward optimization that can bring a lot of benefit.
 
 # PART II: A Thunk in The Trunk
 
+*Note: it took me three evenings to debug and fix the following tickets. To
+learn the solution I tried many dead ends that I won't be covering, to keep
+you from getting bored, and instead will instantly jump to conclusions. The
+point is that fixing core bugs is a lot easier than may seem from reading this
+article—you just need to be willing to spend some time on them.*
+
+---------------
+
 Now that we have some familiarity with QAST, let's try to fix a
 bug that existed in [Rakudo `v2018.01.30.ga.5.c.2398.cc`](https://github.com/rakudo/rakudo/tree/a5c2398cc744706eb81b3d73b181cb4233c85a17)
 and earlier. The ticket in question is
@@ -394,6 +402,7 @@ cover the tickets. My tests ended up looking like this, where I've used
 what the tickets' code printed to the screen:
 
     use Test;
+    plan 1;
     subtest 'thunking closure scoping' => {
         plan 10;
 
@@ -554,3 +563,190 @@ by running `z` command with no arguments:
     $ z
     [...]
     $ ./perl6 bug-tests.t
+    1..1
+        1..10
+        ok 1 - xx inside `with`
+        not ok 2 - try with block and andthen
+        # Failed test 'try with block and andthen'
+        # at /home/zoffix/R/bug-tests.t line 10
+        # expected: $(2, 4, 6)
+        #      got: $(2, 2, 4)
+        not ok 3 - block in a sub with orelse
+        # Failed test 'block in a sub with orelse'
+        # at /home/zoffix/R/bug-tests.t line 16
+        # expected: $("cc", "dd")
+        #      got: $("cc", "cc")
+        not ok 4 - loop + lexical variable plus chain of andthens
+        # Failed test 'loop + lexical variable plus chain of andthens'
+        # at /home/zoffix/R/bug-tests.t line 22
+        # expected: $(1, 1, 1, 1, 1, 1, 1)
+        #      got: $(1, 4, 3, 3, 3, 3, 3)
+        not ok 5 - loop + andthen + orelse
+        # Failed test 'loop + andthen + orelse'
+        # at /home/zoffix/R/bug-tests.t line 28
+        # expected: $("a", "b", "c")
+        #      got: $("a", "a", "a")
+        ok 6 - parentheses + xx + given
+        ok 7 - postfix for + take + block in a string
+        ok 8 - given + whatever code closure execution
+        ok 9 - sub + given + whatevercode closure execution
+        not ok 10 - sub with `with` + orelse + block interpolation
+        # Failed test 'sub with `with` + orelse + block interpolation'
+        # at /home/zoffix/R/bug-tests.t line 49
+        # expected: $("meow True",)
+        #      got: $("meow False",)
+        # Looks like you failed 5 tests of 10
+    not ok 1 - thunking closure scoping
+    # Failed test 'thunking closure scoping'
+    # at /home/zoffix/R/bug-tests.t line 3
+    # Looks like you failed 1 test of 1
+
+Looks like that fixed half the issues. Pretty good!
+
+## Extra Debugging
+
+Let's now look at the remaining failures and figure out why block migration
+isn't how we want it in those cases. To assists with our sleuthing efforts,
+let's make a couple of changes to produce more debugging info.
+
+First, let's modify [`QAST::Node.dump` method in NQP's repo](https://github.com/perl6/nqp/blob/d71bd7334c5c9363d49ddf20645e6041af15fa41/src/QAST/Node.nqp#L166)
+to dump the value of `in_stmt_mod` annotation:
+
+    if $k eq 'IN_DECL' || $k eq 'BY' || $k eq 'statement_id'
+    || $k eq 'in_stmt_mod' {
+        ...
+
+Next, let's go to [`sub migrate_blocks` in `Actions.nqp`](https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Perl6/Actions.nqp#L6535-L6560) and add a bunch of debug dumps inside all of the conditionals.
+This will let us track when a block is compared and to see whether migration
+occurs. As mentioned earlier, I like to key my dumps on env vars using
+`nqp::getenvhash` op, so after modifications my `migrate_blocks` routine
+looks like this; note the use of `.dump` method to dump QAST node guts
+(tip: `.dump` method exists on grammar match objects as well!):
+
+    sub migrate_blocks($from, $to, $predicate?) {
+        my @decls := @($from[0]);
+        my int $n := nqp::elems(@decls);
+        my int $i := 0;
+        while $i < $n {
+            my $decl := @decls[$i];
+            if nqp::istype($decl, QAST::Block) {
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: -----------------');
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: trying to grab ' ~ $decl.dump);
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: to move to ' ~ $to.dump);
+                if !$predicate || $predicate($decl) {
+                    nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: grabbed');
+                    $to[0].push($decl);
+                    @decls[$i] := QAST::Op.new( :op('null') );
+                }
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: -----------------');
+            }
+            elsif (nqp::istype($decl, QAST::Stmt) || nqp::istype($decl, QAST::Stmts)) &&
+                  nqp::istype($decl[0], QAST::Block) {
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: -----------------');
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: trying to grab ' ~ $decl[0].dump);
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: to move to ' ~ $to.dump);
+                if !$predicate || $predicate($decl[0]) {
+                    nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: grabbed');
+                    $to[0].push($decl[0]);
+                    $decl[0] := QAST::Op.new( :op('null') );
+                }
+                nqp::atkey(nqp::getenvhash(),'ZZ') && nqp::say('ZZ1: -----------------');
+            }
+            elsif nqp::istype($decl, QAST::Var) && $predicate && $predicate($decl) {
+                $to[0].push($decl);
+                @decls[$i] := QAST::Op.new( :op('null') );
+            }
+            $i++;
+        }
+    }
+
+After making the changes, we need to recompile both NQP and Rakudo. With
+[ZScript](https://github.com/zoffixznet/z), we can just run `z n` to do that:
+
+    $ z n
+    [...]
+
+Now, we'll grab the first failing code and take a look at its QAST. I'm
+going to use [`CoreHackers::Q` tool](https://modules.perl6.org/dist/CoreHackers::Q)
+
+    $ q a ./perl6 -e '
+        sub itcavuc ($c) { try {say $c} andthen 42 };
+        itcavuc $_ for 2, 4, 6;'
+    $ firefox out.html
+
+We can see that our buggy `say` call lives in `QAST::Block` with `cuid 1`,
+which gets called from within `QAST::Block` with `cuid 3`, but is actually
+located within `QAST::Block` with `cuid 2`:
+
+    - QAST::Block(:cuid(3)) <wanted> :statement_id<1>
+            :count<?> :signatured<?> :IN_DECL<sub>
+            :in_stmt_mod<0> :code_object<?>
+            :outer<?> { try {say $c} andthen 42 }
+        [...]
+            - QAST::Block(:cuid(2)) <wanted> :statement_id<2>
+                    :count<?> :in_stmt_mod<0> :code_object<?> :outer<?>
+                [...]
+                - QAST::Block(:cuid(1)) <wanted> :statement_id<2>
+                        :IN_DECL<> :in_stmt_mod<0> :code_object<?>
+                        :also_uses<?> :outer<?> {say $c}
+                    [...]
+                    - QAST::Op(call &say)  say $c
+        [...]
+        - QAST::Op(p6typecheckrv)
+            [...]
+            - QAST::WVal(Block :cuid(1))
+
+Looks like `cuid 2` block steals our `cuid 1` block. Let's enable the
+debug env var and look at the dumps to see why exactly:
+
+    $ ZZ=1 ./perl6 -e '
+        sub itcavuc ($c) { try {say $c} andthen 42 };
+        itcavuc $_ for 2, 4, 6;'
+
+    ZZ1: -----------------
+    ZZ1: trying to grab - QAST::Block(:cuid(1)) <wanted>
+        :statement_id<2> :IN_DECL<> :in_stmt_mod<0> :code_object<?>
+        :also_uses<?> :outer<?> {say $c}
+    [...]
+
+    ZZ1: to move to - QAST::Block  :statement_id<2>
+        :in_stmt_mod<0> :outer<?>
+
+    ZZ1: grabbed
+    ZZ1: -----------------
+
+We can see the theft in progress. Let's take a look at our [migration
+predicate](https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Perl6/Actions.nqp#L9196)
+again:
+
+    ! $b.ann('in_stmt_mod')
+    && ($b.ann('statement_id') // -1) >= $migrate_stmt_id
+
+In the dump we can see `in_stmt_mod` is false. Were it set to a true value,
+the block would not be migrated—exactly what we're trying to accomplish.
+Let's investigate the `in_stmt_mod` annotation, to see when it gets set:
+
+    $ G 'in_stmt_mod' src/Perl6/Actions.nqp
+    2327:                $_.annotate('in_stmt_mod', $*IN_STMT_MOD);
+    9206:                !$b.ann('in_stmt_mod') && ($b.ann('statement_id') // -1) >= $migrate_stmt_id
+
+    $ G '$*IN_STMT_MOD' src/Perl6/Grammar.nqp
+    1200:        :my $*IN_STMT_MOD := 0;                    # are we inside a statement modifier?
+    1328:        :my $*IN_STMT_MOD := 0;
+    1338:        | <EXPR> :dba('statement end') { $*IN_STMT_MOD := 1 }
+
+Looks like it's a marker for statement modifier conditions. Statement modifiers
+have a lot of relevance to our `andthen` thunks, because `$foo with $bar` gets
+turned into `$bar andthen $foo` during parsing. Since, as we can see in
+`src/Perl6/Grammar.nqp`, `in_stmt_mod` annotation gets set for `with`
+statement modifiers, we can hypothesize that if we turn
+our buggy `andthen` into a `with`, the bug will disappear:
+
+
+    $ ./perl6 -e 'sub itcavuc ($c) { 42 with try {say $c} };
+        itcavuc $_ for 2, 4, 6;'
+    2
+    4
+    6
+
+And indeed it does!
