@@ -338,10 +338,13 @@ further optimize our `call`.
 
 A fairly easy and straightforward optimization that can bring a lot of benefit.
 
+
+
 # PART II: A Thunk in The Trunk
 
 Now that we have some familiarity with QAST, let's try to fix a
-bug. The ticket in question is
+bug that existed in [Rakudo `v2018.01.30.ga.5.c.2398.cc`](https://github.com/rakudo/rakudo/tree/a5c2398cc744706eb81b3d73b181cb4233c85a17)
+and earlier. The ticket in question is
 [R#1212](https://github.com/rakudo/rakudo/issues/1212), that shows
 the following problem:
 
@@ -457,5 +460,97 @@ was a good start.
 ## What's Your Problem?
 
 In order to find the best solution for a bug, it's important to understand
-what exactly is the problem. Knowing mis-scoped
-https://github.com/perl6/nqp/commit/0264b237930f426f4cba744c55f10813869ac40b
+what exactly is the problem. We know mis-scoped blocks are the cause of the
+bug, so lets grab each of our tests, dump their QAST (`--target=ast`), and
+write out *how* mis-scoped the blocks are.
+
+To make it easier to match the `QAST::Block`s with the `QAST::WVal`s
+referencing them, I [made a modification](https://github.com/perl6/nqp/commit/0264b237930f426f4cba744c55f10813869ac40b) to `QAST::Node.dump` to include CUID numbers and `statement_id` annotations in the dumps.
+
+Going through mosts of the buggy code chunks, we have these results:
+
+    is-deeply <a b c>[$_ xx 2], <b b>.Seq, 'xx inside `with`' with 1;
+    # QAST for `xx` is ALONGSIDE RHS `andthen` thunk, but needs to be INSIDE
+
+    is-deeply gather {
+        sub itcavuc ($c) { try {take $c} andthen 42 };
+        itcavuc $_ for 2, 4, 6;
+    }, (2, 4, 6).Seq, 'try with block and andthen';
+    # QAST for try block is INSIDE RHS `andthen` thunk, but needs to be ALONGSIDE
+
+    is-deeply gather {
+        sub foo ($str) { { take $str }() orelse Nil }
+        foo "cc"; foo "dd";
+    }, <cc dd>.Seq, 'block in a sub with orelse';
+    # QAST for block is INSIDE RHS `andthen` thunk, but needs to be ALONGSIDE
+
+    is-deeply gather for ^7 {
+        my $x = 1;
+        1 andthen $x.take andthen $x = 2 andthen $x = 3 andthen $x = 4;
+    }, 1 xx 7, 'loop + lexical variable plus chain of andthens';
+    # each andthen thunk is nested inside the previous one, but all need to be
+    # ALONGSIDE each other
+
+    is-deeply gather for <a b c> { $^v.uc andthen $v.take orelse .say },
+        <a b c>.Seq, 'loop + andthen + orelse';
+    # andthen's block is INSIDE orelse's but needs to be ALONGSIDE each other
+
+    is-deeply gather { (.take xx 10) given 42 }, 42 xx 10,
+        'parentheses + xx + given';
+    # .take thunk is ALONGSIDE given's thunk, but needs to be INSIDE of it
+
+    is-deeply gather { take ("{$_}") for <aa bb> }, <aa bb>.Seq,
+        'postfix for + take + block in a string';
+    # the $_ is ALONGSIDE `for`'s thunk, but needs to be INSIDE
+
+    is-deeply gather { take (* + $_)(32) given 10 }, 42.Seq,
+        'given + whatever code closure execution';
+    # the WhateverCode ain't got no statement_id and is ALONGSIDE given
+    # block but needs to be INSIDE of it
+
+So far, we can see a couple of patterns:
+
+1) [`xx`](https://docs.perl6.org/routine/xx) and
+    [`WhateverCode`](https://docs.perl6.org/type/WhateverCode) thunks don't
+    get migrated, even though they should
+2) [`andthen`](https://docs.perl6.org/routine/andthen) thunks get migrated,
+    even though they shouldn't
+
+The first one is fairly straightforward. Looking at the QAST dump, we see
+`xx` thunk has a higher `statement_id` than the block it was meant to be in.
+This is what skids++'s hint addresses, so we'll
+change [the `statement_id` conditional](https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Perl6/Actions.nqp#L9196) from
+`==` to `>=` to look for statement IDs higher than our current one as well,
+since those would be from any substatements, such as our `xx` inside the
+positional indexing operator:
+
+    ($b.ann('statement_id') // -1) >= $migrate_stmt_id
+
+The cause is the same for the `WhateverCode` case, so we'll just annotate
+the generated `QAST::Block` with the statement ID. Some basic detective work
+gives us [the location where that node is created](https://github.com/rakudo/rakudo/blob/a5c2398cc744706eb81b3d73b181cb4233c85a17/src/Perl6/Actions.nqp#L9574): we search `src/Perl6/Actions.nqp` for word `"whatever"` until we spot
+`whatever_curry` method and in its guts we find the `QAST::Block` we want. For
+the statement ID, we'll grep the source for `statement_id`:
+
+    $ grep -FIRn 'statement_id' src/Perl6/
+    src/Perl6/Actions.nqp:1497:            $past.annotate('statement_id', $id);
+    src/Perl6/Actions.nqp:2326:                $_.annotate('statement_id', $*STATEMENT_ID);
+    src/Perl6/Actions.nqp:2488:                -> $b { ($b.ann('statement_id') // -1) == $stmt.ann('statement_id') });
+    src/Perl6/Actions.nqp:9235:                && ($b.ann('statement_id') // -1) >= $migrate_stmt_id
+    src/Perl6/Actions.nqp:9616:            ).annotate_self: 'statement_id', $*STATEMENT_ID;
+    src/Perl6/World.nqp:256:            $pad.annotate('statement_id', $*STATEMENT_ID);
+
+From the output, we can see the ID is stored in `$*STATEMENT_ID` dynamic
+variable, so we'll use that for our annotation on the `WhateverCode`:
+
+    my $block := QAST::Block.new(
+        QAST::Stmts.new(), $past
+    ).annotate_self: 'statement_id', $*STATEMENT_ID;
+
+Let's compile and run our bug tests. If you're using
+[ZScript](https://github.com/zoffixznet/z), you can re-compile Rakudo
+by running `z` command with no arguments:
+
+    $ z
+    [...]
+    $ ./perl6 bug-tests.t
