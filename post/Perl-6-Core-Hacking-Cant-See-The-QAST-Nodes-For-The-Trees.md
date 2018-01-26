@@ -96,14 +96,125 @@ object). Lastly, `Optimizer.nqp` contains Rakudo's static optimizer.
 The root (of all evil) is the [`QAST::Node` object](https://github.com/perl6/nqp/blob/master/src/QAST/Node.nqp), with all the other QAST nodes
 being its subclasses. Let's review some of the popular ones:
 
-### QAST::Op
-### QAST::*Val
-    QAST::SVal, QAST::IVal, QAST::NVal, QAST::WVal
+### `QAST::Op`
 
-### QAST::Var
-### QAST::Stmts
-### QAST::Block
-### QAST::Want
+`QAST::Op` nodes are the workhorse of the QAST world. The `:op` named argument
+specifies the name of an [NQP op](https://github.com/perl6/nqp/blob/master/docs/ops.markdown) or the name of a [Rakudo's NQP
+extension op](https://github.com/rakudo/rakudo/blob/master/docs/ops.markdown)
+and its children are the arguments:
+
+Here's a `say` op printing a string value:
+
+    QAST::Op.new: :op<say>,
+      QAST::SVal.new: :value('Hello, World!');
+
+And here's a QAST node for a `call` op that calls to Perl 6's `infix:<+>`
+operator; notice how the name of the routine we call is given via `:name` named
+argument:
+
+    QAST::Op.new: :op<call>, :name('&infix:<+>'),
+      QAST::IVal.new( :value(2)),
+      QAST::IVal.new: :value(2)
+
+### `QAST::*Val`
+
+The `QAST::SVal`, `QAST::IVal`, `QAST::NVal`, and `QAST::WVal` nodes, specify
+string, integer, float, and "World" object values respectively. The first three
+are the "unboxed" raw values, while World objects are everything else, such
+as [`DateTime`](https://docs.perl6.org/type/DateTime),
+[`Block`](https://docs.perl6.org/type/Block), or
+[`Str`](https://docs.perl6.org/type/Block) objects.
+
+### `QAST::Want`
+
+Some of the objects can be represented by multiple `QAST::*Val` nodes, where
+the most appropriate value is used depending on what is *wanted* in the
+current context. `QAST::Want` node contains these alternatives, interleaved
+with string markers indicating what those alternatives are.
+
+For example, numeric `42` in Perl 6 could be needed as an object
+to call some method on, or as a raw value to be assigned to a native
+`int` attribute. The `QAST::Want` node would look like this:
+
+    QAST::Want.new:
+      QAST::WVal.new(:value($Int-obj))),
+      'Ii',
+      QAST::IVal.new: :value(42)
+
+The `$Int-obj` above would contain an instance of
+[`Int` type](https://docs.perl6.org/type/Int) with value set to `42`. The
+`Ii` marker indicates the following alternative is an integer value and we
+provide a `QAST::IVal` object containing it. The other possible markers are
+`Ss` (string)`, `Nn` (float), and `v` (void context) alternatives.
+
+When these nodes are later converted to bytecode, the most appropriate value
+will be selected, with the first child being the "default" value, to be used
+when none of the available alternatives make the cut.
+
+### `QAST::Var`
+
+These nodes are used for variables and parameters. The `:name` named argument
+specifies the name of the variable and `:scope` its scope:
+
+    QAST::Op.new: :op('bind'),
+      QAST::Var.new(:name<$x>, :scope<lexical>, :decl<var>, :returns(int)),
+      QAST::IVal.new: :value(0)
+
+The `:decl` named arg is present to indicate where this variable is declared
+(when it's absent, we simply reference the variable) and its value dictates
+what sort of variable it is: `var` for variables, `param` for routine
+parameters. Several other `:decl` types, as well as optional arguments
+specifying additional configuration of the variable exist. You can find them
+discussed in [the QAST
+documentation](https://github.com/perl6/nqp/blob/master/docs/qast.markdown#qastvar)
+
+### `QAST::Stmt` / `QAST::Stmts`
+
+These are statement grouping constructs. For example, here, the truthy branch
+of an `nqp::if` is three `nqp::say` statements, all grouped inside
+`QAST::Stmts`:
+
+    QAST::Op.new: :op<if>,
+      QAST::IVal.new(:value(42)),
+      QAST::Stmts.new(
+        QAST::Op.new( :op<say>, QAST::SVal.new: :value<foo>),
+        QAST::Op.new( :op<say>, QAST::SVal.new: :value<bar>),
+        QAST::Op.new: :op<say>, QAST::SVal.new: :value<ber>),
+      QAST::Op.new: :op<say>, QAST::SVal.new: :value<meow>,
+
+The singular `QAST::Stmt` is similar. The difference is it
+marks a register allocation boundary, beyond which, any temporaries are
+free to be reused. When used correctly, this alternative can result in better
+code generation.
+
+### `QAST::Block`
+
+This node is both a unit of invocation and a unit of lexical scoping. For
+example, code `sub foo { say "hello" }` might compile to a `QAST::Block`
+like this:
+
+    Block (:cuid(1)) <wanted> :IN_DECL<sub> { say \"hello\" }
+    [...]
+      Stmts <wanted> say \"hello\"
+        Stmt <wanted final> say \"hello\"
+          Want <wanted>
+            Op (call &say) <wanted> :statement_id<?> say \"hello\"
+              Want <wanted> hello
+                WVal (Str)
+                - Ss
+                SVal (hello)
+            - v
+            Op (p6sink)
+              Op (call &say) <wanted> :statement_id<?> say \"hello\"
+                Want <wanted> hello
+                  WVal (Str)
+                  - Ss
+                  SVal (hello)
+    [...]
+
+Each block demarcates a lexical scope boundary—this detail come into play
+in Part II of this article, when we'll be going over a bug fix.
+
 ### Others
 
 A few more QAST nodes exist. They're out of scope of this article, but
@@ -140,8 +251,8 @@ using [colon method call](https://docs.perl6.org/language/syntax#Precedence_Drop
     QAST::Op.new: :op<say>,
       QAST::SVal.new: :value('Hello, World!');
 
-If a `.new` is followed by a colon, we're descending and there aren't any
-more ops on the same level. If `.new` is followed by an opening parentheses,
+If a `.new` is followed by a colon, there aren't any
+more nodes on the same level. If `.new` is followed by an opening parentheses,
 there are more sister nodes yet to come.
 
 Due to Rakudo's lengthy compilation, it can be handy to execute your QAST tree
@@ -162,3 +273,189 @@ whereas in `src/Perl6/Actions.nqp` and related files, as `.nqp` extension
 suggests, we're using NQP language only. Keep an eye out for strange
 explosions; it's possible your QAST tree that explodes in Perl 6 will compile
 just fine in the land of pure NQP.
+
+## Mutating QAST Trees
+
+A handy thing to do with QAST node objects is to mutate them into something
+better. That's essentially all the static optimizer in
+`src/Perl6/Optimizer.nqp` does. Named arguments can be mutated by calling
+them as methods and providing a value. For example, `$qast.op('callstatic')`
+will change `:op` type from whatever it is to `callstatic`. Positional
+arguments can be altered by re-assignment to a positional index, as well
+as `shift`, `push`, `unshift`, `pop` operations performed either via method
+calls with those names or `nqp::` ops. Some nodes also support `nqp::elems`
+calls on them, which is slightly faster than the generic patter of `+@($qast)`
+to find out the number of children a node contains.
+
+As an exercise, let's write a small optimization: some operations, like
+`$foo < $bar < $ber` compile to `nqp::chain` ops. This is the case even if
+we have only two children, such as `$foo < $bar`. In such cases, rewriting
+the op to be `nqp::call` has performance advantages: not only `nqp::call`
+on its own is a little bit faster than `nqp::chain`, the static optimizer knows
+how to do further optimizations on `nqp::call` ops.
+
+Let's take a look at what both 2-child and 2+-child `nqp::chain` chains look
+like:
+
+    $ perl6 --target=ast -e '2 < 3 < 4; 2 < 3'
+
+The first statement compiled to this (I removed `QAST::Want`s for clarifty):
+
+    - QAST::Op(chain &infix:«<»)  :statement_id<?> <
+      - QAST::Op(chain &infix:«<») <wanted> <
+        - QAST::IVal(2)
+        - QAST::IVal(3)
+      - QAST::IVal(4)
+
+And the second one to:
+
+    - QAST::Op(chain &infix:«<»)  :statement_id<?> <
+      - QAST::IVal(2)
+      - QAST::IVal(3)
+
+Thus, to target our optimization correctly, we need to ensure neither child of
+our `chain` op is a `chain` op. In addition, we need to ensure that the
+op we're optimizing is *not* itself a child of another `chain` op.
+
+Raking [the code of the optimizer](https://github.com/rakudo/rakudo/blob/master/src/Perl6/Optimizer.nqp), we can spot that
+chain depth is already tracked via `$!chain_depth` attribute, so we merely need
+to ensure we're at the first link of the chain. The code then becomes:
+
+    $qast.op: 'call'
+      if nqp::istype($qast, QAST::Op)
+      && $qast.op eq 'chain'
+      && $!chain_depth == 1
+      && ! (nqp::istype($qast[0], QAST::Op) && $qast[0].op eq 'chain')
+      && ! (nqp::istype($qast[1], QAST::Op) && $qast[1].op eq 'chain');
+
+Once we find a `chain` `QAST::Op`, we index into it and use `nqp::istype` to
+check the type of kid nodes, and if those happen to be `QAST::Op` nodes,
+we ensure the  `:op` parameter is not a `chain` op. If all of the conditions are met, we simply call `.op` method on our node with value `'call'` to convert
+it into a `call` op.
+
+We then stick our optimization [early enough into `.visit_op` method of the optimizer](https://github.com/rakudo/rakudo/blob/1ee89b54074e80c0753a120d679c6265bd8d5d1f/src/Perl6/Optimizer.nqp#L1228-L1235) and its later portions will
+further optimize our `call`.
+
+A fairly easy and straightforward optimization that can bring a lot of benefit.
+
+# PART II: A Thunk in The Trunk
+
+Now that we have some familiarity with QAST, let's try to fix a
+bug. The ticket in question is
+[R#1212](https://github.com/rakudo/rakudo/issues/1212), that shows
+the following problem:
+
+    $ perl6 -e 'say <a b c>[$_ xx 2] with 1'
+
+    Use of Nil in string context
+      in block  at -e line 1
+    Unable to call postcircumfix [ (Any) ] with a type object
+    Indexing requires a defined object
+      in block <unit> at -e line 1
+
+It looks like the `$_` topical variable inside the indexing brackets fails
+to get the value from `with` statement modifier and ends up being undefined.
+Sounds like a challenge!
+
+## It's A Hive!
+
+Both `with` and `xx` operator create thunks (thunks are like blocks of code,
+without having explicit blocks in the code; this, for example, lets
+`rand xx 10` to produce 10 different random values; `rand` is thunked and the
+thunk is called for each iteration). This reminded me of some other tickets
+I've seen, so I went to [fail.rakudo.party](https://fail.rakudo.party/) and
+looked through open tickets for anything that mentioned thunking or wrong
+scoping.
+
+I ended up with a list of 7 tickets, and with the help of dogbert++ later
+increased the number to 9, which with the original Issue gives us a total
+of 10 different manifestations of a bug. The other tickets are
+[RT#130575](https://rt.perl.org/Ticket/Display.html?id=130575),
+[RT#132337](https://rt.perl.org/Ticket/Display.html?id=132337),
+[RT#131548](https://rt.perl.org/Ticket/Display.html?id=131548),
+[RT#132211](https://rt.perl.org/Ticket/Display.html?id=132211),
+[RT#126569](https://rt.perl.org/Ticket/Display.html?id=126569),
+[RT#128054](https://rt.perl.org/Ticket/Display.html?id=128054),
+[RT#126413](https://rt.perl.org/Ticket/Display.html?id=126413),
+[RT#126984](https://rt.perl.org/Ticket/Display.html?id=126984), and
+[RT#132172](https://rt.perl.org/Ticket/Display.html?id=132172). Quite a bug
+hive!
+
+## Test It Out
+
+The starting point here is to cover each manifestation of the bug with a test.
+Make all the test pass and you know you've fixed the bug, plus you already
+have something to place into [roast](https://github.com/perl6/roast/), to
+cover the tickets. My tests ended up looking like this, where I've used
+[`gather`/`take`](https://docs.perl6.org/syntax/gather%20take) duo to capture
+what the tickets' code printed to the screen:
+
+    use Test;
+    subtest 'thunking closure scoping' => {
+        plan 10;
+
+        # https://github.com/rakudo/rakudo/issues/1212
+        is-deeply <a b c>[$_ xx 2], <b b>.Seq, 'xx inside `with`' with 1;
+
+        # RT #130575
+        is-deeply gather {
+            sub itcavuc ($c) { try {take $c} andthen 42 };
+            itcavuc $_ for 2, 4, 6;
+        }, (2, 4, 6).Seq, 'try with block and andthen';
+
+        # RT #132337
+        is-deeply gather {
+            sub foo ($str) { { take $str }() orelse Nil }
+            foo "cc"; foo "dd";
+        }, <cc dd>.Seq, 'block in a sub with orelse';
+
+        # RT #131548
+        is-deeply gather for ^7 {
+            my $x = 1;
+            1 andthen $x.take andthen $x = 2 andthen $x = 3 andthen $x = 4;
+        }, 1 xx 7, 'loop + lexical variable plus chain of andthens';
+
+        # RT #132211
+        is-deeply gather for <a b c> { $^v.uc andthen $v.take orelse .say },
+            <a b c>.Seq, 'loop + andthen + orelse';
+
+        # RT #126569
+        is-deeply gather { (.take xx 10) given 42 }, 42 xx 10,
+            'parentheses + xx + given';
+
+        # RT #128054
+        is-deeply gather { take ("{$_}") for <aa bb> }, <aa bb>.Seq,
+            'postfix for + take + block in a string';
+
+        # RT #126413
+        is-deeply gather { take (* + $_)(32) given 10 }, 42.Seq,
+            'given + whatever code closure execution';
+
+        # RT #126984
+        is-deeply gather {
+            sub foo($x) { (* ~ $x)($_).take given $x }; foo(1); foo(2)
+        }, ("11", "22").Seq, 'sub + given + whatevercode closure execution';
+
+        # RT #132172
+        is-deeply gather { sub {
+            my $ver =.lines.uc with "totally-not-there".IO.open
+                orelse "meow {$_ ~~ Failure}".take and return 42;
+        }() }, 'meow True'.Seq, 'sub with `with` + orelse + block interpolation';
+    }
+
+When I brought up the first bug in [our dev
+channel](https://webchat.freenode.net/?channels=#perl6-dev), jnthn++ pointed
+out that such bugs are often due to mis-scoped blocks, as `p6capturelex`
+op that's involved needs to be called in the immediate outer of the block
+it references.
+
+Looking through the tickets, I also spotted skids++'s note that changing
+a conditional for `statement_id` in block migrator fixed one of the tickets.
+This wasn't the full story, as the many still-failing tests showed, but it
+was a good start.
+
+## What's Your Problem?
+
+In order to find the best solution for a bug, it's important to understand
+what exactly is the problem. Knowing mis-scoped
+https://github.com/perl6/nqp/commit/0264b237930f426f4cba744c55f10813869ac40b
