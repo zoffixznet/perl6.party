@@ -1,4 +1,4 @@
-%% title: Perl 6 Core Hacking: Can't See The QAST Nodes For The Trees
+%% title: Perl 6 Core Hacking: QASTalicious
 %% date: 2018-01-26
 %% desc: Overview of "Q" Abstract Syntax Trees
 %% draft: True
