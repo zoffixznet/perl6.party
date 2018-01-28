@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:image"
         content="https://rakudo.party/assets/pics/perl6.party.gif">
+    <meta name="twitter:image" content="https://rakudo.party/assets/pics/perl6.party.gif">
     <title><%= $title %> - Perl 6 Party</title>
 
     %= asset 'app.css'
