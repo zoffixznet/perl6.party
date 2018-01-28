@@ -51,6 +51,10 @@ h2:not(.blog-post-title), h3, h4, h5, h6 {
 }
 
 article {
+    h1 {
+        margin-top: 70px;
+        font-size: 290%;
+    }
     p {
         margin-bottom: 30px;
         line-height: 1.7em;
