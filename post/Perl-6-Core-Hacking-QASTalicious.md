@@ -254,9 +254,9 @@ and `QAST::SVal` nodes for those. The result is:
     QAST::Op.new(:op('if'),
       QAST::Op.new(:op('isgt_n'),
         QAST::Op.new(:op('rand_n'),
-          QAST::SVal.new(:value(1e0))
+          QAST::NVal.new(:value(1e0))
         ),
-        QAST::SVal.new(:value(.5e0))
+        QAST::NVal.new(:value(.5e0))
       ),
       QAST::Op.new(:op('say'),
         QAST::SVal.new(:value('Glass half full'))
@@ -273,8 +273,8 @@ preferring [colon method call](https://docs.perl6.org/language/syntax#Precedence
     QAST::Op.new: :op<if>,
       QAST::Op.new(:op<isgt_n>,
         QAST::Op.new(:op<rand_n>,
-          QAST::SVal.new: :value(1e0)),
-        QAST::SVal.new: :value(.5e0)),
+          QAST::NVal.new: :value(1e0)),
+        QAST::NVal.new: :value(.5e0)),
       QAST::Op.new(:op<say>,
         QAST::SVal.new: :value('Glass half full')),
       QAST::Op.new: :op<say>,
@@ -297,8 +297,8 @@ the tree) and our QAST tree as the second positional:
         QAST::Op.new: :op<if>,
           QAST::Op.new(:op<isgt_n>,
             QAST::Op.new(:op<rand_n>,
-              QAST::SVal.new: :value(1e0)),
-            QAST::SVal.new: :value(.5e0)),
+              QAST::NVal.new: :value(1e0)),
+            QAST::NVal.new: :value(.5e0)),
           QAST::Op.new(:op<say>,
             QAST::SVal.new: :value('Glass half full')),
           QAST::Op.new: :op<say>,
@@ -367,7 +367,7 @@ like:
 
     $ perl6 --target=ast -e '2 < 3 < 4; 2 < 3'
 
-The first statement compiled to this (I removed `QAST::Want`s for clarifty):
+The first statement compiled to this (I removed `QAST::Want`s for clarity):
 
     - QAST::Op(chain &infix:«<»)  :statement_id<?> <
       - QAST::Op(chain &infix:«<») <wanted> <
