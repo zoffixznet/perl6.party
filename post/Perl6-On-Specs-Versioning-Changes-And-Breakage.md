@@ -99,7 +99,7 @@ even more holes will be covered in future language versions.
 
 The cheese metaphor covers refinements to the specification, but there's another
 set of changes the core developers sometimes have to make: changes that violate
-previous versions of the specification. For 6.d language, the list of such changes is available in [our 6.d-prep repository](https://github.com/perl6/6.d-prep/blob/master/TODO/FEATURES.md) (some of the listed changes don't violate 6.c spec, but are still have significant impact so we pushed them to the next language version).
+previous versions of the specification. For 6.d language, the list of such changes is available in [our 6.d-prep repository](https://github.com/perl6/6.d-prep/blob/master/TODO/FEATURES.md) (some of the listed changes don't violate 6.c spec, but still have significant impact so we pushed them to the next language version).
 
 This may seem to be a contradiction: didn't I say earlier that passing 6.c
 specification is part of the compiler's release requirements? The key to resolving
