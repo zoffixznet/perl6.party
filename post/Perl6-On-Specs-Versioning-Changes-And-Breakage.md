@@ -1,5 +1,5 @@
 %% title: Perl 6: On Specs, Versioning, Changes, and… Breakage
-%% date: 2017-02-20
+%% date: 2018-02-20
 %% desc: Details on how Perl 6 language changes.
 
 Recently, I came across a [somewhat-frantic comment](https://stackoverflow.com/questions/48488381/perl6-comparison-operator#comment83973425_48489204) on StackOverflow that describes a 2017.01 change to the type of return value of ``.sort``:
