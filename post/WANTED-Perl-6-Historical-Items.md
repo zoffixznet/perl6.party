@@ -3,12 +3,12 @@
 %% desc: A call to collect memorabilia for a Perl 6 museum
 
 The Perl 6 programming language had a turbulent birth. It was announced in
-summer of 2000 and the first stable language release shipped out only 2 years
+the summer of 2000 and the first stable language release shipped out only 2 years
 ago, on Christmas, 2015. A lot has happened during that decade and a half,
 yet the details are hard to piece together.
 
 After my recent facelift to [rakudo.org](https://rakudo.org/), I'm
-working on (a second) facelift to [perl6.org](https://perl6.org) website.
+working on a (second) facelift to [perl6.org](https://perl6.org) website.
 
 Part of the work involves bringing all the Perl 6 deliverables under one umbrella, so the user isn't thrown around multiple websites, trying to find what to install. At the same time, we want to strengthen the distinction between Perl 6 the language and the compilers that implement it, as well as encourage more implementors to give it a go at implementing a Perl 6 programming language compiler.
 
