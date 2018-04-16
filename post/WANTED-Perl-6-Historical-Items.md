@@ -18,7 +18,9 @@ The Perl 6 Programming Language Museum will be part of that effort and along wit
     src="/assets/pics/FOSDEM_2015_Larry_Wall_and_Camelia_the_Perl6_logo.jpg" alt="">
 <small style="display: block; text-align: center; font-style: italic;">Larry Wall at FOSDEM 2015, <a href="https://ru.m.wikipedia.org/wiki/%D0%A4%D0%B0%D0%B9%D0%BB:FOSDEM_2015_Larry_Wall_and_Camelia_the_Perl6_logo.jpg">photo by Klapi</a></small>
 
-In my mind's eye, I'm imagining a few pages on perl6.org; something in the same vein as [Computer History Museum's pages](http://www.computerhistory.org/timeline/software-languages/)—pictures, years, and info, and potentially links to code repositories. I'm looking for:
+In my mind's eye, I'm imagining a few pages on perl6.org; something in the same vein as [Computer History Museum's pages](http://www.computerhistory.org/timeline/software-languages/)—pictures, years, and info, and potentially links to code repositories. Depending on the content we collect, it's possible there will be a digital PDF version of the Museum that can also be printed and handed out at events, if desired.
+
+I'm looking for:
 
 - Descriptions of interesting/significant events (like the mug throwing incident).
 - Descriptions of interesting/significant implementations of Perl 6 or influential Perl 6 projects. Having links to repos/tarballs of their code is a plus.
