@@ -1,4 +1,4 @@
-%% title: How To Make Old Perl 6 IRC Log Links Work
+%% title: How To Make Old #perl6 IRC Log Links Work
 %% date: 2018-06-06
 %% desc: Find out how where PerlGeek.De IRC log links link to
 
