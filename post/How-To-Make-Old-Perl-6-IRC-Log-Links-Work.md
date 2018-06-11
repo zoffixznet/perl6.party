@@ -63,10 +63,13 @@ The available data is the intersection of sets of when the secondary logger
 became active, which for `#perl6` channel is 2005-02-26, and when the primary
 logger was disabled, which is around 2018-06-04.
 
-Only the `#perl6` channel data is available. Despite the primary logger being
+<strike>Only the `#perl6` channel data is available. Despite the primary logger being
 in operation in `#perl6-dev` and `#moarvm`, the secondary logger was enabled
 in them only a few days ago, so sadly a lot of the more recentish dev commits
-won't have working URLs.
+won't have working URLs.</strike>
+
+**UPDATE: we're working on the final piece required to bring back the logs from
+the rest of Perl 6/MoarVM channels.**
 
 ## Conclusion
 
