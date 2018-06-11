@@ -43,18 +43,18 @@ Which is the message the commit links to.
 
 
 
-~~In fact, if you add this to your hosts file (`/etc/hosts` on *nix;
-`C:\Windows\System32\drivers\etc\hosts` on Windows):~~
+<strike>In fact, if you add this to your hosts file (`/etc/hosts` on *nix;
+`C:\Windows\System32\drivers\etc\hosts` on Windows):</strike>
 
     69.164.222.157 irclog.perlgeek.de
 
-~~Then you can simply visit the original URL in your browser (confirm SSL
+<strike>Then you can simply visit the original URL in your browser (confirm SSL
 cert exception, because I couldn't figure out how to make it work with
 proper SSL), and that's it. You can now just click the original URLs to logs
-and get proper content.~~
+and get proper content.</strike>
 
-**UPDATE:** this redirect is no longer needed. The old log site now
-redirects to the mapper automatically.
+**UPDATE: the above redirect is no longer needed. The old log site now
+redirects to the mapper automatically.**
 
 
 ## What's Available
