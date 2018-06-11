@@ -69,7 +69,7 @@ in them only a few days ago, so sadly a lot of the more recentish dev commits
 won't have working URLs.</strike>
 
 **UPDATE: we're working on the final piece required to bring back the logs from
-the rest of Perl 6/MoarVM channels.**
+the rest of Perl&nbsp;6/MoarVM channels.**
 
 ## Conclusion
 
