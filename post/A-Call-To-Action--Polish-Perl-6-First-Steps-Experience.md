@@ -51,7 +51,7 @@ is clean on Linux and MacOS, on Windows,
 [there's a bunch of test failures](https://github.com/perl6/roast/issues/320#issuecomment-379595368). Several of them are likely problematic tests themselves (e.g. those that shell out and expect
 `cmd.exe` to handle Unicode out of the box). When I last looked at the failing tests, some of them were failing due to how
 [`&run` escapes arguments](https://rt.perl.org/Ticket/Display.html?id=132258#ticket-history); since `perl6` is launched with a batch file on
-windows, using `$*EXECUTABLE` with `&run` would require using `cmd.exe`-style
+Windows, using `$*EXECUTABLE` with `&run` would require using `cmd.exe`-style
 escapes of command line arguments, which `&run` doesn't use. There's some discussion for this issue on [R#1325](https://github.com/rakudo/rakudo/issues/1325), [RT#132258](https://rt.perl.org/Ticket/Display.html?id=132258#ticket-history), and self-rejected RFC [R#1306](https://github.com/rakudo/rakudo/issues/1306).
 
 If you'd like to look into these problems, you can [install Rakudo from source](https://rakudo.org/files/rakudo/source) on Windows and then run `gmake stresstest` (or whatever `make` equivalent you have) to clone all the spectests into `t/spec` directory and run them, so you'll be able to see what's failing. You can run individual tests with `t/fudgeandrun t/spec/42-foobar/the-test-file.t`
@@ -61,7 +61,7 @@ outdated. On occasion people do ask for 32-bit builds and currently we can
 only suggests to [build from source](https://rakudo.org/files/rakudo/source).
 
 It'd be nice to have a more recent build created. I'm unfamiliar with what's
-involved. If you're interested in helping. Join our [IRC chat](https://docs.perl6.org/webchat.html) and try to speak to `stmuk` or `FROGGS`
+involved. If you're interested in helping, join our [IRC chat](https://docs.perl6.org/webchat.html) and try to speak to `stmuk` or `FROGGS`
 
 ## Help Resolve Issues
 
