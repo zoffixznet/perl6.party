@@ -68,8 +68,7 @@ involved. If you're interested in helping, join our [IRC chat](https://docs.perl
 Help us resolve open Issues. In the context of this call to action, the most pertinent repos would likely be [User Experience](https://github.com/perl6/user-experience/issues), [Perl6.org website](https://github.com/perl6/perl6.org/issues), [Modules.Perl6.org website](https://github.com/perl6/modules.perl6.org/issues), as well as [Docs](https://github.com/perl6/doc/issues),
 [Rakudo Star](https://github.com/rakudo/star/issues), [Rakudo itself](https://github.com/rakudo/rakudo/issues), and [Roast Test Suite](https://github.com/perl6/roast/issues/).
 
-For core hacking resources, there are some tutorials with "Core Hacking" in their titles on [Rakudo.Party](https://rakudo.party/) website
-and the [NQP/Rakudo Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course) and [6guts blog](https://6guts.wordpress.com/). I also
+For core hacking resources, there are some tutorials with "Core Hacking" in their titles on [Rakudo.Party](https://rakudo.party/) website, the [NQP/Rakudo Internals Course](https://github.com/edumentab/rakudo-and-nqp-internals-course) and [6guts blog](https://6guts.wordpress.com/). I also
 like to use [Z-Script](https://github.com/zoffixznet/z) rakudo dev
 helper script.
 
