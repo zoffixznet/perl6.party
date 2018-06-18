@@ -137,7 +137,7 @@ you construct ``Pair``s with such keys:
     ("the key" => "the value").say; # OUTPUT: «the key => the value␤»
 
 There are some extra rules with how this form behaves in argument lists as
-well as sigilles variables and constants, which we'll see later in the article.
+well as sigilless variables and constants, which we'll see later in the article.
 
 #### Boolean Shortcut
 
@@ -259,7 +259,7 @@ to the variable name to construct a colonpair with the key named the same
 as the variable (without including the sigil) and the value being the value
 of that variable. The only
 catch is the variable must have a sigil, so you can't use this shortcut with
-[sigilles variables](https://docs.perl6.org/language/variables#Sigilless_variables)
+[sigilless variables](https://docs.perl6.org/language/variables#Sigilless_variables)
 or constants.
 
     my $the-thing-with-a-thing = …
@@ -360,7 +360,7 @@ parameter, simply use the sigilled variable colonpair shortcut:
 
 Since parameters need some sort of a variable to bind their stuff to, pretty
 much all other forms of colonpairs are not available for use in parameters.
-This means that you can't, for example, declare sigilles named parameters
+This means that you can't, for example, declare sigilless named parameters
 and must instead explicitly use the [`is raw` trait](https://docs.perl6.org/type/Signature#index-entry-trait__is_raw) to get the rawness:
 
     sub meow (\foo, :$bar is raw) {
@@ -501,7 +501,7 @@ Simple!
 ## Conclusion
 
 That's pretty much all there is to know about colonpairs. We learned
-they're can be used to construct ``Pair`` objects, used as adverbs, and used
+they can be used to construct ``Pair`` objects, used as adverbs, and used
 to specify named arguments and parameters.
 
 We learned about various shortcuts, such as using key only for boolean
