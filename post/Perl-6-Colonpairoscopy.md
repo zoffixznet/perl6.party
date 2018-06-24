@@ -1,5 +1,5 @@
 %% title: Perl 6 Colonpairoscopy
-%% date: 2019-06-18
+%% date: 2018-06-18
 %% desc: Everything to know about colonpairs in Perl 6
 
 If I were to pick the most ubiquitous construct in the Perl 6 programming
