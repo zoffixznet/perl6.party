@@ -19,7 +19,7 @@ that shamelessly erased random people from the contrib list without my
 having any memory of it?!
 
 First, a brief intro on how the contrib script works: it uses `git` to look
-up commits in checkouts of 5 repos: Rakudo, NQP, Docs, and Roast.
+up commits in checkouts of 5 repos: Rakudo, NQP, MoarVM, Docs, and Roast.
 Until [December 2016](https://github.com/rakudo/rakudo/commit/27761645c59446090d895e50e5cd7a1ab3a93ab7#diff-508f29ffdf70323e02c5be76f4f30364) the script just used the day of the
 release as last release, which was later switched to using the timestamp
 on the Rakudo's tag. The script gathers all the contributors from commits,
@@ -29,8 +29,8 @@ it spits out the names ordered by the number of commits made, largest first.
 I set out to figure out why a person was missing from the release announcement.
 After digging through commits, CREDITS files, and tracing the code in
 [the contributor generating script](https://github.com/rakudo/rakudo/blob/master/tools/contributors.p6), I found out that in
-September 2016, I [introduced a bug](https://github.com/rakudo/rakudo/commit/bd3d430210d6d8c6f601718dd4b290c3c9753206) into contributors script. After some refactoring I accidentally left out [MoarVM repository](https://github.com/MoarVM/MoarVM)
-from the list of repos the script searches, so all the contributors to MoarVM
+September 2016, I [introduced a bug](https://github.com/rakudo/rakudo/commit/bd3d430210d6d8c6f601718dd4b290c3c9753206) into the contributors script. After some refactoring I accidentally left out [MoarVM repository](https://github.com/MoarVM/MoarVM)
+from the list of repos the script searches, so all the contributors to the MoarVM
 since September 2016 were missing! Since many of them also contribute to the
 other 4 repos, it was harder to spot that something was wrong.
 
