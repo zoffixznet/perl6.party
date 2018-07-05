@@ -99,7 +99,7 @@ is or has been generating the list of contributors:
     on the release manager to have up-to-date checkouts of repos
 - Missing contributors from entire repositories due to unnoticed bug in the code
 - What happens with commits made at the time of past release in a branch
-    that are merged at the time of the next release? Do they get lost?
+    that is merged at the time of the next release? Do they get lost?
 
 I'm taking the lazy way out and leaving it to the current release managers
 to resolve these problems. I filed [R#2028](https://github.com/rakudo/rakudo/issues/2028) with the list of issues and have full trust the
@@ -109,7 +109,7 @@ solution that will be implemented will be suitable :)
 
 And now, of course, the list of previously unsung heros who made Perl 6
 better in the past two and a half years, in alphabetical order. I've also
-[add them to our past release announcements](https://github.com/rakudo/rakudo/commit/ade83c861484f5f4e4184a88d9dae79a2cdf110c).
+[added them to our past release announcements](https://github.com/rakudo/rakudo/commit/ade83c861484f5f4e4184a88d9dae79a2cdf110c).
 
 It's possible this list includes the missing-found from [2016.08](https://github.com/rakudo/rakudo/blob/master/docs/announce/2016.08.md) announcement as well as people who were not logged in the CREDITS file in the past but are now,
 but I figure it's better to list them twice than none at all.
