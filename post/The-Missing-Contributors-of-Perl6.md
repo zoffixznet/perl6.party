@@ -108,7 +108,8 @@ solution that will be implemented will be suitable :)
 ## The Found
 
 And now, of course, the list of previously unsung heros who made Perl 6
-better in the past two and a half years, in alphabetical order.
+better in the past two and a half years, in alphabetical order. I've also
+[add them to our past release announcements](https://github.com/rakudo/rakudo/commit/ade83c861484f5f4e4184a88d9dae79a2cdf110c).
 
 It's possible this list includes the missing-found from [2016.08](https://github.com/rakudo/rakudo/blob/master/docs/announce/2016.08.md) announcement as well as people who were not logged in the CREDITS file in the past but are now,
 but I figure it's better to list them twice than none at all.
