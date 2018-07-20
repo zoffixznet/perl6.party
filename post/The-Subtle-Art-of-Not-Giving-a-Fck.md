@@ -34,7 +34,7 @@ about Perl 6's popularity. Positive trends, such as recent survey showing over
 30% of people already using Perl 6 at work, go with barely a notice, yet a dip of a couple of percetage points for "Perl" (not even "Perl 6"!) in some obscure
 "language popularity" ranking that uses questionable methodology cause a panic and the prophesying of The End of Times. This is insecurity.
 
-I also see comparison to other languages that for some reason attempt to
+I also see comparisons to other languages that for some reason attempt to
 portray Perl 6 as the loser: Perl 6 is bigger than language X; Perl 6 has more symbol-based syntax than language Y; Perl 6 has more ways to do a thing than
 language Z. It is the personality of our language and it's perfectly fine to have people who don't like those things to not like our language. Otherwise, this is trying to please everyone.
 
