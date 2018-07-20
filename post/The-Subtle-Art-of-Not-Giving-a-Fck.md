@@ -38,14 +38,11 @@ Also, I see comparisons to other languages that for some reason attempt to
 portray Perl 6 as the loser: Perl 6 is bigger than language X; Perl 6 has more symbol-based syntax than language Y; Perl 6 has more ways to do a thing than
 language Z. It is the personality of our language and it's perfectly fine to have people who don't like those things to not like our language. Otherwise, this is trying to please everyone.
 
-Lastly, I see what I term "wallowing in self-pity."
+Lastly, sometimes I see what I term "wallowing in self-pity." It's people widely advertising someone hating on Perl 6 or its community. Look! Someone
+said something bad about us. Look! Someone chose another tech after considering Perl 6! Look! Look! We are disliked! It is important that you look!
+Just as our screenplay's hapless chap convinces himself to be unworthy every night, I feel those discussions seek a similar goal at the end.
 
-## What's Your Hurry?
+It's all a self-fullfilling prophecy.
 
-
-## It's Depressing
-
-
-
-
+## What'ya Gonna Do?
 
