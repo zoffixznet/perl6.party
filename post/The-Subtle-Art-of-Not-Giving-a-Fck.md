@@ -40,7 +40,7 @@ language Z. It is the personality of our language and it's perfectly fine to hav
 
 Lastly, sometimes I see what I term "wallowing in self-pity." It's people widely advertising someone hating on Perl 6 or its community. Look! Someone
 said something bad about us. Look! Someone chose another tech after considering Perl 6! Look! Look! We are disliked! It is important that you look!
-Just as our screenplay's hapless chap convinces himself to be unworthy every night, I feel those discussions seek a similar goal at the end.
+Just as our screenplay's hapless chap convinces himself to be unworthy every night, I feel those discussions achieve a similar goal: self-pity.
 
 It's all a self-fullfilling prophecy.
 
