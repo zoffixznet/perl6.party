@@ -13,4 +13,4 @@ itself is pretty much identical.
 
 You can view the slides at [https://tpm-perf.perl6.party/](https://tpm-perf.perl6.party/) and [the screencast of the talk is on YouTube](https://youtu.be/UfhQ8qcgs0k):
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/UfhQ8qcgs0k" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe width="800" height="450" src="https://www.youtube.com/embed/UfhQ8qcgs0k" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
