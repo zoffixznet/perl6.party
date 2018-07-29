@@ -1,4 +1,4 @@
-%% title: Talk Slides and Recording: "Intro Into Perl 6 Regexes and Grammars Perl 6"
+%% title: Talk Slides and Recording: "Intro Into Perl 6 Regexes and Grammars"
 %% date: 2018-07-29
 %% desc: Overview of Perl 6's novel regex syntax and grammars
 
