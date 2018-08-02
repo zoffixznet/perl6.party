@@ -1,4 +1,4 @@
-%% title: Introducing: Newcomer Guide to Contributing to Core Perl&nbsp;6
+%% title: Introducing: Newcomer Guide to Contributing to Core Perl 6
 %% date: 2018-08-02
 %% desc: Info on the new guide for newcomers
 

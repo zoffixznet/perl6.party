@@ -1,6 +1,6 @@
-%% title: Newcomer Guide to Contributing to Core Perl&nbsp;6
+%% title: Newcomer Guide to Contributing to Core Perl 6
 %% date: 2018-08-02
-%% desc: How to start contributing to Rakudo Perl&nbsp;6 compiler
+%% desc: How to start contributing to Rakudo Perl 6 compiler
 
 So, you want to contribute to an awesome open source project like the
 Rakudo Perl&nbsp;6 compiler, but didn't know where to start? Good news! This guide
