@@ -1,26 +1,26 @@
-%% title: Introducing: Newcomer Guide to Contributing to Core Perl 6
+%% title: Introducing: Newcomer Guide to Contributing to Core Perl&nbsp;6
 %% date: 2018-08-02
 %% desc: Info on the new guide for newcomers
 
 An important part of a project is to keep a steady flow of new volunteers coming on board to help you out (that's *Hug 1: Gift a Shovel* in the [Hole Digging Metaphor](/post/On-Troll-Hugging-Hole-Digging-and-Improving-Open-Source-Communities)). Starting out can be difficult: you barely know the people who you're working with and you're not familiar with the codebase or the build toolchain. A bug that will take a regular coredeveloper a minute to fix, test, and ship, might be insurmountable for someone who doesn't know where to start.
 
-Perl 6 is can especially benefit from newcomer help, as core development is
-very easy to get into: a lot of bugs involve pure Perl 6 code, mixed with some
+Perl&nbsp;6 can especially benefit from newcomer help, as core development is
+very easy to get into: a lot of bugs involve pure Perl&nbsp;6 code, mixed with some
 NQP subroutine calls that aren't much different than using subroutines from
 an ecosystem module.
 
-For some time now, the Perl 6 devs labeled easy Issues with particular labels.
+For some time now, the Perl&nbsp;6 devs labeled easy Issues with particular labels.
 However, that still leaves some challenges for new volunteers in place: knowing what the labels really mean, knowing how to build the project with the
 fix applied, and knowing how to run the tests.
 
 ## The Newcomer Guide
 
-To address those issues, I drafted a [Newcomer Guide to Contributing to Core Perl 6](/post/Newcomer-Guide-to-Contributing-to-Core-Perl-6) that will be
+To address those issues, I drafted a [Newcomer Guide to Contributing to Core Perl&nbsp;6](/post/Newcomer-Guide-to-Contributing-to-Core-Perl-6) that will be
 linked to on specially labeled Issues. It's still an early version and will
 likely see several revisions based on the type of questions new volunteers ask.
 
 It's meant to be a quick guide a programmer can read to get into contributing
-to Rakudo Perl 6. It's not meant to be exhaustive, so for example things
+to Rakudo Perl&nbsp;6. It's not meant to be exhaustive, so for example things
 like how to submit a Pull Request or make a commit with `git` are outside of
 its scope.
 
@@ -40,4 +40,4 @@ Issues for newcomers, add a few tips and suggestions on how the Issue can likely
 
 ## That's It
 
-There isn't much else to say, other than [check out the Guide itself](/post/Newcomer-Guide-to-Contributing-to-Core-Perl-6) and help make Perl 6 better! :)
+There isn't much else to say, other than [check out the Guide itself](/post/Newcomer-Guide-to-Contributing-to-Core-Perl-6) and help make Perl&nbsp;6 better! :)
