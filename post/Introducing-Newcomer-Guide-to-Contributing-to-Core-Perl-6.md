@@ -24,6 +24,10 @@ to Rakudo Perl 6. It's not meant to be exhaustive, so for example things
 like how to submit a Pull Request or make a commit with `git` are outside of
 its scope.
 
+The Z-Script the guide uses haven't seen much battle testing by people without
+a commit bit to all the repos, so I suspect that will need some improvement
+as well, as people start to use it.
+
 ## To The Core Devs
 
 Be sure to label easy issues with the labels mentioned in the guide. Encourage people to fix bugs. The person reporting the bug can be given a few tips on

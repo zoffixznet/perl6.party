@@ -51,7 +51,9 @@ script that simplifies a lot of the building instructions to a single command.
 The rest of the guide will assume you're using Z-Script.
 
 For initial setup, follow [Z-Script's installation instructions](https://github.com/zoffixznet/z#z-script). Once installed, you can run `z --help` for a list
-of supported commands (the list in README is outdated).
+of supported commands (the list in README is outdated). It will check out
+the 3 code repos inside your setup directory and the roast will be checked
+out inside `rakudo/t/spec` directory.
 
 You need to build different stuff, depending on what repos you modified:
 
