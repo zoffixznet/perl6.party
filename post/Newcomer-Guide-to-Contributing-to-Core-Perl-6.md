@@ -58,7 +58,7 @@ out inside `rakudo/t/spec` directory.
 You need to build different stuff, depending on what repos you modified:
 
 - If you made changes in MoarVM, run `z m` to rebuild MoarVM
-- If you made changes in NQP, run `z m` to rebuild NQP and Rakudo on top of it
+- If you made changes in NQP, run `z n` to rebuild NQP and Rakudo on top of it
 - If you made changes in Rakudo, run `z` to rebuild Rakudo
 
 In some cases, such as when modifying `Makefile`-related stuff or list of
