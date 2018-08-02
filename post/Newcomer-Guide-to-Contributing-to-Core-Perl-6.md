@@ -95,6 +95,15 @@ commit bit to a particular repository, feel free to commit directly if you're
 confident in your work and it isn't something controvercial. Otherwise, still
 submit a Pull Request.
 
+## Tips and Stuff
+
+Some tips for excellent bug fixing: write tests to cover the bug firsts. They should all fail and when they all pass you know you fixed the bug. And even if you fail to fix the bug, the tests can still be submitted to roast.
+
+Think about the code you're fixing. Do similar routines have similar bug?
+Is the bug present with other types of input? Often what's reported in the
+bug report covers just a part of the problem.
+
+
 --------
 
 And again, if you need help, [just ask us](https://perl6.org/irc-dev).

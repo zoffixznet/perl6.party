@@ -35,7 +35,8 @@ how to fix the very problem they're reporting and asked whether they wish to
 submit a fix. You never know when a one-off contributor will become a regular core developer.
 
 The Guide promises the core devs will answer questions and help walk the interested volunteers through the fixes of specially labeled Issues, so keep
-an eye open for such questions and help people out.
+an eye open for such questions and help people out. Also, when filing the
+Issues for newcomers, add a few tips and suggestions on how the Issue can likely be fixed.
 
 ## That's It
 
