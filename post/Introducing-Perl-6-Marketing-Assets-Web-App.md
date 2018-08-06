@@ -24,7 +24,7 @@ marketing repo, that lets you browse all of the assets. It's hosted at [marketin
 # The Assets
 
 Under the thumbnail of each asset, there are a few buttons that show you
-wish formats are available for download. The last two buttons are the GitHub
+which formats are available for download. The last two buttons are the GitHub
 button and the pencil button. The former will lead
 you to GitHub to the folder that particular asset is at, where you can download
 any files that aren't shown on the front end (e.g. the source files). The latter
