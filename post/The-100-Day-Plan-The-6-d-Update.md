@@ -41,7 +41,7 @@ The aforementioned ton of work includes:
 
 - Still have to review about 2,100 spec commits
 - Still have ~95% of ChangeLog to write
-- Still have to implement, 7 TODO features, costing 110 hours
+- Still have to implement 7 TODO features, costing 110 hours
 - Still have 0.3 policies to write (a draft already exists, but needs polishing)
 - Review and spec of any new features that were implemented in Rakudo but were not specced in the language
 - Marketing stuff regarding creation of marketing name alias for the language
