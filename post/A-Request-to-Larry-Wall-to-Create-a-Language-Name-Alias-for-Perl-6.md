@@ -2,7 +2,7 @@
 %% date: 2018-10-07
 %% desc: The culmination of the naming discussion
 
-I (Zoffix Znet), on behalf of the Perl&nbsp;5 and Perl&nbsp;6 communities, am writing this document to Larry&nbsp;Wall to request the creation of a second name for the *"Perl&nbsp;6"* language. This name is *not* a rename of the language, but is simply an alternative name, an alias. Similar to how *TimToady* is an alias for *Larry&nbsp;Wall*.
+I (Zoffix Znet) am writing this document to Larry&nbsp;Wall to request the creation of a second name for the *"Perl&nbsp;6"* language. This name is *not* a rename of the language, but is simply an alternative name, an alias. Similar to how *TimToady* is an alias for *Larry&nbsp;Wall*.
 
 It's been a year and a half since the time when I first re-opened this issue with a blog post, and in this document, I compiled the argumentation for creation of the alias, the community suggestions for what that alias might look like, along with the observations of discussions on the topic that occured during that time period.
 
