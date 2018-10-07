@@ -83,7 +83,7 @@ It is detrimental to our future.
 
 ## No Full Rename
 
-While numerious members of the community would have liked to see a full language rename, there are also those who believe a full rename would be detrimental. The full rename at this point in time is also a lot more challenging due to the existence of books, websites, documentation, environmental variables, and dynamic variables in the language—all with the name "Perl" in them.
+While numerous members of the community would have liked to see a full language rename, there are also those who believe a full rename would be detrimental. The full rename at this point in time is also a lot more challenging due to the existence of books, websites, documentation, environmental variables, and dynamic variables in the language—all with the name "Perl" in them.
 
 As such, we are creating an alias only. One that does not have any reference to Perl in it (i.e. no "Perl++"). If another name is truly as superior as the full-rename proponents claim it would be, I believe the alias can become a defacto name through its sheer amount of use. Thus, the creation of the alias can be seen as a means for the full-rename proponents to prove their claims.
 
@@ -147,7 +147,7 @@ The *(parentheticals)* indicate what issue was encountered in an item. The issue
 
 With the 6.d release around the corner, we have approached the point where a direct request to Larry Wall is made with the matter of assuaging the problem of the naming of the language.
 
-Through a year and a half worth of discussions, we came to a conclusion that a second name to the language should be created, as opposed to a full rename. This will let the proponets of a rename to prove their claims, without severely upsetting those who believe the current name is beneficial.
+Through a year and a half worth of discussions, we came to a conclusion that a second name to the language should be created, as opposed to a full rename. This will let the proponents of a rename to prove their claims, without severely upsetting those who believe the current name is beneficial.
 
 This document presented argumentation for why a second name is beneficial, as well as compiled the discussions and suggestions that occured during that year and a half.
 
