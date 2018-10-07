@@ -1,4 +1,4 @@
-%% title: Request to Larry Wall to Create a Language Name Alias for Perl 6
+%% title: A Request to Larry Wall to Create a Language Name Alias for Perl 6
 %% date: 2018-10-07
 %% desc: The culmination of the naming discussion
 
