@@ -1,4 +1,4 @@
-%% title: Perl 6 Advent Calendar 2017 Call for Authors
+%% title: Perl 6 Advent Calendar 2018 Call for Authors
 %% date: 2018-10-31
 %% desc: Write a blog post about Perl 6
 
